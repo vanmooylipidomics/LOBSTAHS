@@ -568,7 +568,17 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
                 
                 # get name
                 
-                this.parent_compound_name = paste0(this.species," ",this.FA_total_no_C,":",this.FA_total_no_DB," +",this.degree_oxidation,"O")
+                if (this.degree_oxidation>0) {
+                  
+                  oxystring = paste0(" +",this.degree_oxidation,"O")
+                  
+                } else {
+                  
+                  oxystring = NULL
+                  
+                }
+     
+                this.parent_compound_name = paste0(this.species," ",this.FA_total_no_C,":",this.FA_total_no_DB,oxystring)
                 
                 # now, record data
                 
