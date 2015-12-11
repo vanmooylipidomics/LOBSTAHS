@@ -11,9 +11,13 @@
 # RData but not *.RData
 .RData
 
-# RStudio project files
+# RStudio projects
 *.Rproj
+
+# .DS_Store
+*.DS_Store
 
 # directories & files I dont want indexed, for now
 r_process_files
 rsmDirectory
+.Rproj.user
