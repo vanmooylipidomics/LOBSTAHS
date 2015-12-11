@@ -297,7 +297,15 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies, base
       
       num.adducts = sum(!is.na(AIHs.thismode[,colnames(AIHs.thismode)[colnames(AIHs.thismode)==rownames(baseComponent.masses)[i]]]))
       
-      num_compounds.this_species = (this.oxymax-this.oxymin+1)*sum(this.C_DBmaxdata-this.C_DBmindata+1,na.rm = TRUE)
+      if (num.adducts>0) {
+        
+        num_compounds.this_species = (this.oxymax-this.oxymin+1)*sum(this.C_DBmaxdata-this.C_DBmindata+1,na.rm = TRUE)
+      } else {
+        
+        num_compounds.this_species = 0
+        
+      }
+      
       num_ions.this_species = num.adducts*num_compounds.this_species
       
     } else if (this.class %in% c("DNPPE","pigment")) {
@@ -312,7 +320,16 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies, base
         
       }
       
-      num_compounds.this_species = 1 # because we considered DNPPE and each pigment individually
+      if (num.adducts>0) {
+        
+        num_compounds.this_species = 1 # because we considered DNPPE and each pigment individually
+        
+      } else {
+        
+        num_compounds.this_species = 0
+        
+      }
+      
       num_ions.this_species = num.adducts
       
     }
