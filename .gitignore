@@ -11,6 +11,9 @@
 # RData but not *.RData
 .RData
 
+# RStudio project files
+*.Rproj
+
 # directories & files I dont want indexed, for now
 r_process_files
 rsmDirectory
