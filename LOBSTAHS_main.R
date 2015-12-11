@@ -108,9 +108,9 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
   
   # set things up for rt window screening
   
-  if (rt.restrict = TRUE) {
+  if (rt.restrict==TRUE) {
     
-    if (rt.windows = NULL) { # use defaults
+    if (rt.windows==NULL) { # use defaults
       
       load("dependencies/default.rt.windows.RData")
       
@@ -160,7 +160,7 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
   
   # lastly, if user has elected remove.iso, make sure there are actually isotopes ID'd in the xsAnnotate object
   
-  if ((remove.iso = TRUE) & (length(xsA@isotopes)<1)) {
+  if ((remove.iso==TRUE) & (length(xsA@isotopes)<1)) {
     
     stop("Input 'xsA' does not appear to contain any identified isotopes. Re-run CAMERA and use findIsotopes!")
     
@@ -416,16 +416,33 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   
   pgdata = data.frame(pgdata, xcms_peakgroup, isotopes, CAMERA_pseudospectrum, stringsAsFactors = FALSE) # combine into data frame
   
-  # define a matrix for diagnostic data
+  # define a list to hold diagnostic data elements
   
-  diagnostic.data = matrix(data = integer(0), nrow = 1, ncol = 14)
-  colnames(diagnostic.data) = c("pg.init","peaks.init","postiso.pg","postiso.peaks","pg.with.initial.assign","peaks.with.initial.assign","num.initial.assigned.adducts","num.initial.assigned.parents","postrt.pg","postrt.peaks","postAIH.pg","postAIH.peaks","postevenFA.pg","postevenFA.peaks")
+  diagnostic.data = vector(mode = "list", length = 18)
+  names(diagnostic.data) = c("pg.init",
+                             "peaks.init",
+                             "postiso.pg",
+                             "postiso.peaks",
+                             "pg.with.initial.assign",
+                             "peaks.with.initial.assign",
+                             "num.initial.assigned.adducts",
+                             "num.initial.assigned.parents",
+                             "postrt.pg",
+                             "postrt.peaks",
+                             "postrt.assigned.adducts",
+                             "postrt.assigned.parents",
+                             "postAIH.pg",
+                             "postAIH.peaks",
+                             "postAIH.assigned.parents",
+                             "postevenFA.pg",
+                             "postevenFA.peaks",
+                             "postevenFA.assigned.parents")
   
   diagnostic.data[c("pg.init","peaks.init")] = c(nrow(pgdata),sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
 
   # take care of secondary isotopes, if user wants
   
-  if (remove.iso = TRUE) {
+  if (remove.iso==TRUE) {
     
     pgdata = pgdata[(pgdata$isotopes=="") | (grepl("\\[M\\]\\+$",pgdata$isotopes)),]
     
@@ -447,32 +464,32 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     c(sum(sapply(init.matches, function(x) length(x)>0)),
       sum(pgdata[sapply(init.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
       sum(sapply(init.matches, length)),
+      length(unique(database@parent_compound_name[unlist(init.matches)])))
+  
+  current.matches = init.matches
       
-      
-      
-      unique(database@ unlist(init.matches)
-      
-                                                                                                                                             )
-
   # apply rt restrictions, if user asked for it
   
-  if (rt.restrict = TRUE) {
+  if (rt.restrict==TRUE) {
     
-    evalFeatureRT = function(assignment.rt, matched.frag_IDs, rt.windows, database)
-      
-      rt.matches = mapply(evalFeatureRT, matched.frag_IDs = init.matches, assignment.rt = pgdata$rt, MoreArgs =  list(database = database, rt.windows = rt.windows))
-      
-      num.rt.matches = sum(sapply(rt.matches,length))
-      
+    rt.matches = mapply(evalFeatureRT, matched.frag_IDs = current.matches, assignment.rt = pgdata$rt, MoreArgs =  list(database = database, rt.windows = rt.windows))
+    
+    diagnostic.data[c("postrt.pg",
+                      "postrt.peaks",
+                      "postrt.assigned.adducts",
+                      "postrt.assigned.parents")] = 
+      c(sum(sapply(rt.matches, function(x) length(x)>0)),
+        sum(pgdata[sapply(rt.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+        sum(sapply(rt.matches, length)),
+        length(unique(database@parent_compound_name[unlist(rt.matches)])))
+    
+    current.matches = rt.matches
+    
   }
-    
-    
-    
-  as.matrix(init.matches)
-    
-  }
-}
-
+  
+  # adduct ion hierarchy screening & annotation
+  
+  AIHscreen = function()
 
   
 }
