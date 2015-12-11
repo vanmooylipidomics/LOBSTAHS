@@ -1,0 +1,16 @@
+# Object file
+*.o
+
+# .history files
+*.history
+*.Rhistory
+
+# MATLAB temp files
+*.m~
+
+# RData but not *.RData
+.RData
+
+# directories & files I dont want indexed, for now
+r_process_files
+rsmDirectory
