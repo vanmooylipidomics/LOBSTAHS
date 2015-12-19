@@ -1,62 +1,10 @@
-################ Set classes, methods #############
-
-# create a class "LOBSet" for the results of LOBSTAHS screening & compound assignments
-
-LOBSet = setClass("LOBSet",
-                  representation(LOBpeakdata = "data.frame",
-                                 iso.C3r = "list",
-                                 iso.C3f = "list",
-                                 iso.C3c = "list",
-                                 LOBscreen.diagnostics = "data.frame",
-                                 LOBisoID.diagnostics = "data.frame",
-                                 LOBscreen.settings = "list",
-                                 parent.xsAnnotate = "xsAnnotate"
-                  ),
-                  
-                  prototype(LOBpeakdata = data.frame(),
-                            iso.C3r = list(),
-                            iso.C3f = list(),
-                            iso.C3c = list(),
-                            LOBscreen.diagnostics = data.frame(),
-                            LOBisoID.diagnostics = data.frame(),
-                            LOBscreen.settings = list(),
-                            parent.xsAnnotate = new("xsAnnotate")
-                  ))
-
-setMethod("show", "LOBSet", function(object) {
-  
-  cat("A",as.character(object@parent.xsAnnotate@polarity),"polarity \"LOBSet\" containing LC-MS peak data. Compound assignments and adduct ion hierarchy screening annotations applied to",length(sampnames(object@parent.xsAnnotate@xcmsSet)),"samples using the \"LOBSTAHS\" package.\n\n")
-  cat("Individual peaks:",object@LOBscreen.diagnostics$peaks[6],"\n")
-  cat("Peak groups:",object@LOBscreen.diagnostics$peakgroups[6],"\n")
-  cat("Compound assignments:",object@LOBscreen.diagnostics$parent_compounds[6],"\n")
-  cat("m/z range:",paste(min(object@LOBpeakdata$peakgroup.mz, na.rm = TRUE),max(object@LOBpeakdata$peakgroup.mz, na.rm = TRUE), sep = "-"),"\n\n")
-  
-  cat("Possible regisomers:",paste(object@LOBisoID.diagnostics$peakgroups[1],"\n"))
-  cat("Possible structural functional isomers:",paste(object@LOBisoID.diagnostics$peakgroups[2],"\n"))
-  cat("Isobars indistinguishable within ppm matching tolerance:",paste(object@LOBisoID.diagnostics$peakgroups[3],"\n\n"))
-
-    cat("Restrictions applied prior to conducting adduct ion hierarchy screening:",paste(c("remove.iso","rt.restrict","exclude.oddFA")[unlist(object@LOBscreen.settings[c("remove.iso","rt.restrict","exclude.oddFA")])], collapse = ", "),"\n\n")
-
-  cat("Match tolerance used for database assignments:",object@LOBscreen.settings$match.ppm,"ppm\n\n")
-#   cat("Ranges of chemical parameters represented in molecules other than pigments:\n\n")
-#   cat("Total number of acyl carbon atoms:",paste(min(object@LOBpeakdata$FA_total_no_C, na.rm = TRUE),max(object@LOBpeakdata$FA_total_no_C, na.rm = TRUE), sep = "-"),"\n")
-#   cat("Total number of acyl carbon-carbon double bonds:",paste(min(object@LOBpeakdata$FA_total_no_DB, na.rm = TRUE),max(object@LOBpeakdata$FA_total_no_DB, na.rm = TRUE), sep = "-"),"\n")
-#   cat("Number of additional oxygen atoms:",paste(min(object@LOBpeakdata$degree_oxidation, na.rm = TRUE),max(object@LOBpeakdata$degree_oxidation, na.rm = TRUE), sep = "-"),"\n\n")
-  
-  cat("The CAMERA \"xsAnnotate\" object used for screening was retained in slot @parent.xsAnnotate.\n\n")
-  
-  memsize = object.size(object)
-  cat("Memory usage:", signif(memsize/2^20, 3), "MB\n")
-  
-})
-
 ################ Wrapper function #############
 
 # doLOBscreen: Wrapper function for LOBSTAHS screening & annotation of an xsAnnotate object; returns a LOBSet object
 
 doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE, rt.restrict =  TRUE, rt.windows = NULL, exclude.oddFA = TRUE, match.ppm = NULL) { # planning to add nSlaves option at some point
   
-  cat("/n")
+  cat("\n")
   
   ################ Check arguments, load necessary data #############
   
@@ -92,14 +40,14 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   
   if (is.null(polarity)) { # user didn't provide value for argument, try to automatically detect polarity from xsA@polarity
     
-    cat("User did not specify a value for argument 'polarity.' Attempting to detect current polarity from property of input 'xsA'...\n\n")
+    cat("User did not specify a value for argument 'polarity.' Attempting to detect current polarity from property of input 'xsA'...\n")
     
     if (!is.null(xsA@polarity)) {
       
       if (is.element(xsA@polarity,c("positive","negative"))) {
         
         polarity = xsA@polarity
-        cat("Input 'xsA' appears to be of polarity '",polarity,"'\n")
+        cat("Input 'xsA' appears to be of polarity '",polarity,"'\n\n")
         
       } else {
         
@@ -473,7 +421,7 @@ loadLOBdbase = function(file, polarity, num.compounds = NULL) {
     
     if (sum(grepl("^\\[.*\\]\\-{1,}$",object@adduct))>0) {
       
-      stop("At least one of the adducts in field 'adduct' of the database being imported appears to be of ion mode opposite that of indicated polarity '",polarity,".' Check the ion mode specified. Aborting...")
+      stop("At least one of the adducts in field 'adduct' of the database being imported appears to be of ion mode opposite that of indicated polarity '",polarity,".' Check the ion mode specified. Aborting...\n")
       
     }
     
@@ -489,7 +437,7 @@ loadLOBdbase = function(file, polarity, num.compounds = NULL) {
     
     if (sum(grepl("^\\[.*\\]\\+{1,}$",object@adduct))>0) {
       
-      stop("At least one of the adducts in field 'adduct' of the database being imported appears to be of ion mode opposite that of indicated polarity '",polarity,".' Check the ion mode specified. Aborting...")
+      stop("At least one of the adducts in field 'adduct' of the database being imported appears to be of ion mode opposite that of indicated polarity '",polarity,".' Check the ion mode specified. Aborting...\n")
       
     }
     
@@ -743,9 +691,9 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
   
   if (include.iso==TRUE) {
     
-    iso.C3r.match_ID = sapply(object@iso.C3r, paste, collapse = ", ")
-    iso.C3f.match_ID = sapply(object@iso.C3f, paste, collapse = ", ")
-    iso.C3c.match_ID = sapply(object@iso.C3c, paste, collapse = ", ")
+    iso.C3r.match_ID = sapply(LOBSet@iso.C3r, paste, collapse = ", ")
+    iso.C3f.match_ID = sapply(LOBSet@iso.C3f, paste, collapse = ", ")
+    iso.C3c.match_ID = sapply(LOBSet@iso.C3c, paste, collapse = ", ")
     
     export.df = data.frame(export.df,iso.C3r.match_ID,iso.C3f.match_ID,iso.C3c.match_ID)
     
@@ -761,9 +709,9 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
     
     cat("Peak data exported to:",fname,"\n")
     
-    
-    
   }
+  
+  return(export.df)
   
 }
 
