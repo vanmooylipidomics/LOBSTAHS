@@ -1,52 +1,64 @@
 ################ Set classes, methods #############
 
-# create a class for our screened xsAnnotate object to which compound assignments and confidence codes have been applied
+# create a class "LOBSet" for the results of LOBSTAHS screening & compound assignments
 
-xsALOB = setClass("xsALOB", contains="xsAnnotate",
-                  representation(confcodes = "factor",
+LOBSet = setClass("LOBSet",
+                  representation(LOBpeakdata = "data.frame",
                                  iso.C3r = "list",
                                  iso.C3f = "list",
                                  iso.C3c = "list",
-                                 LOBdbase.frag_ID = "integer",
-                                 LOBdbase.exact_parent_neutral_mass = "numeric",
-                                 LOBdbase.mz = "numeric",
-                                 LOBdbase.ppm.match = "numeric",
-                                 lipid_class = "factor",
-                                 species = "character",
-                                 major.adduct = "factor",
-                                 FA_total_no_C = "integer",
-                                 FA_total_no_DB = "integer",
-                                 degree_oxidation = "integer",
-                                 elem_formula = "character",
-                                 compound_name = "character"
-                                 ),
+                                 LOBscreen.diagnostics = "data.frame",
+                                 LOBisoID.diagnostics = "data.frame",
+                                 LOBscreen.settings = "list",
+                                 parent.xsAnnotate = "xsAnnotate"
+                  ),
                   
-                  prototype(confcodes = factor(character(0)),
+                  prototype(LOBpeakdata = data.frame(),
                             iso.C3r = list(),
                             iso.C3f = list(),
                             iso.C3c = list(),
-                            frag_ID = integer(0),
-                            LOBdbase.frag_ID = integer(0),
-                            LOBdbase.exact_parent_neutral_mass = numeric(0),
-                            LOBdbase.mz = numeric(0),
-                            LOBdbase.ppm.match = numeric(0),
-                            lipid_class = factor(character(0)),
-                            species = character(0),
-                            major.adduct = factor(character(0)),
-                            FA_total_no_C = integer(0),
-                            FA_total_no_DB = integer(0),
-                            degree_oxidation = integer(0),
-                            elem_formula = character(0),
-                            compound_name = character(0)
+                            LOBscreen.diagnostics = data.frame(),
+                            LOBisoID.diagnostics = data.frame(),
+                            LOBscreen.settings = list(),
+                            parent.xsAnnotate = new("xsAnnotate")
                   ))
+
+setMethod("show", "LOBSet", function(object) {
+  
+  cat("A",as.character(object@parent.xsAnnotate@polarity),"polarity \"LOBSet\" containing LC-MS peak data. Compound assignments and adduct ion hierarchy screening annotations applied to",length(sampnames(object@parent.xsAnnotate@xcmsSet)),"samples using the \"LOBSTAHS\" package.\n\n")
+  cat("Individual peaks:",object@LOBscreen.diagnostics$peaks[6],"\n")
+  cat("Peak groups:",object@LOBscreen.diagnostics$peakgroups[6],"\n")
+  cat("Compound assignments:",object@LOBscreen.diagnostics$parent_compounds[6],"\n")
+  cat("m/z range:",paste(min(object@LOBpeakdata$peakgroup.mz, na.rm = TRUE),max(object@LOBpeakdata$peakgroup.mz, na.rm = TRUE), sep = "-"),"\n\n")
+  
+  cat("Possible regisomers:",paste(object@LOBisoID.diagnostics$peakgroups[1],"\n"))
+  cat("Possible structural functional isomers:",paste(object@LOBisoID.diagnostics$peakgroups[2],"\n"))
+  cat("Isobars indistinguishable within ppm matching tolerance:",paste(object@LOBisoID.diagnostics$peakgroups[3],"\n\n"))
+
+    cat("Restrictions applied prior to conducting adduct ion hierarchy screening:",paste(c("remove.iso","rt.restrict","exclude.oddFA")[unlist(object@LOBscreen.settings[c("remove.iso","rt.restrict","exclude.oddFA")])], collapse = ", "),"\n\n")
+
+  cat("Match tolerance used for database assignments:",object@LOBscreen.settings$match.ppm,"ppm\n\n")
+#   cat("Ranges of chemical parameters represented in molecules other than pigments:\n\n")
+#   cat("Total number of acyl carbon atoms:",paste(min(object@LOBpeakdata$FA_total_no_C, na.rm = TRUE),max(object@LOBpeakdata$FA_total_no_C, na.rm = TRUE), sep = "-"),"\n")
+#   cat("Total number of acyl carbon-carbon double bonds:",paste(min(object@LOBpeakdata$FA_total_no_DB, na.rm = TRUE),max(object@LOBpeakdata$FA_total_no_DB, na.rm = TRUE), sep = "-"),"\n")
+#   cat("Number of additional oxygen atoms:",paste(min(object@LOBpeakdata$degree_oxidation, na.rm = TRUE),max(object@LOBpeakdata$degree_oxidation, na.rm = TRUE), sep = "-"),"\n\n")
+  
+  cat("The CAMERA \"xsAnnotate\" object used for screening was retained in slot @parent.xsAnnotate.\n\n")
+  
+  memsize = object.size(object)
+  cat("Memory usage:", signif(memsize/2^20, 3), "MB\n")
+  
+})
 
 ################ Wrapper function #############
 
-# makeLOBAssignments: Wrapper function for screening & annotation of an xsAnnotate object
+# doLOBscreen: Wrapper function for LOBSTAHS screening & annotation of an xsAnnotate object; returns a LOBSet object
 
-makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE, rt.restrict =  TRUE, rt.windows = NULL, exclude.oddFA = TRUE, match.ppm = 2.5) { # add nSlaves option at some point?
+doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE, rt.restrict =  TRUE, rt.windows = NULL, exclude.oddFA = TRUE, match.ppm = NULL) { # planning to add nSlaves option at some point
   
-################ Check arguments, load necessary data #############
+  cat("/n")
+  
+  ################ Check arguments, load necessary data #############
   
   # verify that input xsA is of correct class, has pseudospectra, and that rt data are in seconds
   
@@ -68,11 +80,19 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
     
   }
   
+  # check for match.ppm input
+  
+  if (is.null(match.ppm)) { 
+    
+    stop("User did not specify a ppm matching tolerance.")
+    
+  }
+  
   # check for consistent polarity between xsA and value of argument 'polarity' provided by user
   
   if (is.null(polarity)) { # user didn't provide value for argument, try to automatically detect polarity from xsA@polarity
     
-    cat("User did not specify a value for argument 'polarity.' Attempting to detect current polarity from property of input 'xsA'...\n")
+    cat("User did not specify a value for argument 'polarity.' Attempting to detect current polarity from property of input 'xsA'...\n\n")
     
     if (!is.null(xsA@polarity)) {
       
@@ -135,7 +155,9 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
     
   } else { # user didn't specify a database, use the default DB of the correct polarity
     
-    cat("User did not specify an external database. Loading default LOBSTAHS database for polarity '",polarity,"' ...\n")
+    cat("User did not specify an external database. Using default LOBSTAHS database for polarity '",polarity,"'\n\n")
+    
+    defDB = 1
     
     load("dependencies/default.LOBdbase.RData")
     database = LOBdbase[[polarity]]
@@ -146,11 +168,12 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
   
   if (rt.restrict==TRUE) {
     
-    if (rt.windows==NULL) { # use defaults
+    if (is.null(rt.windows)) { # use defaults
       
       load("dependencies/default.rt.windows.RData")
+      defRTwin = 1
       
-      warning("User did not specify an external source of retention time window data. Loading default rt windows used for the Van Mooy Lab Orbitrap. Non-VML users are strongly urged to use argument 'rt.wintable' to load retention time data specific to their chromatography...\n")
+      warning("User did not specify an external source of retention time window data. Default rt windows for the Van Mooy Lab Orbitrap were used. Non-VML users are strongly urged to use argument 'rt.wintable' to load retention time data specific to their chromatography.\n")
       
     } else { # load and perform basic check of user-specified rt window data, assuming they pointed rt.wintable to a valid R matrix with reasonbly named column headings
       
@@ -186,7 +209,7 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
       
       if (any((rt.windows$rt_win_min|rt.windows$rt_win_max)>100, na.rm = TRUE)) { # likely that user's data are in seconds, not minutes
         
-        warning("Retention time data should be specified in minutes, not seconds. User's data appear to be in seconds.")
+        warning("Retention time data should be specified in minutes, not seconds. User's data appear to be in seconds.\n\n")
         
       }
       
@@ -202,113 +225,184 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
     
   }
   
-}
-
-# # remove any holdovers from a previous run, if they exist
-# 
-# if (exists("screened.peaktable")) {
-#   
-#   rm(screened.peaktable)
-#   
-# }
-# 
-# if (exists("isodata.C3r")) {
-#   
-#   rm(isodata.C3r)
-#   
-# }
-# 
-# if (exists("diagnostic.data")) {
-#   
-#   rm(diagnostic.data)
-#   
-# }
-
-################ Perform screening #############
-
-cat("Performing initial screening and annotation of dataset. Compound assignments will be made from database with",match.ppm,"ppm match tolerance...\n")
-
-pspectra = 1:length(xsA@pspectra)
-
-screened.pspecdata = lapply(pspectra, screenPSpectrum, xsA = xsA, polarity = polarity, database = database, remove.iso = remove.iso, rt.restrict = rt.restrict, rt.windows = rt.windows, exclude.oddFA = exclude.oddFA, match.ppm = match.ppm)
-
-# extract & reformat results, plus extract some aggregate diagnostics
-
-screenedpeaks = as.data.frame(do.call("rbind", lapply(screened.pspecdata, function(x) x[["screened.peaktable"]])))
-isodata.C3r = unlist(lapply(screened.pspecdata, function(x) x[["isodata.C3r"]]), recursive = FALSE)
-screening.diagnostics = Reduce("+",lapply(screened.pspecdata, function(x) x[["diagnostic.data"]]))
-
-# calculate the match delta ppm for each item in screenedpeaks
-
-screenedpeaks$LOBdbase.ppm.match = (screenedpeaks$LOBdbase.mz-screenedpeaks$mz)/screenedpeaks$LOBdbase.mz*1000000
-
-# append a match_ID
-
-screenedpeaks$match_ID = 1:nrow(screenedpeaks)
-
-cat("Initial screening and annotation complete.",screening.diagnostics[c("post.AIHscreen"),c("pg")],"peakgroups remain in dataset, to which",screening.diagnostics[c("post.AIHscreen"),c("parent_compounds")],"parent compound identities have been assigned from database.\n")
-
-# further screening to identify isomers
-
-# check for & tag any additional "case 3r" regioisomers
-
-cat("Now identifying and annotating possible regioisomers...\n")
-
-screenedpeaks$C3r[screenedpeaks$compound_name %in% screenedpeaks$compound_name[duplicated(screenedpeaks$compound_name)]] = 1 # set "C3r" for all compounds with regioisomers to 1
-
-C3r.peakdata = screenedpeaks[screenedpeaks$C3r==1,]
-C3r.parent_compounds = unique(C3r.peakdata$compound_name)
-
-# update dataset.isodata.C3r with correct cross-references
-
-for (i in 1:length(C3r.parent_compounds)) {
+  # # remove any holdovers from a previous run, if they exist
+  # 
+  # if (exists("screened.peaktable")) {
+  #   
+  #   rm(screened.peaktable)
+  #   
+  # }
+  # 
+  # if (exists("isodata.C3r")) {
+  #   
+  #   rm(isodata.C3r)
+  #   
+  # }
+  # 
+  # if (exists("diagnostic.data")) {
+  #   
+  #   rm(diagnostic.data)
+  #   
+  # }
   
-  pg.this.parent = screenedpeaks[screenedpeaks$compound_name==C3r.parent_compounds[i],]
+  ################ Perform screening #############
   
-  isodata.C3r[screenedpeaks$compound_name==C3r.parent_compounds[i]] = rep(list(pg.this.parent$match_ID),nrow(pg.this.parent))
+  cat("Performing initial screening and annotation of dataset. Compound assignments will be made from database with",match.ppm,"ppm match tolerance...\n")
   
-}
-
-cat("Found",nrow(screenedpeaks[screenedpeaks$C3r==1,]),"possible regioisomers of",length(unique(screenedpeaks$compound_name[screenedpeaks$C3r==1])),"parent compounds.\n")
-
-# check for & tag isobars (case C3c) and functional structural isomers (case C3f)
-
-cat("Now identifying and annotating isobars and possible functional structural isomers...\n")
-
-# create some lists to hold the C3f isomer/C3c isobar information
-isodata.C3c = vector(mode = "list", length = nrow(screenedpeaks))
-isodata.C3f = vector(mode = "list", length = nrow(screenedpeaks))
-
-C3f_C3c.peakdata = screenedpeaks[screenedpeaks$xcms_peakgroup %in% screenedpeaks$xcms_peakgroup[duplicated(screenedpeaks$xcms_peakgroup)],]
-C3f_C3c.peakgroups = unique(C3f_C3c.peakdata$xcms_peakgroup)
-
-for (i in 1:length(C3f_C3c.peakgroups)) {
+  pspectra = 1:length(xsA@pspectra)
   
-  IDs.this.pg = screenedpeaks[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i],]
+  casecodes = c("C1","C1x","C2a","C2b","C3c","C3f","C3r","C4","C5","C6a","C6b") # the possible case codes with which we'll be annotating each putative parent compound identification based on the data for its various adduct assignments
   
-  parent.mzs.this.pg = unique(IDs.this.pg$LOBdbase.mz)
+  screened.pspecdata = lapply(pspectra, screenPSpectrum, xsA = xsA, polarity = polarity, database = database, remove.iso = remove.iso, rt.restrict = rt.restrict, rt.windows = rt.windows, exclude.oddFA = exclude.oddFA, match.ppm = match.ppm, casecodes = casecodes)
   
-  if (length(parent.mzs.this.pg)>1) { # we have a C3c scenario
+  # extract & reformat results, plus extract some aggregate diagnostics
+  
+  screenedpeaks = as.data.frame(do.call("rbind", lapply(screened.pspecdata, function(x) x[["screened.peaktable"]])))
+  colnames(screenedpeaks)[1:6] = c("peakgroup.mz","peakgroup.mzmin","peakgroup.mzmax","peakgroup.rt","peakgroup.rtmin","peakgroup.rtmax") # to clarify distinction between DB values and observed data
+  isodata.C3r = unlist(lapply(screened.pspecdata, function(x) x[["isodata.C3r"]]), recursive = FALSE)
+  LOBscreen.diagnostics = Reduce("+",lapply(screened.pspecdata, function(x) x[["diagnostic.data"]]))
+  
+  # calculate the match delta ppm for each item in screenedpeaks
+  
+  screenedpeaks$LOBdbase.ppm.match = (screenedpeaks$LOBdbase.mz-screenedpeaks$peakgroup.mz)/screenedpeaks$LOBdbase.mz*1000000
+  
+  # append a match_ID
+  
+  screenedpeaks$match_ID = 1:nrow(screenedpeaks)
+  
+  cat("Initial screening and annotation complete.",LOBscreen.diagnostics[c("post.AIHscreen"),c("peakgroups")],"peakgroups remain in dataset, to which",LOBscreen.diagnostics[c("post.AIHscreen"),c("parent_compounds")],"parent compound identities have been assigned from database.\n\n")
+  
+  # further screening to identify isomers
+  
+  # create a matrix to keep track of isomer data
+  
+  LOBisoID.diagnostics = data.frame(matrix(data = NA, nrow = 3, ncol = 2))
+  colnames(LOBisoID.diagnostics) = c("peakgroups","parent_compounds")
+  rownames(LOBisoID.diagnostics) = c("C3r_regio.iso","C3f_funct.struct.iso","C3c_isobars")
+  
+  # check for & tag any additional "case 3r" regioisomers
+  
+  cat("Identifying and annotating possible regioisomers...\n")
+  
+  screenedpeaks$C3r[screenedpeaks$compound_name %in% screenedpeaks$compound_name[duplicated(screenedpeaks$compound_name)]] = 1 # set "C3r" for all compounds with regioisomers to 1
+  
+  C3r.peakdata = screenedpeaks[screenedpeaks$C3r==1,]
+  C3r.parent_compounds = unique(C3r.peakdata$compound_name)
+  
+  # update dataset.isodata.C3r with correct cross-references
+  
+  for (i in 1:length(C3r.parent_compounds)) {
     
-    screenedpeaks$C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = 1
-    isodata.C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = rep(list(IDs.this.pg$match_ID),nrow(IDs.this.pg))
+    pg.this.parent = screenedpeaks[screenedpeaks$compound_name==C3r.parent_compounds[i],]
+    
+    isodata.C3r[screenedpeaks$compound_name==C3r.parent_compounds[i]] = rep(list(pg.this.parent$match_ID),nrow(pg.this.parent))
     
   }
   
-  for (j in 1:length(parent.mzs.this.pg)) {
+  LOBisoID.diagnostics[c("C3r_regio.iso"),c("peakgroups","parent_compounds")] = c(nrow(screenedpeaks[screenedpeaks$C3r==1,]),length(unique(screenedpeaks$compound_name[screenedpeaks$C3r==1])))
+  
+  cat("Found",LOBisoID.diagnostics$peakgroups[1],"possible regioisomers of",LOBisoID.diagnostics$parent_compounds[1],"parent compounds.\n\n")
+  
+  # check for & tag isobars (case C3c) and functional structural isomers (case C3f)
+  
+  cat("Identifying and annotating isobars and possible functional structural isomers...\n")
+  
+  # create some lists to hold the C3f isomer/C3c isobar information
+  isodata.C3c = vector(mode = "list", length = nrow(screenedpeaks))
+  isodata.C3f = vector(mode = "list", length = nrow(screenedpeaks))
+  
+  C3f_C3c.peakdata = screenedpeaks[screenedpeaks$xcms_peakgroup %in% screenedpeaks$xcms_peakgroup[duplicated(screenedpeaks$xcms_peakgroup)],]
+  C3f_C3c.peakgroups = unique(C3f_C3c.peakdata$xcms_peakgroup)
+  
+  for (i in 1:length(C3f_C3c.peakgroups)) {
     
-    if (nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],])>1) { # we have at least 2 functional structural isomers that go together
-
-      screenedpeaks$C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = 1
-      isodata.C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = rep(list(IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]),nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],]))
+    IDs.this.pg = screenedpeaks[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i],]
+    
+    parent.mzs.this.pg = unique(IDs.this.pg$LOBdbase.mz)
+    
+    if (length(parent.mzs.this.pg)>1) { # we have a C3c scenario
+      
+      screenedpeaks$C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = 1
+      isodata.C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = rep(list(IDs.this.pg$match_ID),nrow(IDs.this.pg))
+      
+    }
+    
+    for (j in 1:length(parent.mzs.this.pg)) {
+      
+      if (nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],])>1) { # we have at least 2 functional structural isomers that go together
+        
+        screenedpeaks$C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = 1
+        isodata.C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = rep(list(IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]),nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],]))
+        
+      }
       
     }
     
   }
   
-}
+  LOBisoID.diagnostics[c("C3f_funct.struct.iso"),c("peakgroups","parent_compounds")] = c(nrow(screenedpeaks[screenedpeaks$C3f==1,]),length(unique(screenedpeaks$compound_name[screenedpeaks$C3f==1])))
+  
+  LOBisoID.diagnostics[c("C3c_isobars"),c("peakgroups","parent_compounds")] = c(nrow(screenedpeaks[screenedpeaks$C3c==1,]),length(unique(screenedpeaks$compound_name[screenedpeaks$C3c==1])))
+  
+  cat("Found",LOBisoID.diagnostics$peakgroups[2],"functional structural isomers and",LOBisoID.diagnostics$peakgroups[3],"isobars, representing",sum(LOBisoID.diagnostics$parent_compounds[c(2,3)]),"parent compounds.\n")
+  
+#   cat("Found",LOBisoID.diagnostics$peakgroups[2],"functional structural isomers and",LOBisoID.diagnostics$peakgroups[3],"isobars. These isobars are compound assignments that differ in m/z so narrowly that they cannot be resolved from each other at",match.ppm,"ppm. Together, these assignments represent",sum(LOBisoID.diagnostics$parent_compounds[c(2,3)]),"different parent compounds.\n")
+  
+  # populate screenedpeaks.casecodes
+  
+  codestrings = apply(screenedpeaks[,casecodes], c(1), function (x) casecodes[x>=1])
+  screenedpeaks$casecodes = unlist(lapply(codestrings, function(x) paste(x,collapse="; ")))
+  
+  # create LOBSet object for return to user
+  
+  object = new("LOBSet")
+  
+  object@LOBpeakdata = screenedpeaks
+  object@parent.xsAnnotate = xsA
+  object@iso.C3r = isodata.C3r
+  object@iso.C3c = isodata.C3c
+  object@iso.C3f = isodata.C3f
+  object@LOBscreen.diagnostics = LOBscreen.diagnostics
+  object@LOBisoID.diagnostics = LOBisoID.diagnostics
 
-cat("Found",nrow(screenedpeaks[screenedpeaks$C3f==1,]),"functional structural isomers and",nrow(screenedpeaks[screenedpeaks$C3c==1,]),"isobars. These isobars are compound assignments that differ in m/z so narrowly that they cannot be resolved from each other at",match.ppm,"ppm. Together, these assignments represent",(length(unique(screenedpeaks$compound_name[screenedpeaks$C3c==1]))+length(unique(screenedpeaks$compound_name[screenedpeaks$C3f==1]))),"different parent compounds.\n")
+  if (defDB==1) {
+    
+    database.used = "default"
+    
+  } else {
+    
+    database.used = "user-supplied database"
+    
+  }
+  
+  if (rt.restrict==TRUE) {
+    
+    if (defRTwin==1) {
+      
+      rt.windows.used = "default"
+      
+    } else {
+      
+      rt.windows.used = "user-supplied rt window data"
+      
+    }
+    
+  } else {
+    
+    rt.windows.used = NULL
+    
+  }
+  
+  object@LOBscreen.settings = list(database = database.used,
+                                   remove.iso = remove.iso,
+                                   rt.restrict = rt.restrict,
+                                   rt.windows = rt.windows.used,
+                                   exclude.oddFA = exclude.oddFA,
+                                   match.ppm = match.ppm)
+  
+  return(object)
+  
+}
 
 ################ Helper functions (some will be private) #############
 
@@ -350,15 +444,15 @@ loadLOBdbase = function(file, polarity, num.compounds = NULL) {
     object@frag_ID = 1:length(object@mz)
     
     cat("Database being imported doesn't appear to have field 'frag_ID'; frag_ID will be assigned sequentially based on order of entries in .csv file.\n")
-  
-    }
+    
+  }
   
   object@exact_parent_neutral_mass = as.numeric(db.rawdata[,rowSums(sapply(c("[Ee][Xx][Aa][Cc][Tt][ |\\.|_]*[Pp][Aa][Rr][Ee][Nn][Tt][ |\\.|_]*[Nn][Ee][Uu][Tt][Rr][Aa][Ll][ |\\.|_]*[Mm][Aa][Ss][Ss]","[Ee][Xx][Aa][Cc][Tt][ |\\.|_]*[Nn][Ee][Uu][Tt][Rr][Aa][Ll][ |\\.|_]*[Mm][Aa][Ss][Ss]","[Ee][Xx][Aa][Cc][Tt][ |\\.|_]*[Mm][Aa][Ss][Ss]","[Pp][Aa][Rr][Ee][Nn][Tt][ |\\.|_]*[Nn][Ee][Uu][Tt][Rr][Aa][Ll][ |\\.|_]*[Mm][Aa][Ss][Ss]"),grepl,colnames(db.rawdata),any))>0])
   
   object@lipid_class = as.factor(db.rawdata[,grepl("[Ll][Ii][Pp][Ii][Dd][ |\\.|_]*[Cc][Ll][Aa][Ss][Ss]",colnames(db.rawdata))])
   
   object@species = as.character(db.rawdata[,grepl("[Ss][Pp][Ee][Cc][Ii][Ee][Ss]",colnames(db.rawdata))])
-
+  
   object@adduct = as.factor(db.rawdata[,grepl("^[Aa][Dd][Dd][Uu][Cc][Tt]$",colnames(db.rawdata))])
   
   object@adduct_rank = as.integer(db.rawdata[,grepl("[Aa][Dd][Dd][Uu][Cc][Tt][ |\\.|_]*[Rr][Aa][Nn][Kk]",colnames(db.rawdata))])
@@ -420,7 +514,7 @@ loadLOBdbase = function(file, polarity, num.compounds = NULL) {
   if (!is.null(num.compounds)) {
     
     object@num.compounds = as.integer(num.compounds)
-  
+    
   }
   
   object
@@ -434,7 +528,7 @@ loadLOBdbase = function(file, polarity, num.compounds = NULL) {
 getformattedIsoData = function(isodata, polarity) { # input "isodata" is all or part of the @isotopes slot from a CAMERA "xsAnnotate" object
   
   polarity = match.arg(polarity, choices = c("positive","negative"), several.ok = FALSE)
-
+  
   polsym = switch(
     polarity,
     positive="+",
@@ -489,17 +583,17 @@ matchbyPPM = function(mz, database, match.ppm) { # mz is list of m/z ratios from
 extractLOBdbasedata = function(frag_ID, database) {
   
   DBdata = data.frame(as.integer(database@frag_ID[database@frag_ID==frag_ID]),
-             as.numeric(database@exact_parent_neutral_mass[database@frag_ID==frag_ID]),
-             as.numeric(database@mz[database@frag_ID==frag_ID]),
-             as.character(database@lipid_class[database@frag_ID==frag_ID]),
-             as.character(database@species[database@frag_ID==frag_ID]),
-             as.character(database@adduct[database@frag_ID==frag_ID]),
-             as.integer(database@FA_total_no_C[database@frag_ID==frag_ID]),
-             as.integer(database@FA_total_no_DB[database@frag_ID==frag_ID]),
-             as.integer(database@degree_oxidation[database@frag_ID==frag_ID]),
-             as.character(database@parent_elem_formula[database@frag_ID==frag_ID]),
-             as.character(database@parent_compound_name[database@frag_ID==frag_ID]),
-             stringsAsFactors = FALSE)
+                      as.numeric(database@exact_parent_neutral_mass[database@frag_ID==frag_ID]),
+                      as.numeric(database@mz[database@frag_ID==frag_ID]),
+                      as.character(database@lipid_class[database@frag_ID==frag_ID]),
+                      as.character(database@species[database@frag_ID==frag_ID]),
+                      as.character(database@adduct[database@frag_ID==frag_ID]),
+                      as.integer(database@FA_total_no_C[database@frag_ID==frag_ID]),
+                      as.integer(database@FA_total_no_DB[database@frag_ID==frag_ID]),
+                      as.integer(database@degree_oxidation[database@frag_ID==frag_ID]),
+                      as.character(database@parent_elem_formula[database@frag_ID==frag_ID]),
+                      as.character(database@parent_compound_name[database@frag_ID==frag_ID]),
+                      stringsAsFactors = FALSE)
   
   names(DBdata) = c("LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name")
   
@@ -626,11 +720,58 @@ trimAssignments = function(matched.frag_IDs, database, pspectrum.frag_IDs, pspec
   
 }
 
+# getLOBpeaklist: generates a peaklist from a screened & annotated LOBSet object, with options to include isotope cross-references and export to .csv 
+
+getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
+  
+  if (!class(LOBSet)=="LOBSet") {
+    
+    stop("Input 'LOBSet' is not a 'LOBSet' object.\n")
+    
+  }
+  
+  export.df = LOBSet@LOBpeakdata
+  
+  # get rid of some junk, reorder some columns
+  
+  export.df = export.df[,-c(which(colnames(export.df) %in% c("npeaks","isotopes")))]
+  leadcols = export.df[,c("match_ID","compound_name","elem_formula","LOBdbase.mz","peakgroup.mz","LOBdbase.ppm.match","peakgroup.rt")]
+  export.df = export.df[,-c(which(colnames(export.df) %in% c("match_ID","compound_name","elem_formula","LOBdbase.mz","peakgroup.mz","LOBdbase.ppm.match","peakgroup.rt")))]
+  export.df = data.frame(leadcols,export.df)
+
+  # argument-dependent options
+  
+  if (include.iso==TRUE) {
+    
+    iso.C3r.match_ID = sapply(object@iso.C3r, paste, collapse = ", ")
+    iso.C3f.match_ID = sapply(object@iso.C3f, paste, collapse = ", ")
+    iso.C3c.match_ID = sapply(object@iso.C3c, paste, collapse = ", ")
+    
+    export.df = data.frame(export.df,iso.C3r.match_ID,iso.C3f.match_ID,iso.C3c.match_ID)
+    
+  }
+  
+  if (gen.csv==TRUE) {
+    
+    output_DTG = genTimeStamp()
+    
+    fname = paste0("LOBSTAHS_screened_peakdata_",output_DTG,".csv")
+
+    write.csv(export.df, fname, row.names = FALSE)
+    
+    cat("Peak data exported to:",fname,"\n")
+    
+    
+    
+  }
+  
+}
+
 # screenPSpectrum: applies screening & annotation routine to peakgroups that belong to a given CAMERA pseudospectrum 
 
-screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, rt.restrict, rt.windows, exclude.oddFA, match.ppm) { # first argument is a CAMERA pseudospectrum; second argument is the xsA object from wrapper function; others self-explanatory or passed down from wrapper function
+screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, rt.restrict, rt.windows, exclude.oddFA, match.ppm, casecodes) { # first argument is a CAMERA pseudospectrum; second argument is the xsA object from wrapper function; others self-explanatory or passed down from wrapper function
   
-#  cat("Pseudospectrum:",pseudospectrum,"\n")
+  cat("Pseudospectrum:",pseudospectrum,"\n")
   
   # get all peakgroup and isotope data associated with the pseudospectrum, appending the xcms peakgroup number, isotope data, and the pseudospectrum number
   
@@ -651,10 +792,10 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   # define a matrix to hold diagnostic data elements
   
   diagnostic.data = data.frame(matrix(data = NA, nrow = 6, ncol = 4))
-  colnames(diagnostic.data) = c("pg","peaks","adducts","parent_compounds")
+  colnames(diagnostic.data) = c("peakgroups","peaks","adducts","parent_compounds")
   rownames(diagnostic.data) = c("initial","post.remove.iso","initial.assignments","post.rt.restrict","post.exclude.oddFA","post.AIHscreen")
   
-  diagnostic.data[c("initial"),c("pg","peaks")] = c(nrow(pgdata),sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
+  diagnostic.data[c("initial"),c("peakgroups","peaks")] = c(nrow(pgdata),sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
   
   ################# begin pre-screening ################# 
   
@@ -666,13 +807,13 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
     if (nrow(pgdata) > 0) { # we still have matches
       
-      diagnostic.data[c("post.remove.iso"),c("pg","peaks")] = 
+      diagnostic.data[c("post.remove.iso"),c("peakgroups","peaks")] = 
         c(nrow(pgdata),
           sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
       
     } else {
       
-      diagnostic.data[c("post.remove.iso"),c("pg","peaks")] = c(0,0)
+      diagnostic.data[c("post.remove.iso"),c("peakgroups","peaks")] = c(0,0)
       
     }
     
@@ -684,7 +825,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   
   if (length(unlist(init.matches)) > 0) { # we still have matches
     
-    diagnostic.data[c("initial.assignments"),c("pg","peaks","adducts","parent_compounds")] = 
+    diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","adducts","parent_compounds")] = 
       c(sum(sapply(init.matches, function(x) length(x)>0)),
         sum(pgdata[sapply(init.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
         sum(sapply(init.matches, length)),
@@ -692,7 +833,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
   } else {
     
-    diagnostic.data[c("initial.assignments"),c("pg","peaks","adducts","parent_compounds")] = c(rep(0,4))
+    diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","adducts","parent_compounds")] = c(rep(0,4))
     
   }
   
@@ -706,7 +847,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
     if (length(unlist(rt.matches)) > 0) { # we still have matches
       
-      diagnostic.data[c("post.rt.restrict"),c("pg","peaks","adducts","parent_compounds")] = 
+      diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","adducts","parent_compounds")] = 
         c(sum(sapply(rt.matches, function(x) length(x)>0)),
           sum(pgdata[sapply(rt.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
           sum(sapply(rt.matches, length)),
@@ -714,7 +855,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
       
     } else {
       
-      diagnostic.data[c("post.rt.restrict"),c("pg","peaks","adducts","parent_compounds")] = c(rep(0,4))
+      diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","adducts","parent_compounds")] = c(rep(0,4))
       
     }
     
@@ -730,7 +871,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
     if (length(unlist(evenFA.matches)) > 0) { # we still have matches
       
-      diagnostic.data[c("post.exclude.oddFA"),c("pg","peaks","adducts","parent_compounds")] = 
+      diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","adducts","parent_compounds")] = 
         c(sum(sapply(evenFA.matches, function(x) length(x)>0)),
           sum(pgdata[sapply(evenFA.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
           sum(sapply(evenFA.matches, length)),
@@ -738,7 +879,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
       
     } else {
       
-      diagnostic.data[c("post.exclude.oddFA"),c("pg","peaks","adducts","parent_compounds")] = c(rep(0,4))
+      diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","adducts","parent_compounds")] = c(rep(0,4))
       
     }
     
@@ -757,8 +898,6 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     if (length(unlist(current.matches)) > 0) { # we still have matches
       
       ################# begin adduct ion hierarchy screening ################# 
-      
-      casecodes = c("C1","C1x","C2a","C2b","C3c","C3f","C3r","C4","C5","C6a","C6b") # the possible case codes with which we'll be annotating each putative parent compound identification based on the data for its various adduct assignments
       
       current_casecodes = array(NA,c(length = length(casecodes))) # create a vector to keep track of case codes
       current_casecodes[1:length(casecodes)] = 0 # set all case codes to 0 by default
@@ -899,7 +1038,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
               # create a matrix for our results, and a list for storing any C3r isodata
               
               screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+13+length(casecodes))))
-              colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"confcodes","LOBdbase.ppm.match")
+              colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"casecodes","LOBdbase.ppm.match")
               
               # record data
               
@@ -973,13 +1112,13 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
             
             warning(paste0("Pseudospectrum ",pseudospectrum," contains an assignment for which no adduct hierarchy data are given in the database. Since only one adduct of this parent compound appears in this pseudospectrum, peak data will be reported for the lone adduct.\n"))
             
-            current_casecodes["C1x"] <- 1  # note that case 1x is true; we can't really say whether it's a case 1 or 4 since we don't know
+            current_casecodes["C1x"] = 1  # note that case 1x is true; we can't really say whether it's a case 1 or 4 since we don't know
             
-            current_casecodes["C6b"] <- 1  # note that case 6b is also true
+            current_casecodes["C6b"] = 1  # note that case 6b is also true
             
           } else if (possible.adducts.this.parent$adduct_rank[possible.adducts.this.parent$adduct==unlist(observed.adducts.this.parent)]==1) { # this is definitely a case 1 situation, proceed
             
-            current_casecodes["C1"] <- 1 # note that case 1 is true
+            current_casecodes["C1"] = 1 # note that case 1 is true
             
           } else {
             
@@ -999,9 +1138,9 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
             
           } else { # we have a case 1-case 6b scenario: 
             
-            current_casecodes["C1x"] <- 1  # note that case 1x is true; we can't really say whether it's a case 1 or 4 since we don't know
+            current_casecodes["C1x"] = 1  # note that case 1x is true; we can't really say whether it's a case 1 or 4 since we don't know
             
-            current_casecodes["C6b"] <- 1  # note that case 6b is true
+            current_casecodes["C6b"] = 1  # note that case 6b is true
             
             peakdata_to_record = cbind(pgdata[sapply(frag_IDs.this.parent, function(x) length(x)>0),],extractLOBdbasedata(as.integer(frag_IDs.this.parent[sapply(frag_IDs.this.parent, function(x) length(x)>0)]),database))
             isodata.C3r_to_record = NULL
@@ -1017,7 +1156,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
               # create a matrix for our results, and a list for storing any C3r isodata
               
               screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+13+length(casecodes))))
-              colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"confcodes","LOBdbase.ppm.match")
+              colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"casecodes","LOBdbase.ppm.match")
               
               # record data
               
@@ -1067,7 +1206,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   
   if (length(unlist(current.matches)) > 0) {
     
-    diagnostic.data[c("post.AIHscreen"),c("pg","peaks","adducts","parent_compounds")] =
+    diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","adducts","parent_compounds")] =
       c(length(unique(screened.peaktable$xcms_peakgroup)),
         sum(apply(screened.peaktable[!duplicated(screened.peaktable$xcms_peakgroup),11:(10+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0)),
         NA,
@@ -1075,7 +1214,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
   } else {
     
-    diagnostic.data[c("post.AIHscreen"),c("pg","peaks","adducts","parent_compounds")] = c(0,0,NA,0)
+    diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","adducts","parent_compounds")] = c(0,0,NA,0)
     screened.peaktable = NULL
     isodata.C3r = NULL
     
