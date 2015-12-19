@@ -9,6 +9,7 @@ xsALOB = setClass("xsALOB", contains="xsAnnotate",
                                  iso.C3c = "list",
                                  LOBdbase.frag_ID = "integer",
                                  LOBdbase.exact_parent_neutral_mass = "numeric",
+                                 LOBdbase.mz = "numeric",
                                  LOBdbase.ppm.match = "numeric",
                                  lipid_class = "factor",
                                  species = "character",
@@ -27,6 +28,7 @@ xsALOB = setClass("xsALOB", contains="xsAnnotate",
                             frag_ID = integer(0),
                             LOBdbase.frag_ID = integer(0),
                             LOBdbase.exact_parent_neutral_mass = numeric(0),
+                            LOBdbase.mz = numeric(0),
                             LOBdbase.ppm.match = numeric(0),
                             lipid_class = factor(character(0)),
                             species = character(0),
@@ -43,10 +45,6 @@ xsALOB = setClass("xsALOB", contains="xsAnnotate",
 # makeLOBAssignments: Wrapper function for screening & annotation of an xsAnnotate object
 
 makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE, rt.restrict =  TRUE, rt.windows = NULL, exclude.oddFA = TRUE, match.ppm = 2.5) { # add nSlaves option at some point?
-  
-  ################ Define some global constants #############
-  
-  casecodes <<- c("C1","C1x","C2a","C2b","C3c","C3f","C3r","C4","C5","C6a","C6b") # the possible case codes with which we'll be annotating each putative parent compound identification based on the data for its various adduct assignments
   
 ################ Check arguments, load necessary data #############
   
@@ -206,13 +204,111 @@ makeLOBAssignments = function(xsA, polarity = NULL, database = NULL, remove.iso 
   
 }
 
+# # remove any holdovers from a previous run, if they exist
+# 
+# if (exists("screened.peaktable")) {
+#   
+#   rm(screened.peaktable)
+#   
+# }
+# 
+# if (exists("isodata.C3r")) {
+#   
+#   rm(isodata.C3r)
+#   
+# }
+# 
+# if (exists("diagnostic.data")) {
+#   
+#   rm(diagnostic.data)
+#   
+# }
+
 ################ Perform screening #############
+
+cat("Performing initial screening and annotation of dataset. Compound assignments will be made from database with",match.ppm,"ppm match tolerance...\n")
 
 pspectra = 1:length(xsA@pspectra)
 
-screened.pspecdata = lapply(pspectra, screenPSpectrum, xsA, polarity = polarity, database = database, remove.iso = remove.iso, rt.restrict = rt.restrict, rt.windows = rt.windows, exclude.oddFA = exclude.oddFA, match.ppm = match.ppm)
+screened.pspecdata = lapply(pspectra, screenPSpectrum, xsA = xsA, polarity = polarity, database = database, remove.iso = remove.iso, rt.restrict = rt.restrict, rt.windows = rt.windows, exclude.oddFA = exclude.oddFA, match.ppm = match.ppm)
 
+# extract & reformat results, plus extract some aggregate diagnostics
 
+screenedpeaks = as.data.frame(do.call("rbind", lapply(screened.pspecdata, function(x) x[["screened.peaktable"]])))
+isodata.C3r = unlist(lapply(screened.pspecdata, function(x) x[["isodata.C3r"]]), recursive = FALSE)
+screening.diagnostics = Reduce("+",lapply(screened.pspecdata, function(x) x[["diagnostic.data"]]))
+
+# calculate the match delta ppm for each item in screenedpeaks
+
+screenedpeaks$LOBdbase.ppm.match = (screenedpeaks$LOBdbase.mz-screenedpeaks$mz)/screenedpeaks$LOBdbase.mz*1000000
+
+# append a match_ID
+
+screenedpeaks$match_ID = 1:nrow(screenedpeaks)
+
+cat("Initial screening and annotation complete.",screening.diagnostics[c("post.AIHscreen"),c("pg")],"peakgroups remain in dataset, to which",screening.diagnostics[c("post.AIHscreen"),c("parent_compounds")],"parent compound identities have been assigned from database.\n")
+
+# further screening to identify isomers
+
+# check for & tag any additional "case 3r" regioisomers
+
+cat("Now identifying and annotating possible regioisomers...\n")
+
+screenedpeaks$C3r[screenedpeaks$compound_name %in% screenedpeaks$compound_name[duplicated(screenedpeaks$compound_name)]] = 1 # set "C3r" for all compounds with regioisomers to 1
+
+C3r.peakdata = screenedpeaks[screenedpeaks$C3r==1,]
+C3r.parent_compounds = unique(C3r.peakdata$compound_name)
+
+# update dataset.isodata.C3r with correct cross-references
+
+for (i in 1:length(C3r.parent_compounds)) {
+  
+  pg.this.parent = screenedpeaks[screenedpeaks$compound_name==C3r.parent_compounds[i],]
+  
+  isodata.C3r[screenedpeaks$compound_name==C3r.parent_compounds[i]] = rep(list(pg.this.parent$match_ID),nrow(pg.this.parent))
+  
+}
+
+cat("Found",nrow(screenedpeaks[screenedpeaks$C3r==1,]),"possible regioisomers of",length(unique(screenedpeaks$compound_name[screenedpeaks$C3r==1])),"parent compounds.\n")
+
+# check for & tag isobars (case C3c) and functional structural isomers (case C3f)
+
+cat("Now identifying and annotating isobars and possible functional structural isomers...\n")
+
+# create some lists to hold the C3f isomer/C3c isobar information
+isodata.C3c = vector(mode = "list", length = nrow(screenedpeaks))
+isodata.C3f = vector(mode = "list", length = nrow(screenedpeaks))
+
+C3f_C3c.peakdata = screenedpeaks[screenedpeaks$xcms_peakgroup %in% screenedpeaks$xcms_peakgroup[duplicated(screenedpeaks$xcms_peakgroup)],]
+C3f_C3c.peakgroups = unique(C3f_C3c.peakdata$xcms_peakgroup)
+
+for (i in 1:length(C3f_C3c.peakgroups)) {
+  
+  IDs.this.pg = screenedpeaks[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i],]
+  
+  parent.mzs.this.pg = unique(IDs.this.pg$LOBdbase.mz)
+  
+  if (length(parent.mzs.this.pg)>1) { # we have a C3c scenario
+    
+    screenedpeaks$C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = 1
+    isodata.C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = rep(list(IDs.this.pg$match_ID),nrow(IDs.this.pg))
+    
+  }
+  
+  for (j in 1:length(parent.mzs.this.pg)) {
+    
+    if (nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],])>1) { # we have at least 2 functional structural isomers that go together
+
+      screenedpeaks$C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = 1
+      isodata.C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = rep(list(IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]),nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],]))
+      
+    }
+    
+  }
+  
+}
+
+cat("Found",nrow(screenedpeaks[screenedpeaks$C3f==1,]),"functional structural isomers and",nrow(screenedpeaks[screenedpeaks$C3c==1,]),"isobars. These isobars are compound assignments that differ in m/z so narrowly that they cannot be resolved from each other at",match.ppm,"ppm. Together, these assignments represent",(length(unique(screenedpeaks$compound_name[screenedpeaks$C3c==1]))+length(unique(screenedpeaks$compound_name[screenedpeaks$C3f==1]))),"different parent compounds.\n")
 
 ################ Helper functions (some will be private) #############
 
@@ -392,8 +488,9 @@ matchbyPPM = function(mz, database, match.ppm) { # mz is list of m/z ratios from
 
 extractLOBdbasedata = function(frag_ID, database) {
   
-  DBdata = c(as.integer(database@frag_ID[database@frag_ID==frag_ID]),
+  DBdata = data.frame(as.integer(database@frag_ID[database@frag_ID==frag_ID]),
              as.numeric(database@exact_parent_neutral_mass[database@frag_ID==frag_ID]),
+             as.numeric(database@mz[database@frag_ID==frag_ID]),
              as.character(database@lipid_class[database@frag_ID==frag_ID]),
              as.character(database@species[database@frag_ID==frag_ID]),
              as.character(database@adduct[database@frag_ID==frag_ID]),
@@ -401,12 +498,13 @@ extractLOBdbasedata = function(frag_ID, database) {
              as.integer(database@FA_total_no_DB[database@frag_ID==frag_ID]),
              as.integer(database@degree_oxidation[database@frag_ID==frag_ID]),
              as.character(database@parent_elem_formula[database@frag_ID==frag_ID]),
-             as.character(database@parent_compound_name[database@frag_ID==frag_ID]))
+             as.character(database@parent_compound_name[database@frag_ID==frag_ID]),
+             stringsAsFactors = FALSE)
   
-  names(DBdata) = c("LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name")
+  names(DBdata) = c("LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name")
   
-  return(DBdata)
-
+  DBdata
+  
 }
 
 # evalFeatureRT: evaluates retention times of xcms peakgroups to which putative database assignments have been made against retention time window restrictions supplied by user 
@@ -467,13 +565,17 @@ excludeoddFAlength = function(matched.frag_IDs, database) {
   
   ID.eval = rep(TRUE, length(matched.frag_IDs)) # vector of logicals to record of the compliance of each assignment
   
-  if (length(matched.frag_IDs)>0) { # matches were made to this feature 
+  if (length(matched.frag_IDs)>0) { # matches were made to this feature
     
     for (i in 1:length(matched.frag_IDs)) {
       
-      if (database@FA_total_no_C[database@frag_ID==matched.frag_IDs[i]]%%2!=0) {
+      if (database@lipid_class[database@frag_ID==matched.frag_IDs[i]] %in% c("IP_DAG","PUA","DNPPE","TAG")) {
         
-        ID.eval[i] = FALSE
+        if (database@FA_total_no_C[database@frag_ID==matched.frag_IDs[i]]%%2!=0) {
+          
+          ID.eval[i] = FALSE
+          
+        }
         
       }
       
@@ -528,6 +630,8 @@ trimAssignments = function(matched.frag_IDs, database, pspectrum.frag_IDs, pspec
 
 screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, rt.restrict, rt.windows, exclude.oddFA, match.ppm) { # first argument is a CAMERA pseudospectrum; second argument is the xsA object from wrapper function; others self-explanatory or passed down from wrapper function
   
+#  cat("Pseudospectrum:",pseudospectrum,"\n")
+  
   # get all peakgroup and isotope data associated with the pseudospectrum, appending the xcms peakgroup number, isotope data, and the pseudospectrum number
   
   pgdata = xsA@groupInfo[xsA@pspectra[[pseudospectrum]],] # get pg data
@@ -535,6 +639,12 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   CAMERA_pseudospectrum = rep(pseudospectrum,length(pgdata)/ncol(xsA@groupInfo)) # create a vector that captures this ps number
   isodata = xsA@isotopes[xcms_peakgroup] # extract isotope data
   isotopes = as.character(sapply(isodata, getformattedIsoData, polarity = polarity)) # generate isotope strings
+  
+  if (length(pgdata)<=26) {
+    
+    pgdata = t(pgdata) 
+    
+  }
   
   pgdata = data.frame(pgdata, xcms_peakgroup, isotopes, CAMERA_pseudospectrum, stringsAsFactors = FALSE) # combine into data frame
   
@@ -554,21 +664,37 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
     pgdata = pgdata[(pgdata$isotopes=="") | (grepl("\\[M\\]\\+$",pgdata$isotopes)),]
     
-    diagnostic.data[c("post.remove.iso"),c("pg","peaks")] = 
-      c(nrow(pgdata),
-        sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
+    if (nrow(pgdata) > 0) { # we still have matches
+      
+      diagnostic.data[c("post.remove.iso"),c("pg","peaks")] = 
+        c(nrow(pgdata),
+          sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
+      
+    } else {
+      
+      diagnostic.data[c("post.remove.iso"),c("pg","peaks")] = c(0,0)
+      
+    }
     
   }
   
   # get initial matches, record results
   
-  init.matches = sapply(pgdata$mz, matchbyPPM, database = database, match.ppm = match.ppm) # returns list of frag_IDs of potential matches to the mz of each peakgroup in this pseudospectrum
+  init.matches = lapply(pgdata$mz, matchbyPPM, database = database, match.ppm = match.ppm) # returns list of frag_IDs of potential matches to the mz of each peakgroup in this pseudospectrum
   
-  diagnostic.data[c("initial.assignments"),c("pg","peaks","adducts","parent_compounds")] = 
-    c(sum(sapply(init.matches, function(x) length(x)>0)),
-      sum(pgdata[sapply(init.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
-      sum(sapply(init.matches, length)),
-      length(unique(database@parent_compound_name[unlist(init.matches)])))
+  if (length(unlist(init.matches)) > 0) { # we still have matches
+    
+    diagnostic.data[c("initial.assignments"),c("pg","peaks","adducts","parent_compounds")] = 
+      c(sum(sapply(init.matches, function(x) length(x)>0)),
+        sum(pgdata[sapply(init.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+        sum(sapply(init.matches, length)),
+        length(unique(database@parent_compound_name[unlist(init.matches)])))
+    
+  } else {
+    
+    diagnostic.data[c("initial.assignments"),c("pg","peaks","adducts","parent_compounds")] = c(rep(0,4))
+    
+  }
   
   current.matches = init.matches
   
@@ -576,13 +702,21 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   
   if (rt.restrict==TRUE) {
     
-    rt.matches = mapply(evalFeatureRT, matched.frag_IDs = current.matches, assignment.rt = pgdata$rt, MoreArgs =  list(database = database, rt.windows = rt.windows))
+    rt.matches = mapply(evalFeatureRT, matched.frag_IDs = current.matches, assignment.rt = pgdata$rt, MoreArgs =  list(database = database, rt.windows = rt.windows), SIMPLIFY = FALSE)
     
-    diagnostic.data[c("post.rt.restrict"),c("pg","peaks","adducts","parent_compounds")] = 
-      c(sum(sapply(rt.matches, function(x) length(x)>0)),
-        sum(pgdata[sapply(rt.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
-        sum(sapply(rt.matches, length)),
-        length(unique(database@parent_compound_name[unlist(rt.matches)])))
+    if (length(unlist(rt.matches)) > 0) { # we still have matches
+      
+      diagnostic.data[c("post.rt.restrict"),c("pg","peaks","adducts","parent_compounds")] = 
+        c(sum(sapply(rt.matches, function(x) length(x)>0)),
+          sum(pgdata[sapply(rt.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+          sum(sapply(rt.matches, length)),
+          length(unique(database@parent_compound_name[unlist(rt.matches)])))
+      
+    } else {
+      
+      diagnostic.data[c("post.rt.restrict"),c("pg","peaks","adducts","parent_compounds")] = c(rep(0,4))
+      
+    }
     
     current.matches = rt.matches
     
@@ -594,11 +728,19 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
     
     evenFA.matches = lapply(current.matches, excludeoddFAlength, database = database)
     
-    diagnostic.data[c("post.exclude.oddFA"),c("pg","peaks","adducts","parent_compounds")] = 
-      c(sum(sapply(evenFA.matches, function(x) length(x)>0)),
-        sum(pgdata[sapply(evenFA.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
-        sum(sapply(evenFA.matches, length)),
-        length(unique(database@parent_compound_name[unlist(evenFA.matches)])))
+    if (length(unlist(evenFA.matches)) > 0) { # we still have matches
+      
+      diagnostic.data[c("post.exclude.oddFA"),c("pg","peaks","adducts","parent_compounds")] = 
+        c(sum(sapply(evenFA.matches, function(x) length(x)>0)),
+          sum(pgdata[sapply(evenFA.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+          sum(sapply(evenFA.matches, length)),
+          length(unique(database@parent_compound_name[unlist(evenFA.matches)])))
+      
+    } else {
+      
+      diagnostic.data[c("post.exclude.oddFA"),c("pg","peaks","adducts","parent_compounds")] = c(rep(0,4))
+      
+    }
     
     current.matches = evenFA.matches
     
@@ -606,193 +748,341 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   
   # eliminate case C4/C5 assignments; i.e., those assignments representing adducts of lesser theoretical abundance where the most abundant adduct of the same parent is not present; should leave us with only adducts of abundance rank = 1, and those lesser adducts for which the most abundant adduct is also present
   
-  pspectrum.compound_names = database@parent_compound_name[sapply(unlist(current.matches), match, database@frag_ID)]
-  
-  current.matches = lapply(current.matches, trimAssignments, database = database, pspectrum.frag_IDs = unlist(current.matches), pspectrum.compound_names = pspectrum.compound_names)
-  
-  ################# begin adduct ion hierarchy screening ################# 
-  
-  current_casecodes <- array(NA,c(length = length(casecodes))) # create a vector to keep track of case codes
-  current_casecodes[1:length(casecodes)] <- 0 # set all case codes to 0 by default
-  names(current_casecodes) <- casecodes # label columns
-  
-  row.counter = 0 # set a counter so we know how to build screened.peaktable
-  
-  ################# case 2a/2b/3r ################# 
-  
-  parent.compounds.current.matches = lapply(current.matches, function(x) database@parent_compound_name[database@frag_ID %in% x]) # obtain list of parent compounds of all matches still remaining in this pseudospectrum
-  multiadduct.parent.compounds = unique(unlist(parent.compounds.current.matches)[duplicated(unlist(parent.compounds.current.matches))]) # get list of compounds still remaining in the pseudospectrum which appear in assignments to more than one peakgroup (these will be case 2a, 2b, and 3r assignments; note that we will also have to check for case 3r assignments again later, in case there are some which gap across pseudospectra) 
-  adducts.current.matches = lapply(current.matches, function(x) database@adduct[database@frag_ID %in% x])
-  ranks.current..matches = lapply(current.matches, function(x) database@adduct_rank[database@frag_ID %in% x])
-  
-  if (length(multiadduct.parent.compounds) > 0) {  # if we don't have any potential case 2a/2b/3r species, skip this part
+  if (length(unlist(current.matches)) > 0) { # we still have matches
     
-    for (i in 1:length(multiadduct.parent.compounds)) {
+    pspectrum.compound_names = database@parent_compound_name[sapply(unlist(current.matches), match, database@frag_ID)]
+    
+    current.matches = lapply(current.matches, trimAssignments, database = database, pspectrum.frag_IDs = unlist(current.matches), pspectrum.compound_names = pspectrum.compound_names)
+    
+    if (length(unlist(current.matches)) > 0) { # we still have matches
       
-      observed.adducts.this.parent = mapply(function(x,y) as.character(x[y==multiadduct.parent.compounds[i]]), adducts.current.matches, parent.compounds.current.matches) # return all observed adducts of this case 2/3r parent compound appearing in this pseudospectrum
+      ################# begin adduct ion hierarchy screening ################# 
       
-      print(multiadduct.parent.compounds[i])
-      print(unlist(observed.adducts.this.parent))
+      casecodes = c("C1","C1x","C2a","C2b","C3c","C3f","C3r","C4","C5","C6a","C6b") # the possible case codes with which we'll be annotating each putative parent compound identification based on the data for its various adduct assignments
       
-      frag_IDs.this.parent = mapply(function(x,y) as.character(x[y==multiadduct.parent.compounds[i]]), current.matches, parent.compounds.current.matches) # return all frag_IDs for this case 2/3r parent compound appearing in this pseudospectrum
+      current_casecodes = array(NA,c(length = length(casecodes))) # create a vector to keep track of case codes
+      current_casecodes[1:length(casecodes)] = 0 # set all case codes to 0 by default
+      names(current_casecodes) = casecodes # label columns
       
-      adduct_distribution.this.pspectrum <- table(unlist(observed.adducts.this.parent)) # use the assignments involving this parent compound to obtain the distribution of its adducts in this pseudospectrum
+      ################# resolution of case 2a/2b/3r ################# 
       
-      possible.adducts.this.parent = data.frame(as.character(database@adduct[database@parent_compound_name==multiadduct.parent.compounds[i]]),database@adduct_rank[database@parent_compound_name==multiadduct.parent.compounds[i]])
-      colnames(possible.adducts.this.parent) = c("adduct","adduct_rank") # return list of possible adducts for this parent compound from the database
+      parent.compounds.current.matches = lapply(current.matches, function(x) database@parent_compound_name[database@frag_ID %in% x]) # obtain list of parent compounds of all matches still remaining in this pseudospectrum
+      multiadduct.parent.compounds = unique(unlist(parent.compounds.current.matches)[duplicated(unlist(parent.compounds.current.matches))]) # get list of compounds in the pseudospectrum for which we ID'd more than one adduct (these will be case 2a, 2b, and 3r assignments; note that we will also have to check for case 3r assignments again later, in case there are some which gap across pseudospectra) 
+      adducts.current.matches = lapply(current.matches, function(x) database@adduct[database@frag_ID %in% x])
+      ranks.current..matches = lapply(current.matches, function(x) database@adduct_rank[database@frag_ID %in% x])
       
-      possible.adducts.this.parent <- possible.adducts.this.parent[order(possible.adducts.this.parent$adduct_rank, decreasing = TRUE, na.last = FALSE),] # reorder the list of possible adducts to iterate through them; must return any NA's (i.e., any adducts for which ranking was not given in DB) first so that rest of code works ok
-      
-      for (j in 1:nrow(possible.adducts.this.parent)) { # iterate through the list of all possible adducts from least to most abundant, checking to see whether we made an assignment for each one
+      if (length(multiadduct.parent.compounds) > 0) {  # if we don't have any potential case 2a/2b/3r species, skip this part
         
-        if (!is.na(adduct_distribution.this.pspectrum[as.character(possible.adducts.this.parent$adduct[j])]) && adduct_distribution.this.pspectrum[as.character(possible.adducts.this.parent$adduct[j])]>=1) { # at least one peak was identified in the data for this adduct
+        for (i in 1:length(multiadduct.parent.compounds)) {
           
-          possible.adducts.this.parent$present_in_pspectrum[j]=1 # mark this adduct as being present in the pseudospectrum
-          possible.adducts.this.parent$num_times_present[j]=adduct_distribution.this.pspectrum[as.character(possible.adducts.this.parent$adduct[j])] # indicate number of different peakgroups identified as this adduct
+          observed.adducts.this.parent = mapply(function(x,y) as.character(x[y==multiadduct.parent.compounds[i]]), adducts.current.matches, parent.compounds.current.matches) # return all observed adducts of this case 2/3r parent compound appearing in this pseudospectrum
           
-        } else { # assume no peak was identified for this adduct
+          frag_IDs.this.parent = mapply(function(x,y) as.character(x[y==multiadduct.parent.compounds[i]]), current.matches, parent.compounds.current.matches) # return all frag_IDs for this case 2/3r parent compound appearing in this pseudospectrum
           
-          possible.adducts.this.parent$present_in_pspectrum[j]=0 # mark this adduct as being absent from the data
-          possible.adducts.this.parent$num_times_present[j]=0 # indicate number of different peaks identified as this adduct (0)
+          adduct_distribution.this.pspectrum = table(unlist(observed.adducts.this.parent)) # use the assignments involving this parent compound to obtain the distribution of its adducts in this pseudospectrum
+          
+          possible.adducts.this.parent = data.frame(as.character(database@adduct[database@parent_compound_name==multiadduct.parent.compounds[i]]),database@adduct_rank[database@parent_compound_name==multiadduct.parent.compounds[i]])
+          colnames(possible.adducts.this.parent) = c("adduct","adduct_rank") # return list of possible adducts for this parent compound from the database
+          
+          possible.adducts.this.parent = possible.adducts.this.parent[order(possible.adducts.this.parent$adduct_rank, decreasing = TRUE, na.last = FALSE),] # reorder the list of possible adducts to iterate through them; must return any NA's (i.e., any adducts for which ranking was not given in DB) first so that rest of code works ok
+          
+          for (j in 1:nrow(possible.adducts.this.parent)) { # iterate through the list of all possible adducts from least to most abundant, checking to see whether we made an assignment for each one
+            
+            if (!is.na(adduct_distribution.this.pspectrum[as.character(possible.adducts.this.parent$adduct[j])]) && adduct_distribution.this.pspectrum[as.character(possible.adducts.this.parent$adduct[j])]>=1) { # at least one peak was identified in the data for this adduct
+              
+              possible.adducts.this.parent$present_in_pspectrum[j]=1 # mark this adduct as being present in the pseudospectrum
+              possible.adducts.this.parent$num_times_present[j]=adduct_distribution.this.pspectrum[as.character(possible.adducts.this.parent$adduct[j])] # indicate number of different peakgroups identified as this adduct
+              
+            } else { # assume no peak was identified for this adduct
+              
+              possible.adducts.this.parent$present_in_pspectrum[j]=0 # mark this adduct as being absent from the data
+              possible.adducts.this.parent$num_times_present[j]=0 # indicate number of different peaks identified as this adduct (0)
+              
+            }
+            
+          }
+          
+          ################# case 6 check #############
+          
+          # before continuing evaluation of case 2a/2b/3r parent compounds, first check to see whether they happen to be case 6's, then proceed accordingly
+          
+          if (!all(is.na(possible.adducts.this.parent$adduct_rank))) { # either we have a case 6a situation, or no case 6 at all; either way, proceed with evaluation of case 2a/2b/3r parent compounds
+            
+            if (any(is.na(possible.adducts.this.parent$adduct_rank))) { # we have a case 6a situation
+              
+              current_casecodes["C6a"] = 1 # note that case 6a is true
+              
+            }
+            
+            # apply subrules to the case 2a/2b/3r assignments for this parent compound
+            # Note that the way i've coded this, using independent "if" statments, some subrule assignments will be nonexclusive; i.e., the script can tag a particular parent compound as both case 3r and 2a or 2b if it meets the minimum criteria for each
+            
+            # case 3r: we have multiple assignments of the dominant adduct of the same putative parent compound, and this is because we've identified > 1 peakgroup in this pseudospectrum representing the same dominant adduct 
+            
+            if (possible.adducts.this.parent$num_times_present[possible.adducts.this.parent$adduct_rank==1]>1) { # parent compound is case 3r
+              
+              current_casecodes["C3r"] = 1 # note that case 3r is true
+              
+              if (sum((adduct_distribution.this.pspectrum>=1))==1) { # this is a case 1-case 3r compound
+                
+                current_casecodes["C1"] = 1 # note that case 1 is true
+                
+              }
+              
+            }
+            
+            # case 2a or 2b: we have multiple assignments for the same putative parent compound, and this is because we've identified multiple peaks representing different adducts
+            
+            if (sum((adduct_distribution.this.pspectrum>=1))>1) { # putative parent compound is case 2a/2b... but, have to determine which subtybe
+              
+              # case 2a: the different adducts identified strictly satisfy the hypothesized adduct hierarchy for this parent compound, i.e., we have identified a peakgroup in this pseudospectrum for every adduct more abundant than the least abundant adduct in the pseudospectrum (however, this does not mean we have to have identified a peakgroup in the pseudospectrum for EVERY possible adduct of this parent compound)
+              
+              adduct_theoretically_least = match(1,possible.adducts.this.parent$present_in_pspectrum) # of the adducts present in the pseudospectrum, this one should be the least abundant according to the rules; for case 2a to be satisfied, we must then have in the pseudospectrum all adducts which are supposed to be more abundant than this one
+              
+              if (sum(possible.adducts.this.parent$present_in_pspectrum[adduct_theoretically_least:nrow(possible.adducts.this.parent)]) == nrow(possible.adducts.this.parent) - adduct_theoretically_least + 1 ) { # parent compound is case 2a
+                
+                current_casecodes["C2a"] = 1 # note that case 2a is true
+                
+              }
+              
+              # case 2b: the different adducts identified do not perfectly satisfy the hypothesized adduct hierarchy for this putative parent compound, but we consider it a good parent compound match because the adduct which should be most abundant according to the rules is present in the pseudospectrum; in this case, some adducts of intermediate hypothesized abundance may be absent from the pseudospectrum while some other less abundant adducts are present, however the adduct which should be most abundant is definitely present
+              
+              if ((sum(possible.adducts.this.parent$present_in_pspectrum[adduct_theoretically_least:nrow(possible.adducts.this.parent)]) < nrow(possible.adducts.this.parent) - adduct_theoretically_least + 1 ) & possible.adducts.this.parent$present_in_pspectrum[nrow(possible.adducts.this.parent)]==1) { # parent compound is case 2b
+                
+                current_casecodes["C2b"] = 1 # note that case 2b is true
+                
+              }
+              
+            }
+            
+            # last order of business before moving onto the next case 2a/2b/3r species in this pseudospectrum: select and then write to the results array the appropriate data for the current parent compound
+            # method: we will use the rules to determine the particular adduct of this parent compound from which we will pull the data
+            # if the parent compound is case 2a or 2b, the adduct which should be most abundant is present in pseudospectrum --> record data for this adduct, regardless of whether it is actually the most abundant in this particular pseudospectrum; as long as we are consistent in applying this throughout the experiment, we should be ok since we're only really concerned with relative changes between samples
+            # if the parent compound is case 3r, we have a slightly more complicated situation (because >= 2 regioisomers of the species were simultaneously identified in the pseudospectrum); we will record data for all of these assignments by inserting as many additional row(s) as is necessary
+            # lastly, if the parent compound is case 6b, warn user
+            
+            if ((current_casecodes["C2a"]==1 | current_casecodes["C2b"]==1) & possible.adducts.this.parent$num_times_present[nrow(possible.adducts.this.parent)]==1) { # 2a or 2b, and we identified only a single peak for the adduct of theoretical greatest abundance  --> use data for this single peak assignment
+              
+              peakdata_to_record = cbind(pgdata[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent,],extractLOBdbasedata(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]),database))
+              isodata.C3r_to_record = NULL
+              
+            } else if ((current_casecodes["C3r"]==1 & possible.adducts.this.parent$num_times_present[nrow(possible.adducts.this.parent)]>1)) { # C3r, with more than one assignment at different retention times for the adduct that should most abundant
+              
+              LOBdbdata.thisparent = t(sapply(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]), extractLOBdbasedata, database = database, simplify = FALSE))
+              LOBdbdata.thisparent = as.data.frame(do.call("rbind", lapply(LOBdbdata.thisparent, function(x) x)))
+              
+              peakdata_to_record = cbind(pgdata[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent,],LOBdbdata.thisparent)
+              isodata.C3r_to_record = as.integer(peakdata_to_record[[c("xcms_peakgroup")]])
+              
+            }
+            
+          } else { # we have a case 6b situation: unable to determine what data to record
+            
+            warning(paste0("Pseudospectrum ",pseudospectrum," contains an assignment for which no adduct hierarchy data are given in the database. Cannot determine what peak data to report for this pseudospectrum.\n"))
+            
+            current_casecodes["C6b"] = 1 # note that case 6b is true
+            
+            LOBdbdata.thisparent = t(sapply(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]), extractLOBdbasedata, database = database, simplify = FALSE))
+            LOBdbdata.thisparent = as.data.frame(do.call("rbind", lapply(LOBdbdata.thisparent, function(x) x)))
+            
+            peakdata_to_record = cbind(matrix(nrow = nrow(LOBdbdata.thisparent), ncol = 29),LOBdbdata.thisparent)
+            isodata.C3r_to_record = NULL
+            
+          }
+          
+          # now, insert/append the peakdata and case codes for this parent compound into screened.peaktable and isodata.C3r
+          
+          if (exists("peakdata_to_record")) { # only force insertion if there's data
+            
+            if (!exists("screened.peaktable")) { # it's the first peaktable entry
+              
+              # create a matrix for our results, and a list for storing any C3r isodata
+              
+              screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+13+length(casecodes))))
+              colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"confcodes","LOBdbase.ppm.match")
+              
+              # record data
+              
+              screened.peaktable[,1:51] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
+              
+            } else { # it's not the first sample, so rbind
+              
+              peakdata_to_record = cbind(peakdata_to_record,
+                                         t(replicate(nrow(peakdata_to_record),current_casecodes)),
+                                         matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = 2))
+              
+              colnames(peakdata_to_record) = colnames(screened.peaktable)
+              
+              screened.peaktable = rbind(screened.peaktable,
+                                         peakdata_to_record)
+              
+            }
+            
+            if (!exists("isodata.C3r")) { # it's the first isodata.C3r entry
+              
+              isodata.C3r = vector("list", nrow(peakdata_to_record))
+              isodata.C3r[1:nrow(peakdata_to_record)] = rep(list(isodata.C3r_to_record),nrow(peakdata_to_record))
+              
+            } else { # it's not the first entry
+              
+              isodata.C3r = append(isodata.C3r, rep(list(isodata.C3r_to_record),nrow(peakdata_to_record)))
+              
+            }
+            
+            # finally, reset/remove our casecode and peakdata_to_record vectors before proceeding
+            
+            rm(peakdata_to_record)
+            
+          }
+          
+          current_casecodes[1:length(current_casecodes)] = 0
           
         }
         
       }
       
-      print(possible.adducts.this.parent)
+      ################# resolution of case 1 species #############
       
-      ################# case 6 check #############
+      single_adduct.parent.compounds = unlist(parent.compounds.current.matches)[!duplicated(unlist(parent.compounds.current.matches),fromLast = FALSE)&!duplicated(unlist(parent.compounds.current.matches),fromLast = TRUE)] # get list of compounds for which we ID'd only one adduct in this pseudospectrum (case 1 compounds; should be all those parent compounds that we did not ID as case 2a/2b/3r above)
       
-      # before continuing evaluation of case 2a/2b/3r parent compounds, first check to see whether they happen to be case 6's, then proceed accordingly
-      
-      if (!all(is.na(possible.adducts.this.parent$adduct_rank))) { # either we have a case 6a situation, or no case 6 at all; either way, proceed with evaluation of case 2a/2b/3r parent compounds
+      if (length(single_adduct.parent.compounds) > 0) {  # if we don't have any case 1 species, skip this part
         
-        if (any(is.na(possible.adducts.this.parent$adduct_rank))) { # we have a case 6a situation
+        for (l in 1:length(single_adduct.parent.compounds)) { # cycle through each of the case 1 putative compounds in this sample  
           
-          current_casecodes["C6a"] <- 1 # note that case 6a is true
+          frag_IDs.this.parent = mapply(function(x,y) as.character(x[y==single_adduct.parent.compounds[l]]), current.matches, parent.compounds.current.matches) # return frag_ID (there should be only one) for this case 1 parent compound appearing in this pseudospectrum
           
-        }
-        
-        # apply subrules to the case 2a/2b/3r assignments for this parent compound
-        # Note that the way i've coded this, using independent "if" statments, some subrule assignments will be nonexclusive; i.e., the script can tag a particular parent compound as both case 3r and 2a or 2b if it meets the minimum criteria for each
-        
-        # case 3r: we have multiple assignments of the dominant adduct of the same putative parent compound, and this is because we've identified > 1 peakgroup in this pseudospectrum representing the same dominant adduct 
-        
-        if (possible.adducts.this.parent$num_times_present[possible.adducts.this.parent$adduct_rank==1]>1) { # parent compound is case 3r
+          if (length(unlist(frag_IDs.this.parent))!=1) { # check to make sure there's only one assignment for this parent compound in this particular pseudospectrum (otherwise something's wrong with the code)
+            
+            stop(paste0("More than one assignment remaining in pseudospectrum ",pseudospectrum," for a case 1 compound. Something is wrong! Please capture conditions leading to this error and send to developer.\n")) # stop script if this is the case
+            
+          }
           
-          current_casecodes["C3r"] <- 1 # note that case 3r is true
+          observed.adducts.this.parent = mapply(function(x,y) as.character(x[y==single_adduct.parent.compounds[l]]), adducts.current.matches, parent.compounds.current.matches) # return observed adduct (there should be only one) of this case 1 parent compound appearing in this pseudospectrum
           
-          if (sum((adduct_distribution.this.pspectrum>=1))==1) { # this is a case 1-case 3r compound
+          possible.adducts.this.parent = data.frame(as.character(database@adduct[database@parent_compound_name==single_adduct.parent.compounds[l]]),database@adduct_rank[database@parent_compound_name==single_adduct.parent.compounds[l]])
+          colnames(possible.adducts.this.parent) = c("adduct","adduct_rank") # return list of possible adducts for this parent compound from the database
+          possible.adducts.this.parent = possible.adducts.this.parent[order(possible.adducts.this.parent$adduct_rank, decreasing = TRUE, na.last = FALSE),] # reorder the list of possible adducts
+          
+          # another final check to make sure this is a case 1 species
+          
+          ################# case 6 check #############
+          
+          # before continuing, check again to see whether we have a case 6 situation, then proceed accordingly
+          
+          if (is.na(possible.adducts.this.parent$adduct_rank[possible.adducts.this.parent$adduct==unlist(observed.adducts.this.parent)])) { # we have a case 6b-1x situation; we ID'd a single peak representing only one good adduct for this parent compound, but we don't know how it ranks since there's no ranking data in the DB
+            
+            warning(paste0("Pseudospectrum ",pseudospectrum," contains an assignment for which no adduct hierarchy data are given in the database. Since only one adduct of this parent compound appears in this pseudospectrum, peak data will be reported for the lone adduct.\n"))
+            
+            current_casecodes["C1x"] <- 1  # note that case 1x is true; we can't really say whether it's a case 1 or 4 since we don't know
+            
+            current_casecodes["C6b"] <- 1  # note that case 6b is also true
+            
+          } else if (possible.adducts.this.parent$adduct_rank[possible.adducts.this.parent$adduct==unlist(observed.adducts.this.parent)]==1) { # this is definitely a case 1 situation, proceed
             
             current_casecodes["C1"] <- 1 # note that case 1 is true
             
-          }
-          
-        }
-        
-        # case 2a or 2b: we have multiple assignments for the same putative parent compound, and this is because we've identified multiple peaks representing different adducts
-        
-        if (sum((adduct_distribution.this.pspectrum>=1))>1) { # putative parent compound is case 2a/2b... but, have to determine which subtybe
-          
-          # case 2a: the different adducts identified strictly satisfy the hypothesized adduct hierarchy for this parent compound, i.e., we have identified a peakgroup in this pseudospectrum for every adduct more abundant than the least abundant adduct in the pseudospectrum (however, this does not mean we have to have identified a peakgroup in the pseudospectrum for EVERY possible adduct of this parent compound)
-          
-          adduct_theoretically_least <- match(1,possible.adducts.this.parent$present_in_pspectrum) # of the adducts present in the pseudospectrum, this one should be the least abundant according to the rules; for case 2a to be satisfied, we must then have in the pseudospectrum all adducts which are supposed to be more abundant than this one
-          
-          if (sum(possible.adducts.this.parent$present_in_pspectrum[adduct_theoretically_least:nrow(possible.adducts.this.parent)]) == nrow(possible.adducts.this.parent) - adduct_theoretically_least + 1 ) { # parent compound is case 2a
+          } else {
             
-            current_casecodes["C2a"] <- 1 # note that case 2a is true
+            stop("Adduct rank data for this parent compound appear to be incorrect. Aborting...\n")
             
           }
           
-          # case 2b: the different adducts identified do not perfectly satisfy the hypothesized adduct hierarchy for this putative parent compound, but we consider it a good parent compound match because the adduct which should be most abundant according to the rules is present in the pseudospectrum; in this case, some adducts of intermediate hypothesized abundance may be absent from the pseudospectrum while some other less abundant adducts are present, however the adduct which should be most abundant is definitely present
+          # last order of business before moving onto the next case 1 parent compound in this sample: select and then write to the screened.peakdata results array the data for the current parent compound
+          # method: we will use the rules (pretty simple for case 1 IDs) to determine whether data gets written or not
+          # if the ID is case 1 --> record data for this adduct
+          # if the species is case 6b and only one adduct was identified, record data for that adduct 
           
-          if ((sum(possible.adducts.this.parent$present_in_pspectrum[adduct_theoretically_least:nrow(possible.adducts.this.parent)]) < nrow(possible.adducts.this.parent) - adduct_theoretically_least + 1 ) & possible.adducts.this.parent$present_in_pspectrum[nrow(possible.adducts.this.parent)]==1) { # parent compound is case 2b
+          if (current_casecodes["C1"]==1) { # case 1
             
-            current_casecodes["C2b"] <- 1 # note that case 2b is true
+            peakdata_to_record = cbind(pgdata[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent,],extractLOBdbasedata(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]),database))
+            isodata.C3r_to_record = NULL
+            
+          } else { # we have a case 1-case 6b scenario: 
+            
+            current_casecodes["C1x"] <- 1  # note that case 1x is true; we can't really say whether it's a case 1 or 4 since we don't know
+            
+            current_casecodes["C6b"] <- 1  # note that case 6b is true
+            
+            peakdata_to_record = cbind(pgdata[sapply(frag_IDs.this.parent, function(x) length(x)>0),],extractLOBdbasedata(as.integer(frag_IDs.this.parent[sapply(frag_IDs.this.parent, function(x) length(x)>0)]),database))
+            isodata.C3r_to_record = NULL
             
           }
           
+          # now, insert/append the peakdata and case codes for this parent compound into our peakdata results array
+          
+          if (exists("peakdata_to_record")) { # only force insertion if there's data
+            
+            if (!exists("screened.peaktable")) { # it's the first peaktable entry
+              
+              # create a matrix for our results, and a list for storing any C3r isodata
+              
+              screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+13+length(casecodes))))
+              colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"confcodes","LOBdbase.ppm.match")
+              
+              # record data
+              
+              screened.peaktable[,1:51] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
+              
+            } else { # it's not the first sample, so rbind
+              
+              peakdata_to_record = cbind(peakdata_to_record,
+                                         t(replicate(nrow(peakdata_to_record),current_casecodes)),
+                                         matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = 2))
+              
+              colnames(peakdata_to_record) = colnames(screened.peaktable)
+              
+              screened.peaktable = rbind(screened.peaktable,
+                                         peakdata_to_record)
+              
+            }
+            
+            if (!exists("isodata.C3r")) { # it's the first isodata.C3r entry
+              
+              isodata.C3r = vector("list", nrow(peakdata_to_record))
+              isodata.C3r[1:nrow(peakdata_to_record)] = rep(list(isodata.C3r_to_record),nrow(peakdata_to_record))
+              
+            } else { # it's not the first entry
+              
+              isodata.C3r = append(isodata.C3r, rep(list(isodata.C3r_to_record),nrow(peakdata_to_record)))
+              
+            }
+            
+            # finally, reset/remove our casecode and peakdata_to_record vectors before proceeding
+            
+            rm(peakdata_to_record)
+            
+          }
+          
+          current_casecodes[1:length(current_casecodes)] = 0
+          
         }
-        
-        # last order of business before moving onto the next case 2a/2b/3r species in this pseudospectrum: select and then write to the results array the appropriate data for the current parent compound
-        # method: we will use the rules to determine the particular adduct of this parent compound from which we will pull the data
-        # if the parent compound is case 2a or 2b, the adduct which should be most abundant is present in pseudospectrum --> record data for this adduct, regardless of whether it is actually the most abundant in this particular pseudospectrum; as long as we are consistent in applying this throughout the experiment, we should be ok since we're only really concerned with relative changes between samples
-        # if the parent compound is case 3r, we have a slightly more complicated situation (because >= 2 regioisomers of the species were simultaneously identified in the pseudospectrum); we will record data for all of these assignments by inserting as many additional row(s) as is necessary
-        # lastly, if the parent compound is case 6b, we'll record data for the adduct of the parent compound that is present in the pseudospectrum in highest actual abundance
-        
-        if ((current_casecodes["C2a"]==1 | current_casecodes["C2b"]==1) & possible.adducts.this.parent$num_times_present[nrow(possible.adducts.this.parent)]==1) { # 2a or 2b, and we identified only a single peak for the adduct of theoretical greatest abundance  --> use data for this single peak assignment
-          
-          peakdata_to_record = cbind(pgdata[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent,],t(extractLOBdbasedata(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]),database)))
-          isodata.C3r_to_record = NULL
-          
-        } else if ((current_casecodes["C3r"]==1 & possible.adducts.this.parent$num_times_present[nrow(possible.adducts.this.parent)]>1)) { # C3r, with more than one assignment at different retention times for the adduct that should most abundant
-          
-          peakdata_to_record = cbind(pgdata[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent,],t(sapply(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]), extractLOBdbasedata, database = database)))
-          isodata.C3r_to_record = as.integer(peakdata_to_record[[c("xcms_peakgroup")]])
-          
-        }
-        
-      } else { # we have a case 6b situation: unable to determine what data to record
-        
-        warning(paste0("Pseudospectrum ",pseudospectrum," contains an assignment for which no adduct hierarchy data are given in the database. Cannot determine what peak data to report for this pseudospectrum.\n"))
-        
-        current_casecodes["C6b"] <- 1 # note that case 6b is true
-        
-        LOBdbdata.thisparent = t(sapply(as.integer(frag_IDs.this.parent[as.character(possible.adducts.this.parent$adduct[nrow(possible.adducts.this.parent)])==observed.adducts.this.parent]), extractLOBdbasedata, database = database))
-        
-        peakdata_to_record = cbind(matrix(nrow = nrow(LOBdbdata.thisparent), ncol = 29),LOBdbdata.thisparent)
-        isodata.C3r_to_record = NULL
         
       }
-      
-      # now, insert/append the peakdata and case codes for this parent compound into screened.peaktable and isodata.C3r
-      
-      if (exists("peakdata_to_record")) { # only force insertion if there's data
-        
-        if (!exists("screened.peaktable")) { # it's the first peaktable entry
-          
-          # create a matrix for our results, and a list for storing any C3r isodata
-          
-          screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+12+length(casecodes))))
-          colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"confcodes","LOBdbase.ppm.match")
-          
-          # record data
-          
-          screened.peaktable[,1:50] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
-          
-        } else { # it's not the first sample, so rbind
-          
-          peakdata_to_record = cbind(peakdata_to_record,
-                                     t(replicate(nrow(peakdata_to_record),current_casecodes)),
-                                     matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = 2))
-          
-          colnames(peakdata_to_record) = colnames(screened.peaktable)
-          
-          screened.peaktable <- rbind(screened.peaktable,
-                                      peakdata_to_record)
-          
-        }
-        
-        if (!exists("isodata.C3r")) { # it's the first isodata.C3r entry
-          
-          isodata.C3r = vector("list", nrow(peakdata_to_record))
-          isodata.C3r[1:nrow(peakdata_to_record)] = rep(list(isodata.C3r_to_record),nrow(peakdata_to_record))
-          
-        } else { # it's not the first entry
-          
-          isodata.C3r = append(isodata.C3r, rep(list(isodata.C3r_to_record),nrow(peakdata_to_record)))
-          
-        }
-        
-        # finally, reset/remove our casecode and peakdata_to_record vectors before proceeding
-        
-        rm(peakdata_to_record)
-        
-      }
-      
-      current_casecodes[1:length(current_casecodes)] <- 0
       
     }
     
   }
   
+  # update our diagnostics
+  
+  if (length(unlist(current.matches)) > 0) {
+    
+    diagnostic.data[c("post.AIHscreen"),c("pg","peaks","adducts","parent_compounds")] =
+      c(length(unique(screened.peaktable$xcms_peakgroup)),
+        sum(apply(screened.peaktable[!duplicated(screened.peaktable$xcms_peakgroup),11:(10+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0)),
+        NA,
+        length(unique(screened.peaktable$compound_name)))
+    
+  } else {
+    
+    diagnostic.data[c("post.AIHscreen"),c("pg","peaks","adducts","parent_compounds")] = c(0,0,NA,0)
+    screened.peaktable = NULL
+    isodata.C3r = NULL
+    
+  }
+  
+  # return our results
+  
+  list(diagnostic.data = diagnostic.data, screened.peaktable = screened.peaktable, isodata.C3r = isodata.C3r)
+  
+}
