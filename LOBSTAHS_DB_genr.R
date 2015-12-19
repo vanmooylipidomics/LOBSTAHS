@@ -50,7 +50,7 @@ setMethod("show", "LOBdbase", function(object) {
   cat("Total number of acyl carbon-carbon double bonds:",paste(min(object@FA_total_no_DB, na.rm = TRUE),max(object@FA_total_no_DB, na.rm = TRUE), sep = "-"),"\n")
   cat("Number of additional oxygen atoms:",paste(min(object@degree_oxidation, na.rm = TRUE),max(object@degree_oxidation, na.rm = TRUE), sep = "-"),"\n\n")
   
-  memsize <- object.size(object)
+  memsize = object.size(object)
   cat("Memory usage:", signif(memsize/2^20, 3), "MB\n")
   
 })
@@ -92,7 +92,7 @@ setMethod("[", "LOBdbase",
 
 # generateLOBdbase: wrapper function for lipid-ox-lipid-oxylipin database generation
 
-generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE, output.dir = "LOBDB", component.defs = NULL, AIH.defs = NULL, acyl.ranges = NULL, oxy.ranges = NULL) {
+generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE, component.defs = NULL, AIH.defs = NULL, acyl.ranges = NULL, oxy.ranges = NULL) {
   
   polarity = match.arg(polarity, several.ok = TRUE)
   
@@ -171,7 +171,7 @@ generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE
   
   # run simulation(s)
   
-  sapply(polarity, runSim, acylRanges = ranges$acylC_DB, oxyRanges = ranges$addl_oxy, adductHierarchies = adductHierarchies, baseComponent.masses = masses$baseComponents, adduct.masses = masses$adducts, gen.csv = gen.csv, output.dir = output.dir, simplify = FALSE,USE.NAMES = TRUE)
+  sapply(polarity, runSim, acylRanges = ranges$acylC_DB, oxyRanges = ranges$addl_oxy, adductHierarchies = adductHierarchies, baseComponent.masses = masses$baseComponents, adduct.masses = masses$adducts, gen.csv = gen.csv, simplify = FALSE,USE.NAMES = TRUE)
   
 }
 
@@ -388,30 +388,13 @@ genTimeStamp = function () {
 
 # exportDBtoCSV: writes a LOBdbase object to file
 
-exportDBtoCSV = function(output.dir = NULL, LOBdbase) {
-  
-  if (is.null(output.dir)) {
-    
-    export.filepath = NULL
-    
-  } else {
-    
-    if (!file.exists(output.dir)) {
-      
-      dir.create(file.path(output.dir))
-      
-    }
-    
-    export.filepath = paste0(output.dir,"/")
-    
-  }
-  
+exportDBtoCSV = function(LOBdbase) {
   
   output_DTG = genTimeStamp()
   
   cat("Exporting .csv file containing",as.character(LOBdbase@polarity),"mode simulation output...\n")
   
-  fname = paste0(export.filepath,"LOBSTAHS_lipid-oxy_DB_",strtrim(as.character(LOBdbase@polarity),3),"_",output_DTG,".csv")
+  fname = paste0("LOBSTAHS_lipid-oxy_DB_",strtrim(as.character(LOBdbase@polarity),3),"_",output_DTG,".csv")
   
   exportmat = data.frame(LOBdbase@frag_ID,
                          LOBdbase@mz,
@@ -437,7 +420,7 @@ exportDBtoCSV = function(output.dir = NULL, LOBdbase) {
 
 # runSim: runs the in silico simulation for a given ion mode, returns a 
 
-runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseComponent.masses, adduct.masses, output.dir, gen.csv) {
+runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseComponent.masses, adduct.masses, gen.csv) {
   
   # calculate number of combinations for which data are to be calculated in this mode
   
@@ -697,7 +680,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
   
   if (gen.csv==TRUE) {
     
-    exportDBtoCSV(output.dir = output.dir, LOBdbase = object)
+    exportDBtoCSV(LOBdbase = object)
       
   }
   
