@@ -1,0 +1,37 @@
+import("xcms")
+import("CAMERA")
+
+export(
+       "doLOBscreen",
+       "loadLOBdbase",
+#       "getformattedIsoData",
+#       "matchbyPPM",
+       "extractLOBdbasedata",
+#       "evalFeatureRT",
+#       "excludeoddFAlength",
+#       "trimAssignments",
+       "getLOBpeaklist"
+#       "screenPSpectrum"
+       )
+
+export(
+       "generateLOBdbase",
+#       "defineElemExactMasses",
+#       "calcComponentMasses",
+#       "loadSimRanges",
+#       "loadAIH",
+#       "calcNumCombs",
+#       "genTimeStamp",
+       "exportDBtoCSV"
+#       "runSim"
+       )
+
+exportClasses(
+              "LOBSet",
+              "LOBdbase"
+              )
+
+exportMethods(
+              "[",
+              "show"
+              )
