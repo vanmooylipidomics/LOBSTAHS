@@ -328,7 +328,7 @@ exportDBtoCSV = function(LOBdbase) {
   
 }
 
-# runSim: runs the in silico simulation for a given ion mode, returns a 
+# runSim: runs the in silico simulation for a given ion mode, returns a LOBdbase object
 
 runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseComponent.masses, adduct.masses, gen.csv) {
   
