@@ -4,7 +4,8 @@ Repo for the R package "LOBSTAHS," developed in the Van Mooy Lab at Woods Hole O
 
 LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. LOBSTAHS accomplishes feature screening and identification in a series of steps:
 
-1. First, in silico data for a wide range of lipids, oxidized lipids, and oxylipins are generated from user-supplied structural criteria using the database generation function **generateLOBdbase**. Users can generate their own matrices of structural property ranges to be considered during a generateLOBdbase simulation using the Microsoft Excel spreadsheet templates provided in https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/data. Ranges of values can be specified for: 
+<h4>In silico database generation</h4> 
+First, in silico data for a wide range of lipids, oxidized lipids, and oxylipins are generated from user-supplied structural criteria using the database generation function **generateLOBdbase**. These in silico data are paired with empirically-determined adduct ion abundance rankings for the major lipid classes. Users can generate their own matrices of structural property ranges to be considered during a generateLOBdbase simulation using the Microsoft Excel spreadsheet templates provided in https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/data. Ranges of values can be specified for: 
 
    * oxidation state,
    * total acyl carbon chain length, and
@@ -12,7 +13,8 @@ LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequen
 
 Alternatively, users may load default databases that contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. These default databases contain data on 13,578 and 11,073 unique compounds that can be identifed in positive and negative ion mode data, respectively. 
 
-2. The function **doLOBscreen** can then be used to assign putative compound identities from these in silico databases to any high-mass accuracy dataset that has been processed using [xcms](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). (An example dataset is provided at https://github.com/vanmooylipidomics/LipidomicsToolbox.) doLOBscreen then applies a series of user-selected orthogonal screening criteria based on
+<h4>Identification, screening, and annotation using orthogonal criteria</h4> 
+The function **doLOBscreen** can then be used to assign putative compound identities from these in silico databases to any high-mass accuracy dataset that has been processed using [xcms](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). (An example dataset is provided at https://github.com/vanmooylipidomics/LipidomicsToolbox.) doLOBscreen then applies a series of user-selected orthogonal screening criteria based on
 
    * adduct ion formation patterns,
    * chromatographic retention time, and
