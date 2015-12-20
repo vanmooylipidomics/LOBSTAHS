@@ -107,7 +107,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
     
     defDB = 1
     
-    load("dependencies/default.LOBdbase.RData")
+    data(default.LOBdbase)
     database = LOBdbase[[polarity]]
     
   }
@@ -118,7 +118,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
     
     if (is.null(rt.windows)) { # use defaults
       
-      load("dependencies/default.rt.windows.RData")
+      data(default.rt.windows)
       defRTwin = 1
       
       warning("User did not specify an external source of retention time window data. Default rt windows for the Van Mooy Lab Orbitrap were used. Non-VML users are strongly urged to use argument 'rt.wintable' to load retention time data specific to their chromatography.\n")

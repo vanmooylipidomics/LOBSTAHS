@@ -11,11 +11,13 @@ generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE
   
   if (is.null(component.defs)) { # user didn't specify external component definitions table, use defaults
     
-    componentTable.loc = "dependencies/LOBSTAHS_basic_component_matrix.csv"
+    componentTable.loc = NULL
+    use.default.componentTable = TRUE
     
   } else { # user specified something
     
     componentTable.loc = component.defs
+    use.default.componentTable = FALSE
     
     # let user know he/she provided external input, and the possible consequences
     
@@ -27,11 +29,13 @@ generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE
   
   if (is.null(AIH.defs)) { # user didn't specify external AIH table, use defaults
     
-    AIHtable.loc = "dependencies/LOBSTAHS_adduct_ion_hierarchies.csv"
+    AIHtable.loc = NULL
+    use.default.AIHtable = TRUE
     
   } else { # user specified something
     
     AIHtable.loc = AIH.defs
+    use.default.AIHtable = FALSE
     
     # let user know he/she provided external input, and the possible consequences
     
@@ -43,11 +47,13 @@ generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE
   
   if (is.null(acyl.ranges)) { # user didn't specify external in silico acyl property range table, use defaults
     
-    acylRanges.loc = "dependencies/LOBSTAHS_acyl_prop_ranges.csv"
+    acylRanges.loc = NULL
+    use.default.acylRanges = TRUE
     
   } else { # user specified something
     
     acylRanges.loc = acyl.ranges
+    use.default.acylRanges = FALSE
     
     # let user know he/she provided external input, and the possible consequences
     
@@ -59,11 +65,13 @@ generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE
   
   if (is.null(oxy.ranges)) { # user didn't specify external AIH table, use defaults
     
-    oxyRanges.loc = "dependencies/LOBSTAHS_addl_oxy_ranges.csv"
+    oxyRanges.loc = NULL
+    use.default.oxyRanges = TRUE
     
   } else { # user specified something
     
     oxyRanges.loc = oxy.ranges
+    use.default.oxyRanges = FALSE
     
     # let user know he/she provided external input, and the possible consequences
     
@@ -75,9 +83,9 @@ generateLOBdbase = function(polarity = c("positive","negative"), gen.csv = FALSE
   
   # load in silico simulation parameters using helper functions
   
-  masses = calcComponentMasses(componentTable.loc)
-  ranges = loadSimRanges(acylRanges.loc,oxyRanges.loc)
-  adductHierarchies = loadAIH(AIHtable.loc)
+  masses = calcComponentMasses(componentTable.loc,use.default.componentTable)
+  ranges = loadSimRanges(acylRanges.loc,oxyRanges.loc,use.default.acylRanges,use.default.oxyRanges)
+  adductHierarchies = loadAIH(AIHtable.loc,use.default.AIHtable)
   
   # run simulation(s)
   
@@ -129,15 +137,23 @@ defineElemExactMasses = function() {
 # calcComponentMasses: calculates exact masses of components specified in the component table, using the given compositions and the exact masses produced by defineElemExactMasses()
 # creates two tables: (1) baseComponents, with compositions and exact masses of basic, non-adduct components and (2) adducts, containing exact masses of adducts
 
-calcComponentMasses = function(componentTableLoc) { # input should be the component composition file location obtained from getTableLocs, or other
+calcComponentMasses = function(componentTableLoc,use.default.componentTable) { # input should be the component composition file location obtained from getTableLocs, or other
   
   # get exact masses using defineElemExactMasses()
   
   exact.masses = defineElemExactMasses()
   
-  # load in component composition matrix
+  # load in component composition matrix, or default
   
-  componentCompTable.raw = read.table(componentTableLoc, sep=",", header = TRUE, row.names = 1)
+  if (use.default.componentTable==TRUE) {
+    
+    data(default.componentCompTable)
+    
+  } else {
+    
+    componentCompTable.raw = read.table(componentTableLoc, sep=",", header = TRUE, row.names = 1)
+    
+  }
   
   # put columns in alphabetical order
   
@@ -177,25 +193,49 @@ calcComponentMasses = function(componentTableLoc) { # input should be the compon
 
 # loadSimRanges: loads the necessary in silico simulation range data from the acylRanges and oxyRanges file locations. creates two data frames: (1) acylC_DB and (2) addl_oxy
 
-loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc) { # inputs should be the two file locations obtained from getTableLocs, or other
- 
+loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRanges,use.default.oxyRanges) { # inputs should be the two file locations obtained from getTableLocs, or other
+  
   # load in ranges of total acyl C atoms and double bonds to be considered during simulations
   
-  acylRanges = read.table(acylRangeTableLoc, sep=",", skip = 1, header = TRUE)
+  if (use.default.acylRanges==TRUE) {
+    
+    data(default.acylRanges)
+    
+  } else {
+    
+    acylRanges = read.table(acylRangeTableLoc, sep=",", skip = 1, header = TRUE)
+    
+  }
   
   # load in ranges of additional oxygen atoms to be considered during simulations
   
-  oxyRanges = read.table(oxyRangeTableLoc, sep=",", skip = 1, header = TRUE)
- 
+  if (use.default.oxyRanges==TRUE) {
+    
+    data(default.oxyRanges)
+    
+  } else {
+    
+    oxyRanges = read.table(oxyRangeTableLoc, sep=",", skip = 1, header = TRUE)
+    
+  }
+  
   list(acylC_DB=acylRanges,addl_oxy=oxyRanges)
   
 }
 
 # loadAIH: loads the adduct ion hierarchy data from the AIHfile location. creates one data frame called adductHierarchies
 
-loadAIH = function(AIHTableLoc) { # input should be file location obtained from getTableLocs, or other
+loadAIH = function(AIHTableLoc,use.default.AIHtable) { # input should be file location obtained from getTableLocs, or other
   
-  adductHierarchies = read.table(AIHTableLoc, sep=",", skip = 1, header = TRUE)
+  if (use.default.AIHtable==TRUE) {
+    
+    data(default.adductHierarchies)
+    
+  } else {
+    
+    adductHierarchies = read.table(AIHTableLoc, sep=",", skip = 1, header = TRUE)
+    
+  }
   
   # for compatibility, also assign values in "Adduct" as row names
   
@@ -520,7 +560,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
                   oxystring = NULL
                   
                 }
-     
+                
                 this.parent_compound_name = paste0(this.species," ",this.FA_total_no_C,":",this.FA_total_no_DB,oxystring)
                 
                 # now, record data
@@ -591,7 +631,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
   if (gen.csv==TRUE) {
     
     exportDBtoCSV(LOBdbase = object)
-      
+    
   }
   
   # return the LOBdbase object, invisibly
