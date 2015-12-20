@@ -14,7 +14,7 @@ First, in silico data for a wide range of lipids, oxidized lipids, and oxylipins
 Alternatively, users may load default databases that contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. These default databases contain data on 13,578 and 11,073 unique compounds that can be identifed in positive and negative ion mode data, respectively. 
 
 <h4>Identification, screening, and annotation using orthogonal criteria</h4> 
-The function **doLOBscreen** can then be used to assign putative compound identities from these in silico databases to any high-mass accuracy dataset that has been processed using [xcms](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). (An example dataset is provided at https://github.com/vanmooylipidomics/LipidomicsToolbox.) doLOBscreen then applies a series of user-selected orthogonal screening criteria based on
+The function **doLOBscreen** can then be used to assign putative compound identities from these in silico databases to peakgroups in any high-mass accuracy dataset that has been processed using [xcms](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). (An example dataset is provided at https://github.com/vanmooylipidomics/LipidomicsToolbox.) doLOBscreen then applies a series of user-selected orthogonal screening criteria based on
 
    * adduct ion formation patterns,
    * chromatographic retention time, and
