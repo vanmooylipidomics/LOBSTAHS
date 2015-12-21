@@ -147,7 +147,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) { #
   
   if (use.default.componentTable==TRUE) {
     
-    data(default.componentCompTable)
+    data(default.componentCompTable, envir = environment())
     
   } else {
     
@@ -199,7 +199,7 @@ loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRang
   
   if (use.default.acylRanges==TRUE) {
     
-    data(default.acylRanges)
+    data(default.acylRanges, envir = environment())
     
   } else {
     
@@ -211,7 +211,7 @@ loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRang
   
   if (use.default.oxyRanges==TRUE) {
     
-    data(default.oxyRanges)
+    data(default.oxyRanges, envir = environment())
     
   } else {
     
@@ -229,7 +229,7 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) { # input should be file lo
   
   if (use.default.AIHtable==TRUE) {
     
-    data(default.adductHierarchies)
+    data(default.adductHierarchies, envir = environment())
     
   } else {
     
@@ -245,7 +245,7 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) { # input should be file lo
   
 }
 
-# calcNumCombs: calculates the number of parent compounds and adduct ions for which masses are to be generated in a given ion mode, based on the user-specified ranges of lipid classes and chemical properties
+# calcNumCombs: calculates the number of parent compounds and adduct ions for which masses are to be generated in a given ionization mode, based on the user-specified ranges of lipid classes and chemical properties
 
 calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseComponent.masses, adduct.masses) {
   
@@ -368,7 +368,7 @@ exportDBtoCSV = function(LOBdbase) {
   
 }
 
-# runSim: runs the in silico simulation for a given ion mode, returns a LOBdbase object
+# runSim: runs the in silico simulation for a given ionization mode, returns a LOBdbase object
 
 runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseComponent.masses, adduct.masses, gen.csv) {
   
@@ -387,7 +387,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
   sim_results = matrix(data = NA, nrow = numCombs$numAddIons, ncol = 12)
   sim_results = as.data.frame(sim_results)
   
-  # extract adduct hierarchies for this ion mode
+  # extract adduct hierarchies for this ionization mode
   
   AIHs.thismode = adductHierarchies[adductHierarchies$Adduct_ion_mode==polarity,]
   
