@@ -11,9 +11,6 @@
 # RData but not *.RData
 .RData
 
-# RStudio projects
-*.Rproj
-
 # .DS_Store
 *.DS_Store
 
@@ -21,3 +18,4 @@
 r_process_files
 rsmDirectory
 .Rproj.user
+xset_a.RData
