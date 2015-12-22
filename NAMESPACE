@@ -1,5 +1,14 @@
-import("xcms")
-import("CAMERA")
+import("xcms",
+       "CAMERA",
+       "methods"
+       )
+
+importFrom("utils",
+           "write.csv",
+           "object.size",
+           "read.table",
+           "read.csv"
+           )
 
 export(
        "doLOBscreen",

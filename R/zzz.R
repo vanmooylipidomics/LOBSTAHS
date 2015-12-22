@@ -3,4 +3,5 @@
   suppressPackageStartupMessages(require(xcms))
   suppressPackageStartupMessages(require(CAMERA))
   require(methods)
+  require(utils)
 }
