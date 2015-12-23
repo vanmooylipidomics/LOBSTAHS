@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{LOBdbase-class}
+\alias{LOBdbase}
 \alias{[,LOBdbase-method}
 \alias{show,LOBdbase-method}
 

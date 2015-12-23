@@ -23,7 +23,7 @@ data(default.componentCompTable)
 data(default.rt.windows)}
 \format{
   \describe{
-    \item{\code{default.LOBdbase}}{A list of two \code{\link{"LOBdbase"}} objects, which are the default LOBSTAHS databases for positive and negative ion mode species, respectively. These were generated using \code{\link{generateLOBdbase}} with the default values defined in \code{default.adductHierarchies}, \code{default.acylRanges}, \code{default.oxyRanges}, and \code{default.componentCompTable}.}
+    \item{\code{default.LOBdbase}}{A list of two \code{"\link{LOBdbase}"} objects, which are the default LOBSTAHS databases for positive and negative ion mode species, respectively. These were generated using \code{\link{generateLOBdbase}} with the default values defined in \code{default.adductHierarchies}, \code{default.acylRanges}, \code{default.oxyRanges}, and \code{default.componentCompTable}.}
     \item{\code{default.adductHierarchies}}{A data frame containing empirically-determined adduct ion hierarchy data, by lipid class.}
     \item{\code{default.acylRanges}}{A data frame containing ranges of numbers of acyl carbon atoms for which \emph{in silico} data are generated for each lipid class by \code{\link{generateLOBdbase}}.}
     \item{\code{default.oxyRanges}}{A data frame containing ranges of additional oxygen atoms to be considered on species of each lipid class when databases are generated with \code{\link{generateLOBdbase}}.}

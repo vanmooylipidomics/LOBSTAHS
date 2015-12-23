@@ -44,7 +44,7 @@ Should compound assignments with an odd total number of acyl carbon atoms be exc
 \details{\code{doLOBscreen} draws compound identities from a \code{LOBdbase} database. The function applies various retention time and adduct ion hierarchy screening criteria to winnow the list of putative compound assignments. It returns a table of annotated peak data with compound assignments and various annotation codes to assist the user in interpretation and follow-on data analysis.
 }
 \value{
-  A \code{\link{"LOBSet"}} object.
+  A \code{"\link{LOBSet}"} object.
 }
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
@@ -66,18 +66,18 @@ James Collins, \email{james.r.collins@aya.yale.edu}
   \code{\link[CAMERA]{findIsotopes}}
 }
 \examples{
-## screen & annotate "xsAnnotate" object for the PtH2O2lipids dataset using all
-## screening options
-library(LOBSTAHS)
-library(PtH2O2lipids)
+### screen & annotate "xsAnnotate" object for the PtH2O2lipids dataset using all
+### screening options
+#library(LOBSTAHS)
+#library(PtH2O2lipids)
 
-myPtH202LOBSet = doLOBscreen(PtH2O2lipids$xsAnnotate, polarity = "positive",
-                             database = NULL, remove.iso = TRUE,
-                             rt.restrict =  TRUE, rt.windows = NULL,
-                             exclude.oddFA = TRUE, match.ppm = 2.5)
+#myPtH202LOBSet = doLOBscreen(PtH2O2lipids$xsAnnotate, polarity = "positive",
+#                             database = NULL, remove.iso = TRUE,
+#                             rt.restrict =  TRUE, rt.windows = NULL,
+#                             exclude.oddFA = TRUE, match.ppm = 2.5)
 
 ## show some diagnostics
-PtH2O2lipids$LOBSet@LOBscreen.diagnostics # screening diagnostics
-PtH2O2lipids$LOBSet@LOBisoID.diagnostics # isomer identification data
+#PtH2O2lipids$LOBSet@LOBscreen.diagnostics # screening diagnostics
+#PtH2O2lipids$LOBSet@LOBisoID.diagnostics # isomer identification data
 }
 \keyword{methods}
