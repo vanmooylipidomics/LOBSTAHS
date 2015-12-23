@@ -87,3 +87,7 @@ setMethod("[", "LOBdbase",
                      polarity = .polarity)
             
           })
+
+## to generate .Rd file:
+# library(methods)
+# promptClass(LOBdbase)
