@@ -68,8 +68,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \examples{
 ## screen & annotate "xsAnnotate" object for the PtH2O2lipids dataset using all
 ## screening options
-library(xcms)
-library(CAMERA)
 library(LOBSTAHS)
 library(PtH2O2lipids)
 

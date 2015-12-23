@@ -68,8 +68,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \examples{
 ## export peaklist, with isomer data
-library(xcms)
-library(CAMERA)
 library(LOBSTAHS)
 library(PtH2O2lipids)
 

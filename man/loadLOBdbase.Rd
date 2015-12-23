@@ -41,7 +41,7 @@ library(LOBSTAHS)
 
 data(default.LOBdbase)
 
-neg.DB = LOBdbase$negative
+neg.DB = default.LOBdbase$negative
 
 fname = paste0("LOBSTAHS_lipid-oxy_DB_",
                strtrim(as.character(negDB@polarity),3),".csv")

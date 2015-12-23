@@ -41,7 +41,7 @@ library(LOBSTAHS)
 
 data(default.LOBdbase)
 
-DNPPE.data = extractLOBdbasedata(frag_ID = 19801, database = LOBdbase$positive)
+DNPPE.data = extractLOBdbasedata(frag_ID = 19801, database = default.LOBdbase$positive)
 
 }
 \keyword{methods}

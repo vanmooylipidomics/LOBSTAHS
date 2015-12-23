@@ -157,7 +157,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) { #
   
   # put columns in alphabetical order
   
-  componentCompTable = componentCompTable.raw[order(colnames(componentCompTable.raw))]
+  componentCompTable = default.componentCompTable[order(colnames(default.componentCompTable))]
   
   # calculate exact masses of basic components and extract into a few separate tables
   # note: this will calculate full exact masses of pigments and DNP-PE
@@ -219,7 +219,7 @@ loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRang
     
   }
   
-  list(acylC_DB=acylRanges,addl_oxy=oxyRanges)
+  list(acylC_DB=default.acylRanges,addl_oxy=default.oxyRanges)
   
 }
 
@@ -239,9 +239,9 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) { # input should be file lo
   
   # for compatibility, also assign values in "Adduct" as row names
   
-  row.names(adductHierarchies) = adductHierarchies$Adduct
+  row.names(default.adductHierarchies) = default.adductHierarchies$Adduct
   
-  return(adductHierarchies)
+  return(default.adductHierarchies)
   
 }
 
