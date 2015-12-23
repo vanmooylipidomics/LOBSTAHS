@@ -5,9 +5,9 @@
 \alias{[,LOBdbase-method}
 \alias{show,LOBdbase-method}
 
-\title{Class \code{"LOBdbase"}, a Class for \code{LOBSTAHS} Lipid-Oxylipin Databases}
+\title{Class LOBdbase: A class for LOBSTAHS lipid-oxylipin databases}
 \description{
-A class for \code{LOBSTAHS} databases that contain a combination of \strong{in silico} and empirical data for a wide range of lipids, oxidized lipids, and oxylipins. A \code{"LOBdbase"} object can be generated using \code{\link{generateLOBdbase}}, or imported from a .csv file of proper format using \code{\link{loadLOBdbase}}.
+A class for \code{LOBSTAHS} databases that contain a combination of \emph{in silico} and empirical data for a wide range of lipids, oxidized lipids, and oxylipins. A \code{"LOBdbase"} object can be generated using \code{\link{generateLOBdbase}}, or imported from a .csv file of proper format using \code{\link{loadLOBdbase}}.
 }
 \section{Objects from the Class}{
 A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"LOBdbase"} object with the slots indicated below. 
@@ -15,7 +15,7 @@ A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"L
 \section{Slots}{
   \describe{
     \item{\code{frag_ID}:}{Object of class \code{"integer"}, a unique identifier for this molecular species }
-    \item{\code{mz}:}{Object of class \code{"numeric"}, the calculated \strong{m/z} of this species }
+    \item{\code{mz}:}{Object of class \code{"numeric"}, the calculated \emph{m/z} of this species }
     \item{\code{exact_parent_neutral_mass}:}{Object of class \code{"numeric"}, the calculated (monoisotopic) exact mass of the parent compound of this species }
     \item{\code{lipid_class}:}{Object of class \code{"factor"}, the parent lipid class of this species }
     \item{\code{species}:}{Object of class \code{"character"}, the lipid subclass }
@@ -28,7 +28,7 @@ A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"L
     \item{\code{parent_compound_name}:}{Object of class \code{"character"}, name of the parent compound; see the reference for this entry for the naming convention applied to compounds other than pigments }
     \item{\code{polarity}:}{Object of class \code{"factor"}, ionization mode of data in the database }
     \item{\code{num.entries}:}{Object of class \code{"integer"}, number of total entries (adducts) in the database }
-    \item{\code{num.compounds}:}{Object of class \code{"integer"}, number of parent compounds represented in the database (<\code{num.entries})}
+    \item{\code{num.compounds}:}{Object of class \code{"integer"}, number of parent compounds represented in the database (should be < \code{num.entries})}
   }
 }
 \section{Methods}{
@@ -38,7 +38,7 @@ A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"L
 	 }
 }
 \references{
-\item{Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
+Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}
@@ -47,6 +47,7 @@ James Collins, \email{james.r.collins@aya.yale.edu}
   \code{\link{generateLOBdbase}},
   \code{\link{loadLOBdbase}},
   \code{\link{doLOBscreen}}
+}
 \examples{
 ## return object information
 

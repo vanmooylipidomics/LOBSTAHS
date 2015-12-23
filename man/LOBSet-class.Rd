@@ -5,7 +5,7 @@
 \alias{LOBSet}
 \alias{show,LOBSet-method}
 
-\title{Class LOBSet, peak data with annotations, isomers, and compound assignments}
+\title{Class LOBSet: Peak data with annotations, isomers, and compound assignments}
 \description{
 A class for HPLC-MS peak data that have been screened and annotated using \code{LOBSTAHS} function \code{\link{doLOBscreen}}.
 }

@@ -4,14 +4,14 @@
 Extract Compound Data from a LOBdbase
 }
 \description{
-Extracts data from a LOBSTAHS \code{"\link{LOBdbase}"} object for a given compound or compounds.
+Extracts data from a LOBSTAHS \code{"\link{LOBdbase}"} object for a given molecular species.
 }
 \usage{
 extractLOBdbasedata(frag_ID, database)
 }
 \arguments{
   \item{frag_ID}{
-The LOBdbase fragment ID(s) corresponding to the compounds for which data should be extracted.
+The LOBdbase fragment ID(s) corresponding to the species for which data should be extracted.
 }
   \item{database}{
 The \code{LOBdbase} from which data are to be extracted.
@@ -21,8 +21,7 @@ The \code{LOBdbase} from which data are to be extracted.
 A data frame containing the extracted data, with field names corresponding to the slots in \code{database}.
 }
 \references{
-\item{Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
-}
+Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}
