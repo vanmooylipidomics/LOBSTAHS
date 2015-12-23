@@ -5,7 +5,7 @@
 \alias{LOBSet}
 \alias{show,LOBSet-method}
 
-\title{Class \code{"LOBSet"}, Peak Data with Annotations, Isomers, and Compound Assignments}
+\title{Class LOBSet, peak data with annotations, isomers, and compound assignments}
 \description{
 A class for HPLC-MS peak data that have been screened and annotated using \code{LOBSTAHS} function \code{\link{doLOBscreen}}.
 }
@@ -31,7 +31,7 @@ A call of the form \code{new("LOBSet", ...)} will create a new, empty \code{"LOB
 	 }
 }
 \references{
-\item{Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
+Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}
