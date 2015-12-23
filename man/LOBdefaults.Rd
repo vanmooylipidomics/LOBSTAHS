@@ -34,7 +34,7 @@ data(default.rt.windows)}
 \details{
 Empirical determination of the retention time window data in \code{default.rt.windows} and adduct ion hierarchies in \code{default.adductHierarchies} is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}.
 
-The default ranges for the structural properties given in the other files were chosen to yield databases that encompass a broad variety of moieites across lipid types. Microsoft Excel spreadsheet templates are included with the package in Resources/library/LOBSTAHS/doc for users wishing to modify any of the default data inputs. Alternatively, the spreadsheet files may be downloaded from \url{http://github.com/vanmooylipidomics/LOBSTAHS/inst/doc/xlsx/}. These templates can be used to generate .csv files in formats appropriate for \code{\link{generateLOBdbase}} and \code{\link{doLOBscreen}}.
+The default ranges for the structural properties given in the other files were chosen to yield databases that encompass a broad variety of moieites across lipid types. Microsoft Excel spreadsheet templates are included with the package in Resources/library/LOBSTAHS/doc for users wishing to modify any of the default data inputs. Alternatively, the spreadsheet files may be downloaded from \url{https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx}. These templates can be used to generate .csv files in formats appropriate for \code{\link{generateLOBdbase}} and \code{\link{doLOBscreen}}.
 }
 \source{\url{http://github.com/vanmooylipidomics/LOBSTAHS/}
 }
