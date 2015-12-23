@@ -4,7 +4,7 @@
 Export Screened \code{LOBSTAHS} Peaklist with Compound Assignments
 }
 \description{
-Extracts screened peak data, compound assignments, annotation codes, and (optionally) isomer data from a \code{\link[LOBSTAHS]{"LOBSet"}} object. Returns a table containing the requested data, with option to export to a .csv file.
+Extracts screened peak data, compound assignments, annotation codes, and (optionally) isomer data from a \code{"\link{LOBSet}"} object. Returns a table containing the requested data, with option to export to a .csv file.
 }
 \usage{
 getLOBpeaklist(LOBSet, include.iso = TRUE, gen.csv = FALSE)
@@ -102,8 +102,8 @@ Should a .csv file be generated in addition to the data frame that is returned?
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class[LOBSTAHS]{LOBSet}},
-  \code{\link[LOBSTAHS]{doLOBscreen}}
+  \code{\linkS4class{LOBSet}},
+  \code{\link{doLOBscreen}}
 }
 \examples{
 ## export peaklist, with isomer data

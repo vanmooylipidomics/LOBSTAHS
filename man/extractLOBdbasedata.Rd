@@ -4,7 +4,7 @@
 Extract Compound Data from a LOBdbase
 }
 \description{
-Extracts data from a LOBSTAHS \code{\link[LOBSTAHS]{"LOBdbase"}} object for a given compound or compounds.
+Extracts data from a LOBSTAHS \code{"\link{LOBdbase}"} object for a given compound or compounds.
 }
 \usage{
 extractLOBdbasedata(frag_ID, database)
@@ -28,10 +28,10 @@ A data frame containing the extracted data, with field names corresponding to th
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class[LOBSTAHS]{LOBdbase}},
-  \code{\link[LOBSTAHS]{loadLOBdbase}},
-  \code{\link[LOBSTAHS]{generateLOBdbase}},
-  \code{\link[LOBSTAHS]{default.LOBdbase}}  
+  \code{\linkS4class{LOBdbase}},
+  \code{\link{loadLOBdbase}},
+  \code{\link{generateLOBdbase}},
+  \code{\link{default.LOBdbase}}  
 }
 \examples{
 ## extract data from the default database for the [M+H]+ adduct of

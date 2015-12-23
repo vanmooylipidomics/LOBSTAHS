@@ -4,7 +4,7 @@
 Screen, Annotate, and Identify Compounds in an \code{"xsAnnotate"} Object
 }
 \description{
-Primary function of the \code{LOBSTAHS} package. Screen, annotate, and assign compound identities to peak groups in a CAMERA \code{\link[CAMERA]{"xsAnnotate"}} object containing HPLC-ESI-MS lipid data. Identify and annotate possible isomers and isobars.
+Primary function of the \code{LOBSTAHS} package. Screen, annotate, and assign compound identities to peak groups in a CAMERA \code{"\link[CAMERA]{xsAnnotate}"} object containing HPLC-ESI-MS lipid data. Identify and annotate possible isomers and isobars.
 }
 \usage{
 doLOBscreen(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
@@ -19,7 +19,7 @@ A CAMERA \code{"xsAnnotate"} object with identified pseudospectra. Must contain 
 Specify polarity mode of data in \code{xsA}: "positive" or "negative." \code{doLOBscreen} will attempt to detect the polarity mode if nothing is given.
 }
   \item{database}{
-Specify the \code{LOBdbase} from which compound identities and adduct ion hierarchy data are to be applied. If nothing is specified, \code{doLOBscreen} will use the LOBSTAHS default database (\code{\link[LOBSTAHS]{default.LOBdbase}}) for the appropriate ionization mode. The database generation function \code{\link[LOBSTAHS]{generateLOBdbase}} can be used to create a LOBdbase from structural property ranges specified by the user in a series of input tables. \code{\link[LOBSTAHS]{loadLOBdbase}} can be used to import and reconstruct a \code{"LOBdbase"} object from a previously generated database that was saved as a .csv file. 
+Specify the \code{LOBdbase} from which compound identities and adduct ion hierarchy data are to be applied. If nothing is specified, \code{doLOBscreen} will use the LOBSTAHS default database (\code{\link{default.LOBdbase}}) for the appropriate ionization mode. The database generation function \code{\link{generateLOBdbase}} can be used to create a LOBdbase from structural property ranges specified by the user in a series of input tables. \code{\link{loadLOBdbase}} can be used to import and reconstruct a \code{"LOBdbase"} object from a previously generated database that was saved as a .csv file. 
 }
   \item{remove.iso}{
 Should secondary isotope peaks be removed? (If \code{TRUE}, \code{xsA} must contain isotope data obtained using \code{findIsotopes()}.)
@@ -28,7 +28,7 @@ Should secondary isotope peaks be removed? (If \code{TRUE}, \code{xsA} must cont
 Should lipid class retention time screening criteria be applied to putative compound assignments?
 }
   \item{rt.windows}{
-File path to a .csv file containing retention time window data to be used for screening by lipid class, if \code{rt.restrict = TRUE}. If nothing is specified, \code{doLOBscreen} will use the package default windows (\code{\link[LOBSTAHS]{default.rt.windows}}), which are specific to the HPLC-MS method currently used in the Van Mooy Lab at Woods Hole Oceanographic Institution. Because the user is advised to provide retention time window data specific to his/her HPLC-MS method, failure to specify a value for \code{rt.windows} will result in a warning. A Microsoft Excel spreadsheet template included at \url{../data-raw/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx} can be used to generate a .csv file of retention time data in a format appropriate for \code{rt.windows}.
+File path to a .csv file containing retention time window data to be used for screening by lipid class, if \code{rt.restrict = TRUE}. If nothing is specified, \code{doLOBscreen} will use the package default windows (\code{\link{default.rt.windows}}), which are specific to the HPLC-MS method currently used in the Van Mooy Lab at Woods Hole Oceanographic Institution. Because the user is advised to provide retention time window data specific to his/her HPLC-MS method, failure to specify a value for \code{rt.windows} will result in a warning. A Microsoft Excel spreadsheet template included at \url{../data-raw/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx} can be used to generate a .csv file of retention time data in a format appropriate for \code{rt.windows}.
 }
   \item{exclude.oddFA}{
 Should compound assignments with an odd total number of acyl carbon atoms be excluded when the parent lipid class is TAG, IP-DAG, PUA, or FFA? Useful if data are (or are believed to be) of exclusively eukaryotic origin.
@@ -50,16 +50,16 @@ Should compound assignments with an odd total number of acyl carbon atoms be exc
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class[LOBSTAHS]{LOBSet}},
-  \code{\linkS4class[LOBSTAHS]{LOBdbase}},
-  \code{\link[LOBSTAHS]{loadLOBdbase}},
-  \code{\link[LOBSTAHS]{getLOBpeaklist}},
-  \code{\link[LOBSTAHS]{generateLOBdbase}},
-  \code{\link[LOBSTAHS]{default.LOBdbase}},
-  \code{\link[LOBSTAHS]{default.rt.windows}},
-  \code{\link[PtH2O2lipids]{PtH2O2lipids}},
-  \code{\linkS4class[xcms]{xcmsSet}},
-  \code{\linkS4class[CAMERA]{xsAnnotate}},
+  \code{\linkS4class{LOBSet}},
+  \code{\linkS4class{LOBdbase}},
+  \code{\link{loadLOBdbase}},
+  \code{\link{getLOBpeaklist}},
+  \code{\link{generateLOBdbase}},
+  \code{\link{default.LOBdbase}},
+  \code{\link{default.rt.windows}},
+  \code{\link{PtH2O2lipids}},
+  \code{\linkS4class{xcmsSet}},
+  \code{\linkS4class{xsAnnotate}},
   \code{\link[CAMERA]{findIsotopes}}
 }
 \examples{

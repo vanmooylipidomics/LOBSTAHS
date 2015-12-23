@@ -7,7 +7,7 @@
 
 \title{Class \code{"LOBdbase"}, a Class for \code{LOBSTAHS} Lipid-Oxylipin Databases}
 \description{
-A class for \code{LOBSTAHS} databases that contain a combination of \strong{in silico} and empirical data for a wide range of lipids, oxidized lipids, and oxylipins. A \code{"LOBdbase"} object can be generated using \code{\link[LOBSTAHS]{generateLOBdbase}}, or imported from a .csv file of proper format using \code{\link[LOBSTAHS]{loadLOBdbase}}.
+A class for \code{LOBSTAHS} databases that contain a combination of \strong{in silico} and empirical data for a wide range of lipids, oxidized lipids, and oxylipins. A \code{"LOBdbase"} object can be generated using \code{\link{generateLOBdbase}}, or imported from a .csv file of proper format using \code{\link{loadLOBdbase}}.
 }
 \section{Objects from the Class}{
 A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"LOBdbase"} object with the slots indicated below. 
@@ -44,9 +44,9 @@ A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"L
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\link[LOBSTAHS]{generateLOBdbase}},
-  \code{\link[LOBSTAHS]{loadLOBdbase}},
-  \code{\link[LOBSTAHS]{doLOBscreen}}
+  \code{\link{generateLOBdbase}},
+  \code{\link{loadLOBdbase}},
+  \code{\link{doLOBscreen}}
 \examples{
 ## return object information
 

@@ -11,7 +11,7 @@ loadLOBdbase(file, polarity, num.compounds = NULL)
 }
 \arguments{
   \item{file}{
-Path to a .csv file containing the database to be imported. The file format should be consistent with the .csv output that is obtained using \code{gen.csv = TRUE} in \code{\link[LOBSTAHS]{generateLOBdbase}}. Some leeway is allowed for variation in capitalization and punctuation of column headers.
+Path to a .csv file containing the database to be imported. The file format should be consistent with the .csv output that is obtained using \code{gen.csv = TRUE} in \code{\link{generateLOBdbase}}. Some leeway is allowed for variation in capitalization and punctuation of column headers.
 }
   \item{polarity}{
 Specify polarity (ionization mode) of the database being imported ("positive" or "negative"). \code{loadLOBdbase} will attempt to detect the polarity mode based on data in the "adduct" column if nothing is given.
@@ -30,10 +30,10 @@ If known, the number of parent compounds represented in the database being impor
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class[LOBSTAHS]{LOBdbase}},
-  \code{\link[LOBSTAHS]{doLOBscreen}},
-  \code{\link[LOBSTAHS]{generateLOBdbase}},
-  \code{\link[LOBSTAHS]{default.LOBdbase}}
+  \code{\linkS4class{LOBdbase}},
+  \code{\link{doLOBscreen}},
+  \code{\link{generateLOBdbase}},
+  \code{\link{default.LOBdbase}}
 }
 \examples{
 ## save the default negative mode database as a .csv file
