@@ -702,7 +702,7 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
     iso.C3f.match_ID = sapply(LOBSet@iso.C3f, paste, collapse = ", ")
     iso.C3c.match_ID = sapply(LOBSet@iso.C3c, paste, collapse = ", ")
 
-    export.df = data.frame(export.df,iso.C3r.match_ID,iso.C3f.match_ID,iso.C3c.match_ID)
+    export.df = data.frame(export.df,iso.C3r.match_ID,iso.C3f.match_ID,iso.C3c.match_ID, stringsAsFactors = FALSE)
 
   }
 
