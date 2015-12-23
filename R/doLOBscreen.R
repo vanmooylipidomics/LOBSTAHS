@@ -106,9 +106,11 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
     cat("User did not specify an external database. Using default LOBSTAHS database for polarity '",polarity,"'\n\n")
 
     defDB = 1
-
+    
+    default.LOBdbase = NULL # to satisfy R CMD CHECK
     data(default.LOBdbase, envir = environment())
-    database = default.LOBdbase[[polarity]]
+    LOBdbase = default.LOBdbase
+    database = LOBdbase[[polarity]]
 
   }
 
@@ -117,7 +119,8 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   if (rt.restrict==TRUE) {
 
     if (is.null(rt.windows)) { # use defaults
-
+      
+      default.rt.windows = NULL # to satisfy R CMD CHECK
       data(default.rt.windows, envir = environment())
       rt.windows = default.rt.windows
       defRTwin = 1
@@ -557,6 +560,7 @@ evalFeatureRT = function(matched.frag_IDs, assignment.rt, rt.windows, database) 
   
   if (is.null(rt.windows)) { # use defaults
     
+    default.rt.windows = NULL # to satisfy R CMD CHECK
     data(default.rt.windows, envir = environment())
     rt.windows = default.rt.windows
     

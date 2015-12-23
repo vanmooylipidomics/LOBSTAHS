@@ -147,17 +147,19 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) { #
   
   if (use.default.componentTable==TRUE) {
     
+    default.componentCompTable = NULL # to satisfy R CMD CHECK
     data(default.componentCompTable, envir = environment())
+    componentCompTable = default.componentCompTable
     
   } else {
     
-    componentCompTable.raw = read.table(componentTableLoc, sep=",", header = TRUE, row.names = 1)
+    componentCompTable = read.table(componentTableLoc, sep=",", header = TRUE, row.names = 1)
     
   }
   
   # put columns in alphabetical order
   
-  componentCompTable = default.componentCompTable[order(colnames(default.componentCompTable))]
+  componentCompTable = componentCompTable[order(colnames(componentCompTable))]
   
   # calculate exact masses of basic components and extract into a few separate tables
   # note: this will calculate full exact masses of pigments and DNP-PE
@@ -199,7 +201,9 @@ loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRang
   
   if (use.default.acylRanges==TRUE) {
     
+    default.acylRanges = NULL # to satisfy R CMD CHECK
     data(default.acylRanges, envir = environment())
+    acylRanges = default.acylRanges
     
   } else {
     
@@ -211,7 +215,9 @@ loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRang
   
   if (use.default.oxyRanges==TRUE) {
     
+    default.oxyRanges = NULL # to satisfy R CMD CHECK
     data(default.oxyRanges, envir = environment())
+    oxyRanges = default.oxyRanges
     
   } else {
     
@@ -219,7 +225,7 @@ loadSimRanges = function(acylRangeTableLoc,oxyRangeTableLoc,use.default.acylRang
     
   }
   
-  list(acylC_DB=default.acylRanges,addl_oxy=default.oxyRanges)
+  list(acylC_DB=acylRanges,addl_oxy=oxyRanges)
   
 }
 
@@ -229,7 +235,9 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) { # input should be file lo
   
   if (use.default.AIHtable==TRUE) {
     
+    default.adductHierarchies = NULL # to satisfy R CMD CHECK
     data(default.adductHierarchies, envir = environment())
+    adductHierarchies = default.adductHierarchies
     
   } else {
     
@@ -239,9 +247,9 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) { # input should be file lo
   
   # for compatibility, also assign values in "Adduct" as row names
   
-  row.names(default.adductHierarchies) = default.adductHierarchies$Adduct
+  row.names(adductHierarchies) = adductHierarchies$Adduct
   
-  return(default.adductHierarchies)
+  return(adductHierarchies)
   
 }
 
@@ -542,6 +550,9 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
                 this.mz = this.parent_exactneutralmass+this.adduct_exact_mass
                 
                 # ascertain parent compound elemental formula
+                
+                Species_class = NULL # to satisfy R CMD CHECK
+                Exact_mass = NULL # to satisfy R CMD CHECK
                 
                 these.base_elements = subset(baseComponent.masses[i,], select=-c(Species_class,Exact_mass)) 
                 these.base_elements["C"] = these.base_elements["C"]+this.FA_total_no_C
