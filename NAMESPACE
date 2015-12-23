@@ -1,46 +1,22 @@
 import("xcms",
        "CAMERA",
-       "methods"
-       )
+       "methods")
 
 importFrom("utils",
            "write.csv",
            "object.size",
            "read.table",
-           "read.csv"
-           )
+           "read.csv")
 
-export(
-       "doLOBscreen",
+export("doLOBscreen",
        "loadLOBdbase",
-#       "getformattedIsoData",
-#       "matchbyPPM",
        "extractLOBdbasedata",
-#       "evalFeatureRT",
-#       "excludeoddFAlength",
-#       "trimAssignments",
-       "getLOBpeaklist"
-#       "screenPSpectrum"
-       )
+       "getLOBpeaklist")
 
-export(
-       "generateLOBdbase",
-#       "defineElemExactMasses",
-#       "calcComponentMasses",
-#       "loadSimRanges",
-#       "loadAIH",
-#       "calcNumCombs",
-#       "genTimeStamp",
-       "exportDBtoCSV"
-#       "runSim"
-       )
+export("generateLOBdbase")
 
-exportClasses(
-              "LOBSet",
-              "LOBdbase"
-              )
+exportClasses("LOBSet",
+              "LOBdbase")
 
-exportMethods(
-              "[",
-              "show"
-              )
+exportMethods("[",
+              "show")
