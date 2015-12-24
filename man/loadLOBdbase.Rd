@@ -44,20 +44,20 @@ data(default.LOBdbase)
 neg.DB = default.LOBdbase$negative
 
 fname = paste0("LOBSTAHS_lipid-oxy_DB_",
-               strtrim(as.character(negDB@polarity),3),".csv")
+               strtrim(as.character(neg.DB@polarity),3),".csv")
   
-exportmat = data.frame(negDB@frag_ID,
-                         negDB@mz,
-                         negDB@exact_parent_neutral_mass,
-                         as.character(negDB@lipid_class),
-                         as.character(negDB@species),
-                         as.character(negDB@adduct),
-                         as.character(negDB@adduct_rank),
-                         negDB@FA_total_no_C,
-                         negDB@FA_total_no_DB,
-                         negDB@degree_oxidation,
-                         negDB@parent_elem_formula,
-                         negDB@parent_compound_name,
+exportmat = data.frame(neg.DB@frag_ID,
+                         neg.DB@mz,
+                         neg.DB@exact_parent_neutral_mass,
+                         as.character(neg.DB@lipid_class),
+                         as.character(neg.DB@species),
+                         as.character(neg.DB@adduct),
+                         as.character(neg.DB@adduct_rank),
+                         neg.DB@FA_total_no_C,
+                         neg.DB@FA_total_no_DB,
+                         neg.DB@degree_oxidation,
+                         neg.DB@parent_elem_formula,
+                         neg.DB@parent_compound_name,
                          stringsAsFactors = FALSE)
   
 colnames(exportmat) = c("frag_ID","mz","exact_parent_neutral_mass",
@@ -70,7 +70,7 @@ write.csv(exportmat, fname)
 ## reimport it
 
 neg.DB.reimported = loadLOBdbase("LOBSTAHS_lipid-oxy_DB_neg.csv",
-                                 polarity = "positive",
+                                 polarity = "negative",
                                  num.compounds = NULL)
 }
 \keyword{methods}

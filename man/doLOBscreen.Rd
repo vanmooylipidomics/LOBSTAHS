@@ -60,24 +60,23 @@ James Collins, \email{james.r.collins@aya.yale.edu}
   \code{\link{generateLOBdbase}},
   \code{\link{default.LOBdbase}},
   \code{\link{default.rt.windows}},
-  \code{\link{PtH2O2lipids}},
   \code{\linkS4class{xcmsSet}},
   \code{\linkS4class{xsAnnotate}},
   \code{\link[CAMERA]{findIsotopes}}
 }
 \examples{
-### screen & annotate "xsAnnotate" object for the PtH2O2lipids dataset using all
-### screening options
-#library(LOBSTAHS)
-#library(PtH2O2lipids)
+## screen & annotate "xsAnnotate" object from the PtH2O2lipids dataset using all
+## screening options
+library(LOBSTAHS)
+library(PtH2O2lipids)
 
-#myPtH202LOBSet = doLOBscreen(PtH2O2lipids$xsAnnotate, polarity = "positive",
-#                             database = NULL, remove.iso = TRUE,
-#                             rt.restrict =  TRUE, rt.windows = NULL,
-#                             exclude.oddFA = TRUE, match.ppm = 2.5)
+myPtH202LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
+                             database = NULL, remove.iso = TRUE,
+                             rt.restrict =  TRUE, rt.windows = NULL,
+                             exclude.oddFA = TRUE, match.ppm = 2.5)
 
 ## show some diagnostics
-#PtH2O2lipids$LOBSet@LOBscreen.diagnostics # screening diagnostics
-#PtH2O2lipids$LOBSet@LOBisoID.diagnostics # isomer identification data
+myPtH202LOBSet@LOBscreen.diagnostics # screening diagnostics
+myPtH202LOBSet@LOBisoID.diagnostics # isomer identification data
 }
 \keyword{methods}

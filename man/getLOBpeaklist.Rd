@@ -65,13 +65,14 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \seealso{
   \code{\linkS4class{LOBSet}},
   \code{\link{doLOBscreen}}
+
 }
 \examples{
 ## export peaklist, with isomer data
-#library(LOBSTAHS)
-#library(PtH2O2lipids)
+library(LOBSTAHS)
+library(PtH2O2lipids)
 
-#PtH2O2.peakdata = getLOBpeaklist(PtH2O2lipids$LOBSet, include.iso = TRUE,
-#                                 gen.csv = FALSE)
+PtH2O2.peakdata = getLOBpeaklist(ptH2O2lipids$LOBSet, include.iso = TRUE,
+                                 gen.csv = FALSE)
 }
 \keyword{methods}
