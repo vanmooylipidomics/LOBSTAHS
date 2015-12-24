@@ -174,7 +174,8 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) { #
   
   # assuming same no. of building blocks, calculate exact masses & store as additional column in componentCompTable
   
-  componentCompTable[,ncol(componentCompTable)+1] = apply(componentCompTable[,1:ncol(componentCompTable)-1], 1, function(x) sum(x*exact.masses,na.rm = TRUE))
+  componentCompTable = cbind(componentCompTable,matrix(data = NA, nrow = nrow(componentCompTable), ncol = 1)) # preallocate
+  componentCompTable[,ncol(componentCompTable)] = apply(as.matrix(sapply(componentCompTable[,1:(ncol(componentCompTable)-2)], as.numeric)), 1, function(x) sum(x*exact.masses,na.rm = TRUE))
   colnames(componentCompTable)[ncol(componentCompTable)] = c("Exact_mass")
   
   # extract masses of adducts into separate table (we'll need these later); create basecomponent.masses by removing adduct data from componentCompTable
