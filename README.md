@@ -42,7 +42,7 @@ install_github("vanmooylipidomics/LOBSTAHS")
 
 ```
 
-**Installing example data & xsAnnotate object**
+**Install 'PtH2O2lipids,' containing example data & xsAnnotate object**
 
 ```R
 ## install dataset 'PtH2O2lipids'
