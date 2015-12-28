@@ -5,11 +5,58 @@ Repo for the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole
 <h4>Citation</h4> 
 LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, "Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets"
 
-<h4>Dataset preparation in xcms and CAMERA</h4> 
+<h4>Installation</h4>
+
+**Install dependencies**
+
+```R
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("CAMERA")
+biocLite("xcms")
+
+```
+
+**Install RTools**
+
+For windows:
+Download and install RTools from [http://cran.r-project.org/bin/windows/Rtools/](http://cran.r-project.org/bin/windows/Rtools/)
+
+For Unix:
+Install the R-development-packages (r-devel or r-base-dev)
+
+Install packages needed for installation from Github:
+
+```R
+
+install.packages("devtools")
+
+```
+
+**Install LOBSTAHS**
+
+```R
+
+library("devtools")
+install_github("vanmooylipidomics/LOBSTAHS") 
+
+```
+
+**Installing example data & xsAnnotate object**
+
+```R
+## install dataset 'PtH2O2lipids'
+## see LOBSTAHS documentation for examples 
+
+install_github("vanmooylipidomics/PtH2O2lipids)
+
+```
+
+<h4>LOBSTAHS dataset preparation in xcms and CAMERA</h4> 
 Data files must be assembled into a CAMERA xsAnnotate object prior to analysis with LOBSTAHS. Scripts are provided in the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox) for preparing HPLC-ESI-MS data from an Orbitrap Exactive mass spectrometer in [**xcms**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and then [**CAMERA**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). Or, the user can use his/her own implementation of xcms and CAMERA. We have successfully used the [IPO](https://github.com/glibiseller/IPO/) package to optimize xcms and CAMERA settings for a variety of datasets.
 
 <h4>In silico database generation</h4> 
-*In silico* data for a wide range of lipids, oxidized lipids, and oxylipins are then generated from user-supplied structural criteria using the database generation function `generateLOBdbase()`. The function pairs these *in silico* data with empirically-determined adduct ion abundance rankings for the major lipid classes. Users can generate their own matrices of structural property ranges to be considered during a `generateLOBdbase()` simulation using the Microsoft Excel spreadsheet templates provided in https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/data-raw. (Users should generate .csv files from this Excel spreadsheets.) Ranges of values can be specified for: 
+*In silico* data for a wide range of lipids, oxidized lipids, and oxylipins are generated from user-supplied structural criteria using the database generation function `generateLOBdbase()`. The function pairs these *in silico* data with empirically-determined adduct ion abundance rankings for the major lipid classes. Users can generate their own matrices of structural property ranges to be considered during a `generateLOBdbase()` simulation using the Microsoft Excel spreadsheet templates provided in https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/data-raw. (Users should generate .csv files from this Excel spreadsheets.) Ranges of values can be specified for: 
 
    * oxidation state,
    * total acyl carbon chain length, and
