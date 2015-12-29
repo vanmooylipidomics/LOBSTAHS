@@ -24,7 +24,7 @@ File path to a .csv file containing elemental composition definitions for the va
 A Microsoft Excel spreadsheet template included with the package at Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx can be used to generate a .custom csv file with elemental composition definitions in a format appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet may be downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx}.
 }
   \item{AIH.defs}{
-File path to a .csv file containing empirical adduct ion hierarchy (AIH) data for various pigments and lipid classes. If nothing is specified, \code{generateLOBdbase} will use the default AIH data in (\code{\link{default.adductHierarchies}}). 
+File path to a .csv file containing empirical adduct ion hierarchy (AIH) data for various pigments and lipid classes. If nothing is specified, \code{generateLOBdbase} will use the default AIH data in (\code{\link{default.adductHierarchies}}).
 
 A Microsoft Excel spreadsheet template included with the package at Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx can be used to generate a .csv file with additional (or alternative) adduct hierarchy data in a format appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet may be downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx}.
 }
@@ -84,9 +84,10 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 
 library(LOBSTAHS)
 
+\donttest{
 LOBdbase.pos = generateLOBdbase(polarity = "positive", gen.csv = FALSE,
                                 component.defs = NULL, AIH.defs = NULL,
                                 acyl.ranges = NULL, oxy.ranges = NULL)
-
+}
 }
 \keyword{methods}

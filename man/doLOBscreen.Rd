@@ -21,7 +21,7 @@ Specify polarity mode of data in \code{xsA}: "positive" or "negative." \code{doL
   \item{database}{
 Specify the \code{LOBdbase} from which compound identities and adduct ion hierarchy data are to be applied. If nothing is specified, \code{doLOBscreen} will use the LOBSTAHS default database (\code{\link{default.LOBdbase}}) for the appropriate ionization mode.
 
-The database generation function \code{\link{generateLOBdbase}} can be used to create a LOBdbase from structural property ranges specified by the user in a series of input tables. \code{\link{loadLOBdbase}} can be used to import and reconstruct a \code{"LOBdbase"} object from a previously generated database that was saved as a .csv file. 
+The database generation function \code{\link{generateLOBdbase}} can be used to create a LOBdbase from structural property ranges specified by the user in a series of input tables. \code{\link{loadLOBdbase}} can be used to import and reconstruct a \code{"LOBdbase"} object from a previously generated database that was saved as a .csv file.
 }
   \item{remove.iso}{
 Should secondary isotope peaks be removed? (If \code{TRUE}, \code{xsA} must contain isotope data obtained using \code{\link[CAMERA]{findIsotopes}}.)
@@ -70,6 +70,7 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 library(LOBSTAHS)
 library(PtH2O2lipids)
 
+\donttest{
 myPtH202LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
                              database = NULL, remove.iso = TRUE,
                              rt.restrict =  TRUE, rt.windows = NULL,
@@ -78,5 +79,6 @@ myPtH202LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
 ## show some diagnostics
 myPtH202LOBSet@LOBscreen.diagnostics # screening diagnostics
 myPtH202LOBSet@LOBisoID.diagnostics # isomer identification data
+}
 }
 \keyword{methods}
