@@ -117,6 +117,8 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   # set things up for rt window screening
 
   if (rt.restrict==TRUE) {
+    
+    warning("User elected screening based on retention time. If any flavor of xcms retention time correction was applied to the dataset prior to analysis with LOBSTAHS, user is advised to consider whether RT screening was a wise choice. Although LOBSTAHS adds a 10% buffer to all retention times to account for small shifts that occur during RT correction, poor results may arise if the original data showed wide variance in retention time.\n")
 
     if (is.null(rt.windows)) { # use defaults
       
@@ -556,7 +558,7 @@ extractLOBdbasedata = function(frag_ID, database) {
 
 # evalFeatureRT: evaluates retention times of xcms peakgroups to which putative database assignments have been made against retention time window restrictions supplied by user
 
-evalFeatureRT = function(matched.frag_IDs, assignment.rt, rt.windows, database) { # assignment.rt is the mean retention time of a peakgroup; matched.frag_IDs are the database fragment IDs of the putative database assignment(s) matched to that peakgroup
+evalFeatureRT = function(matched.frag_IDs, assignment.rtmin, assignment.rtmax, rt.windows, database) { # assignment.rtmin and max are the min and max retention times of a peakgroup; matched.frag_IDs are the database fragment IDs of the putative database assignment(s) matched to that peakgroup
   
   if (is.null(rt.windows)) { # use defaults
     
@@ -566,8 +568,16 @@ evalFeatureRT = function(matched.frag_IDs, assignment.rt, rt.windows, database) 
     
   }
 
-  assignment.rt = assignment.rt/60 # convert observed feature rt from seconds to minutes
-
+  # convert observed feature rts from seconds to minutes
+  
+  assignment.rtmin = assignment.rtmin/60
+  assignment.rtmax = assignment.rtmax/60
+  
+  # incorporate a conservative (10%) error into each value, to account for the fact that rt's can be altered from observed values during xcms retention time correction; the extra 10% should be sufficient in most cases, unless the user fed xcms a low-quality dataset with very large variance in rt 
+  
+  assignment.rtmin = assignment.rtmin-assignment.rtmin*.1
+  assignment.rtmax = assignment.rtmax+assignment.rtmax*.1
+  
   ID.eval = rep(TRUE, length(matched.frag_IDs)) # vector of logicals to record of the compliance of each assignment
 
   if (length(matched.frag_IDs)>0) { # matches were made to this feature
@@ -580,7 +590,7 @@ evalFeatureRT = function(matched.frag_IDs, assignment.rt, rt.windows, database) 
 
         if (!is.na(rt.windowdata$rt_win_min) & !is.na(rt.windowdata$rt_win_max)) { # we have an upper and lower bound for this class
 
-          if (!(assignment.rt>rt.windowdata$rt_win_min & assignment.rt<rt.windowdata$rt_win_max)) {
+          if (!(assignment.rtmax>rt.windowdata$rt_win_min & assignment.rtmin<rt.windowdata$rt_win_max)) {
 
             ID.eval[i] = FALSE
 
@@ -588,7 +598,7 @@ evalFeatureRT = function(matched.frag_IDs, assignment.rt, rt.windows, database) 
 
         } else if (!is.na(rt.windowdata$rt_win_min) & is.na(rt.windowdata$rt_win_max)) { # we only have a lower bound
 
-          if (!(assignment.rt>rt.windowdata$rt_win_min)) {
+          if (!(assignment.rtmax>rt.windowdata$rt_win_min)) {
 
             ID.eval[i] = FALSE
 
@@ -596,7 +606,7 @@ evalFeatureRT = function(matched.frag_IDs, assignment.rt, rt.windows, database) 
 
         } else if (is.na(rt.windowdata$rt_win_min) & !is.na(rt.windowdata$rt_win_max)) { # we only have an upper bound
 
-          if (!(assignment.rt<rt.windowdata$rt_win_max)) {
+          if (!(assignment.rtmin<rt.windowdata$rt_win_max)) {
 
             ID.eval[i] = FALSE
 
@@ -624,8 +634,8 @@ excludeoddFAlength = function(matched.frag_IDs, database) {
 
     for (i in 1:length(matched.frag_IDs)) {
 
-      if (database@lipid_class[database@frag_ID==matched.frag_IDs[i]] %in% c("IP_DAG","PUA","DNPPE","TAG")) {
-
+      if (database@lipid_class[database@frag_ID==matched.frag_IDs[i]] %in% c("IP_DAG","PUA","FFA","TAG")) {
+        
         if (database@FA_total_no_C[database@frag_ID==matched.frag_IDs[i]]%%2!=0) {
 
           ID.eval[i] = FALSE
@@ -804,7 +814,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
   if (rt.restrict==TRUE) {
 
-    rt.matches = mapply(evalFeatureRT, matched.frag_IDs = current.matches, assignment.rt = pgdata$rt, MoreArgs =  list(database = database, rt.windows = rt.windows), SIMPLIFY = FALSE)
+    rt.matches = mapply(evalFeatureRT, matched.frag_IDs = current.matches, assignment.rtmin = pgdata$rtmin, assignment.rtmax = pgdata$rtmax, MoreArgs =  list(database = database, rt.windows = rt.windows), SIMPLIFY = FALSE)
 
     if (length(unlist(rt.matches)) > 0) { # we still have matches
 
