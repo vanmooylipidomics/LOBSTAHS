@@ -1,7 +1,7 @@
 Package: LOBSTAHS
 Title: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences
-Version: 1.0
-Date: 2015-12-19
+Version: 0.2
+Date: 2016-01-02
 Authors@R: c(
     person("James", "Collins", email = "james.r.collins@aya.yale.edu", role = c("aut", "cre")),
     person("Helen", "Fredricks", email = "hfredricks@whoi.edu", role = c("aut")),
@@ -35,4 +35,3 @@ Description: LOBSTAHS is a multifunction package for screening, annotation, and
 License: MIT + file LICENSE
 URL: https://github.com/vanmooylipidomics/LOBSTAHS
 BugReports: https://github.com/vanmooylipidomics/LOBSTAHS/issues/new
-RoxygenNote: 5.0.1
