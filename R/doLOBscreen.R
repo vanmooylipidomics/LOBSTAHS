@@ -118,7 +118,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
 
   if (rt.restrict==TRUE) {
     
-    warning("User elected screening based on retention time. If any flavor of xcms retention time correction was applied to the dataset prior to analysis with LOBSTAHS, user is advised to consider whether RT screening was a wise choice. Although LOBSTAHS adds a 10% buffer to all retention times to account for small shifts that occur during RT correction, poor results may arise if the original data showed wide variance in retention time.\n")
+    warning("User elected screening based on retention time. If any flavor of xcms retention time correction was applied to the dataset prior to analysis with LOBSTAHS, user is advised to consider whether RT screening was a wise choice. Although LOBSTAHS adds a 10% buffer to all retention times to account for small shifts that may occur during RT correction, poor results may arise if the original data contained wide variance in retention time.\n")
 
     if (is.null(rt.windows)) { # use defaults
       
