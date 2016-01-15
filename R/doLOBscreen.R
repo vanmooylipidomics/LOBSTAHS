@@ -763,7 +763,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   # define a matrix to hold diagnostic data elements
 
   diagnostic.data = data.frame(matrix(data = NA, nrow = 6, ncol = 4))
-  colnames(diagnostic.data) = c("peakgroups","peaks","adducts","parent_compounds")
+  colnames(diagnostic.data) = c("peakgroups","peaks","assignments","parent_compounds")
   rownames(diagnostic.data) = c("initial","post.remove.iso","initial.assignments","post.rt.restrict","post.exclude.oddFA","post.AIHscreen")
 
   diagnostic.data[c("initial"),c("peakgroups","peaks")] = c(nrow(pgdata),sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
@@ -796,7 +796,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
   if (length(unlist(init.matches)) > 0) { # we still have matches
 
-    diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","adducts","parent_compounds")] =
+    diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","assignments","parent_compounds")] =
       c(sum(sapply(init.matches, function(x) length(x)>0)),
         sum(pgdata[sapply(init.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
         sum(sapply(init.matches, length)),
@@ -804,7 +804,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
   } else {
 
-    diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","adducts","parent_compounds")] = c(rep(0,4))
+    diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","assignments","parent_compounds")] = c(rep(0,4))
 
   }
 
@@ -818,7 +818,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
     if (length(unlist(rt.matches)) > 0) { # we still have matches
 
-      diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","adducts","parent_compounds")] =
+      diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","assignments","parent_compounds")] =
         c(sum(sapply(rt.matches, function(x) length(x)>0)),
           sum(pgdata[sapply(rt.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
           sum(sapply(rt.matches, length)),
@@ -826,7 +826,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
     } else {
 
-      diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","adducts","parent_compounds")] = c(rep(0,4))
+      diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","assignments","parent_compounds")] = c(rep(0,4))
 
     }
 
@@ -842,7 +842,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
     if (length(unlist(evenFA.matches)) > 0) { # we still have matches
 
-      diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","adducts","parent_compounds")] =
+      diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","assignments","parent_compounds")] =
         c(sum(sapply(evenFA.matches, function(x) length(x)>0)),
           sum(pgdata[sapply(evenFA.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
           sum(sapply(evenFA.matches, length)),
@@ -850,7 +850,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
     } else {
 
-      diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","adducts","parent_compounds")] = c(rep(0,4))
+      diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","assignments","parent_compounds")] = c(rep(0,4))
 
     }
 
@@ -1177,15 +1177,15 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
   if (length(unlist(current.matches)) > 0) {
 
-    diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","adducts","parent_compounds")] =
+    diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","assignments","parent_compounds")] =
       c(length(unique(screened.peaktable$xcms_peakgroup)),
         sum(apply(screened.peaktable[!duplicated(screened.peaktable$xcms_peakgroup),11:(10+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0)),
-        NA,
+        nrow(screened.peaktable),
         length(unique(screened.peaktable$compound_name)))
 
   } else {
 
-    diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","adducts","parent_compounds")] = c(0,0,NA,0)
+    diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","assignments","parent_compounds")] = c(0,0,NA,0)
     screened.peaktable = NULL
     isodata.C3r = NULL
 
