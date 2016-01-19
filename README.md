@@ -48,7 +48,7 @@ install_github("vanmooylipidomics/LOBSTAHS")
 ## install dataset 'PtH2O2lipids'
 ## see LOBSTAHS documentation for examples 
 
-install_github("vanmooylipidomics/PtH2O2lipids)
+install_github("vanmooylipidomics/PtH2O2lipids")
 
 ```
 
