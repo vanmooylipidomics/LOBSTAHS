@@ -623,7 +623,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies, baseCompon
   object = new("LOBdbase")
   
   object@frag_ID = as.integer(sim_results$frag_ID)
-  object@mz = as.numeric(sim_results$mz)
+  object@mz = round(as.numeric(sim_results$mz),12) # 12 decimal places is far more than enough precision for what we need; also, some very small arithmetic errors occur beyond the 14th decimal place which throw off distinction between isobars and true isomers
   object@exact_parent_neutral_mass = as.numeric(sim_results$exact_parent_neutral_mass)
   object@lipid_class = as.factor(as.character(sim_results$lipid_class))
   object@species = as.character(sim_results$species)
