@@ -753,12 +753,12 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   isotopes = as.character(sapply(isodata, getformattedIsoData, polarity = polarity)) # generate isotope strings
   num.treatments = length(levels(xsA@xcmsSet@phenoData$class)) # get number of sample treatments in original dataset (i.e., xcms "classes")
 
-  if (length(pgdata)<=26) {
+  if (length(pgdata)<=(7+num.treatments+length(sampnames(xsA@xcmsSet)))) {
 
     pgdata = t(pgdata)
 
   }
-
+  
   pgdata = data.frame(pgdata, xcms_peakgroup, isotopes, CAMERA_pseudospectrum, stringsAsFactors = FALSE) # combine into data frame
 
   # define a matrix to hold diagnostic data elements
