@@ -751,6 +751,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   CAMERA_pseudospectrum = rep(pseudospectrum,length(pgdata)/ncol(xsA@groupInfo)) # create a vector that captures this ps number
   isodata = xsA@isotopes[xcms_peakgroup] # extract isotope data
   isotopes = as.character(sapply(isodata, getformattedIsoData, polarity = polarity)) # generate isotope strings
+  num.treatments = length(levels(xsA@xcmsSet@phenoData$class)) # get number of sample treatments in original dataset (i.e., xcms "classes")
 
   if (length(pgdata)<=26) {
 
@@ -766,7 +767,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   colnames(diagnostic.data) = c("peakgroups","peaks","assignments","parent_compounds")
   rownames(diagnostic.data) = c("initial","post.remove.iso","initial.assignments","post.rt.restrict","post.exclude.oddFA","post.AIHscreen")
 
-  diagnostic.data[c("initial"),c("peakgroups","peaks")] = c(nrow(pgdata),sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
+  diagnostic.data[c("initial"),c("peakgroups","peaks")] = c(nrow(pgdata),sum(pgdata[,(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))]>0))
 
   ################# begin pre-screening #################
 
@@ -780,7 +781,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
       diagnostic.data[c("post.remove.iso"),c("peakgroups","peaks")] =
         c(nrow(pgdata),
-          sum(pgdata[,11:(10+length(sampnames(xsA@xcmsSet)))]>0))
+          sum(pgdata[,(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))]>0))
 
     } else {
 
@@ -798,7 +799,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
     diagnostic.data[c("initial.assignments"),c("peakgroups","peaks","assignments","parent_compounds")] =
       c(sum(sapply(init.matches, function(x) length(x)>0)),
-        sum(pgdata[sapply(init.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+        sum(pgdata[sapply(init.matches, function(x) length(x)>0),(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))]>0),
         sum(sapply(init.matches, length)),
         length(unique(database@parent_compound_name[unlist(init.matches)])))
 
@@ -820,7 +821,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
       diagnostic.data[c("post.rt.restrict"),c("peakgroups","peaks","assignments","parent_compounds")] =
         c(sum(sapply(rt.matches, function(x) length(x)>0)),
-          sum(pgdata[sapply(rt.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+          sum(pgdata[sapply(rt.matches, function(x) length(x)>0),(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))]>0),
           sum(sapply(rt.matches, length)),
           length(unique(database@parent_compound_name[unlist(rt.matches)])))
 
@@ -844,7 +845,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
       diagnostic.data[c("post.exclude.oddFA"),c("peakgroups","peaks","assignments","parent_compounds")] =
         c(sum(sapply(evenFA.matches, function(x) length(x)>0)),
-          sum(pgdata[sapply(evenFA.matches, function(x) length(x)>0),11:(10+length(sampnames(xsA@xcmsSet)))]>0),
+          sum(pgdata[sapply(evenFA.matches, function(x) length(x)>0),(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))]>0),
           sum(sapply(evenFA.matches, length)),
           length(unique(database@parent_compound_name[unlist(evenFA.matches)])))
 
@@ -884,7 +885,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
       if (length(multiadduct.parent.compounds) > 0) {  # if we don't have any potential case 2a/2b/3r species, skip this part
 
         for (i in 1:length(multiadduct.parent.compounds)) {
-
+          
           observed.adducts.this.parent = mapply(function(x,y) as.character(x[y==multiadduct.parent.compounds[i]]), adducts.current.matches, parent.compounds.current.matches) # return all observed adducts of this case 2/3r parent compound appearing in this pseudospectrum
 
           frag_IDs.this.parent = mapply(function(x,y) as.character(x[y==multiadduct.parent.compounds[i]]), current.matches, parent.compounds.current.matches) # return all frag_IDs for this case 2/3r parent compound appearing in this pseudospectrum
@@ -1007,13 +1008,16 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
             if (!exists("screened.peaktable")) { # it's the first peaktable entry
 
               # create a matrix for our results, and a list for storing any C3r isodata
-
-              screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+13+length(casecodes))))
+              
+              peaktable.ncols = ncol(pgdata)+13+length(casecodes)
+              
+              screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = peaktable.ncols))
+              
               colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"casecodes","LOBdbase.ppm.match")
 
               # record data
 
-              screened.peaktable[,1:51] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
+              screened.peaktable[,1:(peaktable.ncols-2)] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
 
             } else { # it's not the first sample, so rbind
 
@@ -1126,13 +1130,16 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
               # create a matrix for our results, and a list for storing any C3r isodata
 
-              screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = (ncol(pgdata)+13+length(casecodes))))
+              peaktable.ncols = ncol(pgdata)+13+length(casecodes)
+              
+              screened.peaktable = data.frame(matrix(data = NA, nrow = nrow(peakdata_to_record), ncol = peaktable.ncols))
+              
               colnames(screened.peaktable) = c(colnames(pgdata),"LOBdbase.frag_ID","LOBdbase.exact_parent_neutral_mass","LOBdbase.mz","lipid_class","species","major.adduct","FA_total_no_C","FA_total_no_DB","degree_oxidation","elem_formula","compound_name",casecodes,"casecodes","LOBdbase.ppm.match")
-
+              
               # record data
-
-              screened.peaktable[,1:51] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
-
+              
+              screened.peaktable[,1:(peaktable.ncols-2)] = cbind(peakdata_to_record,t(replicate(nrow(peakdata_to_record),current_casecodes)))
+              
             } else { # it's not the first sample, so rbind
 
               peakdata_to_record = cbind(peakdata_to_record,
@@ -1179,7 +1186,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
 
     diagnostic.data[c("post.AIHscreen"),c("peakgroups","peaks","assignments","parent_compounds")] =
       c(length(unique(screened.peaktable$xcms_peakgroup)),
-        sum(apply(screened.peaktable[!duplicated(screened.peaktable$xcms_peakgroup),11:(10+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0)),
+        sum(apply(screened.peaktable[!duplicated(screened.peaktable$xcms_peakgroup),(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0)),
         nrow(screened.peaktable),
         length(unique(screened.peaktable$compound_name)))
 
