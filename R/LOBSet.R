@@ -33,9 +33,9 @@ setMethod("show", "LOBSet", function(object) {
   cat("Compound assignments:",object@LOBscreen.diagnostics$parent_compounds[6],"\n")
   cat("m/z range:",paste(min(object@peakdata$peakgroup.mz, na.rm = TRUE),max(object@peakdata$peakgroup.mz, na.rm = TRUE), sep = "-"),"\n\n")
   
-  cat("Possible regisomers:",paste(object@LOBisoID.diagnostics$peakgroups[1],"\n"))
-  cat("Possible structural functional isomers:",paste(object@LOBisoID.diagnostics$peakgroups[2],"\n"))
-  cat("Isobars indistinguishable within ppm matching tolerance:",paste(object@LOBisoID.diagnostics$peakgroups[3],"\n\n"))
+  cat("Peak groups having possible regisomers:",paste(object@LOBisoID.diagnostics$peakgroups[1],"\n"))
+  cat("Peak groups having possible structural functional isomers:",paste(object@LOBisoID.diagnostics$peakgroups[2],"\n"))
+  cat("Peak groups having isobars indistinguishable within ppm matching tolerance:",paste(object@LOBisoID.diagnostics$peakgroups[3],"\n\n"))
   
   cat("Restrictions applied prior to conducting adduct ion hierarchy screening:",paste(c("remove.iso","rt.restrict","exclude.oddFA")[unlist(object@LOBscreen.settings[c("remove.iso","rt.restrict","exclude.oddFA")])], collapse = ", "),"\n\n")
   
