@@ -215,7 +215,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   colnames(screenedpeaks)[1:6] = c("peakgroup.mz","peakgroup.mzmin","peakgroup.mzmax","peakgroup.rt","peakgroup.rtmin","peakgroup.rtmax") # to clarify distinction between DB values and observed data
   isodata.C3r = unlist(lapply(screened.pspecdata, function(x) x[["isodata.C3r"]]), recursive = FALSE)
   LOBscreen.diagnostics = Reduce("+",lapply(screened.pspecdata, function(x) x[["diagnostic.data"]]))
-
+  
   # calculate the match delta ppm for each item in screenedpeaks
 
   screenedpeaks$LOBdbase.ppm.match = (screenedpeaks$LOBdbase.mz-screenedpeaks$peakgroup.mz)/screenedpeaks$LOBdbase.mz*1000000
@@ -227,11 +227,13 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   cat("Initial screening and annotation complete.",LOBscreen.diagnostics[c("post.AIHscreen"),c("peakgroups")],"peakgroups remain in dataset, to which",LOBscreen.diagnostics[c("post.AIHscreen"),c("parent_compounds")],"parent compound identities have been assigned from database.\n\n")
 
   # further screening to identify isomers
+  
+  num.treatments = length(levels(xsA@xcmsSet@phenoData$class)) # first, get number of sample treatments in original dataset (i.e., xcms "classes")
 
   # create a matrix to keep track of isomer data
 
-  LOBisoID.diagnostics = data.frame(matrix(data = NA, nrow = 3, ncol = 2))
-  colnames(LOBisoID.diagnostics) = c("peakgroups","parent_compounds")
+  LOBisoID.diagnostics = data.frame(matrix(data = NA, nrow = 3, ncol = 4))
+  colnames(LOBisoID.diagnostics) = c("peakgroups","parent_compounds","assignments","features")
   rownames(LOBisoID.diagnostics) = c("C3r_regio.iso","C3f_funct.struct.iso","C3c_isobars")
 
   # check for & tag any additional "case 3r" regioisomers
@@ -253,7 +255,12 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
 
   }
 
-  LOBisoID.diagnostics[c("C3r_regio.iso"),c("peakgroups","parent_compounds")] = c(nrow(screenedpeaks[screenedpeaks$C3r==1,]),length(unique(screenedpeaks$compound_name[screenedpeaks$C3r==1])))
+  LOBisoID.diagnostics[c("C3r_regio.iso"),c("peakgroups","parent_compounds","assignments","features")] =
+    c(length(unique(screenedpeaks[screenedpeaks$C3r==1,c("xcms_peakgroup")])),
+      length(unique(screenedpeaks$compound_name[screenedpeaks$C3r==1])),
+      nrow(screenedpeaks[screenedpeaks$C3r==1,]),
+      sum(apply(screenedpeaks[(!duplicated(screenedpeaks$xcms_peakgroup) & screenedpeaks$C3r==1),(12+num.treatments):(11+num.treatments+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0))
+      )
 
   cat("Found",LOBisoID.diagnostics$peakgroups[1],"possible regioisomers of",LOBisoID.diagnostics$parent_compounds[1],"parent compounds.\n\n")
 
@@ -294,10 +301,20 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
 
   }
 
-  LOBisoID.diagnostics[c("C3f_funct.struct.iso"),c("peakgroups","parent_compounds")] = c(nrow(screenedpeaks[screenedpeaks$C3f==1,]),length(unique(screenedpeaks$compound_name[screenedpeaks$C3f==1])))
+  LOBisoID.diagnostics[c("C3f_funct.struct.iso"),c("peakgroups","parent_compounds","assignments","features")] =
+    c(length(unique(screenedpeaks[screenedpeaks$C3f==1,c("xcms_peakgroup")])),
+      length(unique(screenedpeaks$compound_name[screenedpeaks$C3f==1])),
+      nrow(screenedpeaks[screenedpeaks$C3f==1,]),
+      sum(apply(screenedpeaks[(!duplicated(screenedpeaks$xcms_peakgroup) & screenedpeaks$C3f==1),(12+num.treatments):(11+num.treatments+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0))
+    )
 
-  LOBisoID.diagnostics[c("C3c_isobars"),c("peakgroups","parent_compounds")] = c(nrow(screenedpeaks[screenedpeaks$C3c==1,]),length(unique(screenedpeaks$compound_name[screenedpeaks$C3c==1])))
-
+  LOBisoID.diagnostics[c("C3c_isobars"),c("peakgroups","parent_compounds","assignments","features")] =
+    c(length(unique(screenedpeaks[screenedpeaks$C3c==1,c("xcms_peakgroup")])),
+      length(unique(screenedpeaks$compound_name[screenedpeaks$C3c==1])),
+      nrow(screenedpeaks[screenedpeaks$C3c==1,]),
+      sum(apply(screenedpeaks[(!duplicated(screenedpeaks$xcms_peakgroup) & screenedpeaks$C3c==1),(12+num.treatments):(11+num.treatments+length(sampnames(xsA@xcmsSet)))], c(1,2), function(x) x>0))
+    )
+  
   cat("Found",LOBisoID.diagnostics$peakgroups[2],"functional structural isomers and",LOBisoID.diagnostics$peakgroups[3],"isobars, representing",sum(LOBisoID.diagnostics$parent_compounds[c(2,3)]),"parent compounds.\n")
 
 #   cat("Found",LOBisoID.diagnostics$peakgroups[2],"functional structural isomers and",LOBisoID.diagnostics$peakgroups[3],"isobars. These isobars are compound assignments that differ in m/z so narrowly that they cannot be resolved from each other at",match.ppm,"ppm. Together, these assignments represent",sum(LOBisoID.diagnostics$parent_compounds[c(2,3)]),"different parent compounds.\n")
