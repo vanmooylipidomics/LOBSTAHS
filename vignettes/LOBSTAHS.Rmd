@@ -17,7 +17,7 @@ This document describes the purpose and use of the R-package **LOBSTAHS: Lipid a
 
 LOBSTAHS contains several functions to help scientists discover and identify lipid and oxidized lipid biomarkers in HPLC-MS data that have been pre-processed with the popular R packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). First, LOBSTAHS uses exact mass to make initial compound assignments from a set of customizable onboard databases. Then, a series of orthogonal screening criteria are applied to refine and winnow the list of assignments. A basic workflow based on xcms, CAMERA, and LOBSTAHS is illustrated in Fig. 1. Each step is described below in detail. 
 
-<img src = "images/Fig1.jpg">
+<img src="images/Fig1.jpg" width="695">
 
 - Never uses retina figures
 - Has a smaller default figure size
