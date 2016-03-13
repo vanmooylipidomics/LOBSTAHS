@@ -1,0 +1,66 @@
+---
+title: "Discovery, Identification, and Screening of Lipids and Oxylipins in HPLC-MS Datasets Using LOBSTAHS"
+author: "James Collins"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Discovery, Identification, and Screening of Lipids and Oxylipins in HPLC-MS Datasets Using LOBSTAHS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+This document describes the purpose and use of the R-package **LOBSTAHS: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences**. In the sections below LOBSTAHS package functions are applied to a model dataset using example code. LOBSTAHS requires the additional packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html); the model dataset, consisting of lipid data from cultures of the marine diatom Phaeodactylum tricornutum, is contained in the R data package [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids).
+
+## Purpose
+
+LOBSTAHS contains several functions to help scientists discover and identify lipid and oxidized lipid biomarkers in HPLC-MS data that have been pre-processed with the popular R packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). First, LOBSTAHS uses exact mass to make initial compound assignments from a set of customizable onboard databases. Then, a series of orthogonal screening criteria are applied to refine and winnow the list of assignments. A basic workflow based on xcms, CAMERA, and LOBSTAHS is illustrated in Fig. 1. Each step is described below in detail. 
+
+<img src = "images/Fig1.pdf">
+
+- Never uses retina figures
+- Has a smaller default figure size
+- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))

@@ -4,18 +4,15 @@
 # .history files
 *.history
 *.Rhistory
-
 # MATLAB temp files
 *.m~
-
 # RData but not *.RData
 .RData
-
 # .DS_Store
 *.DS_Store
-
 # directories & files I dont want indexed, for now
 r_process_files
 rsmDirectory
 .Rproj.user
 xset_a.RData
+inst/doc
