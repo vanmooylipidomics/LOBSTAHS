@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
@@ -113,20 +116,23 @@ library(xcms)
 library(CAMERA)
 library(LOBSTAHS)
 
-# first, a necessary workaround to avoid a import error; see https://support.bioconductor.org/p/69414/
+# first, a necessary workaround to avoid a import error; see
+# https://support.bioconductor.org/p/69414/
 
 imports = parent.env(getNamespace("CAMERA"))
 unlockBinding("groups", imports)
 imports[["groups"]] = xcms::groups
 lockBinding("groups", imports)
 
-# create annotated xset using wrapper annotate(), allowing us to perform all CAMERA tasks at once
+# create annotated xset using wrapper annotate(), allowing us to perform all
+# CAMERA tasks at once
 
 xsA = annotate(ptH2O2lipids$xsAnnotate@xcmsSet,
                    
                quick=FALSE,
                sample=NA, # use all samples
-               nSlaves=1, # set to number of available cores or processors if > 1
+               nSlaves=1, # set to number of available cores or processors if 
+                          # > 1
                    
                # group FWHM settings (defaults)
                    
@@ -152,7 +158,8 @@ xsA = annotate(ptH2O2lipids$xsAnnotate@xcmsSet,
                    
                psg_list=NULL,
                rules=NULL,
-               polarity="positive", # the PtH2O2lipids xcmsSet contains positive-mode data
+               polarity="positive", # the PtH2O2lipids xcmsSet contains
+                                    # positive-mode data
                multiplier=3,
                max_peaks=100,
                    
