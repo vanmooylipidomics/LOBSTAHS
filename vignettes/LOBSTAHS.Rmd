@@ -407,7 +407,7 @@ Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature de
 
 ### Notes
 
-1. Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers"<div id="note1"> </span>
+1. Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers"
 
 1. <span id="note2">Smith et al., 2006, "XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification," *Anal. Chem.* **78**: 779–787; Tautenhahn et al., 2008, "Highly sensitive feature detection for high resolution LC/MS," *BMC Bioinformatics* **9**: 504; Benton et al., 2010, "Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data," *Bioinformatics* **26**: 2488-2489</span>
 
