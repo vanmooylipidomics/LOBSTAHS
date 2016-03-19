@@ -1,7 +1,3 @@
-```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-```
-
 ---
 title: "Discovery, Identification, and Screening of Lipids and Oxylipins in HPLC-MS Datasets Using LOBSTAHS"
 author: "James Collins"
@@ -12,6 +8,9 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
 ### Introduction
 
