@@ -1,6 +1,3 @@
-```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-```
 ---
 title: "Discovery, Identification, and Screening of Lipids and Oxylipins in HPLC-MS Datasets Using LOBSTAHS"
 author: "James Collins"
@@ -14,7 +11,7 @@ vignette: >
 
 ### Introduction
 
-This document describes the purpose and use of the R-package **LOBSTAHS: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences**. The package is described in Collins et al. 2016.^[Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers"] In the sections below, LOBSTAHS package functions are applied to a model dataset using example code. LOBSTAHS requires the additional packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html)^[Smith et al., 2006, "XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification," *Anal. Chem.* **78**: 779–787; Tautenhahn et al., 2008, "Highly sensitive feature detection for high resolution LC/MS," *BMC Bioinformatics* **9**: 504; Benton et al., 2010, "Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data," *Bioinformatics* **26**: 2488-2489] and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html)^[Kuhl et al., 2012, "CAMERA: an integrated strategy for compound spectra extraction and annotation of liquid chromatography/mass spectrometry data sets," *Anal. Chem.* **84**: 283-289]; the model dataset, consisting of lipid data from cultures of the marine diatom *Phaeodactylum tricornutum*, is contained in the R data package [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids).
+This document describes the purpose and use of the R-package **LOBSTAHS: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences**. The package is described in Collins et al. 2016.<sup>[1](#note1)</sup> In the sections below, LOBSTAHS package functions are applied to a model dataset using example code. LOBSTAHS requires the additional packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html)<sup>[2](#note2)</sup> and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html)<sup>[3](#note3)</sup>; the model dataset, consisting of lipid data from cultures of the marine diatom *Phaeodactylum tricornutum*, is contained in the R data package [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids).
 
 ### Purpose
 
@@ -89,16 +86,28 @@ After all data files in a particular dataset have been converted and extracted i
 First, data files should be given intuitive file names (containing, e.g., a sample ID along with information on experimental timepoint and treatment) and placed into a directory structure according to an index variable; the xcms vignette [LC/MS Preprocessing and Analysis with xcms](https://bioconductor.org/packages/release/bioc/vignettes/xcms/inst/doc/xcmsPreprocess.pdf) contains a detailed explanation. Feature detection, retention time correction, and peak grouping should then be performed. Values of parameters for xcms functions can be obtained from several sources:
 
 * Package default values can be used (not recommended)
-* Values may be obtained from the literature^[See, e.g., Patti et al., 2012, "Meta-analysis of untargeted metabolomic data from multiple profiling experiment," *Nature Protocols* **7**: 508-516]
-* The R-package [IPO](https://github.com/glibiseller/IPO)^[Libiseller et al., 2015, "IPO: a tool for automated optimization of XCMS parameters," *BMC Bioinformatics* **16**: 118] can be used to optimize the values of many of the required parameters
+* Values may be obtained from the literature<sup>[4](#note4)</sup>
+* The R-package [IPO](https://github.com/glibiseller/IPO)<sup>[5](#note5)</sup> can be used to optimize the values of many of the required parameters
 
 The R script [prepOrbidata.R](https://github.com/vanmooylipidomics/LipidomicsToolbox/blob/master/prepOrbidata.R) (part of the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox)) contains code for complete preparation in xcms of the PtH2O2lipids (or similar) dataset. The script allows the user to apply parameter values assembled from the literature or obtain them from IPO optimization of a subset of samples. The final parameter values used in Collins et al. 2016 for analysis of the PtH2O2lipids dataset -- obtained using HPLC-ESI-MS on an Exactive Orbitrap instrument -- are given in Table S3 of the electronic supplement. The settings and values listed in the table could be used as a starting point for analysis of similar data.
 
 The xcmsSet produced using these settings from the *P. tricornutum* data is stored in the [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids) package:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
 library(PtH2O2lipids)
 ptH2O2lipids$xsAnnotate@xcmsSet
+#> An "xcmsSet" object with 16 samples
+#> 
+#> Time range: -1.1-1742.4 seconds (0-29 minutes)
+#> Mass range: 100.0397-1499.3326 m/z
+#> Peaks: 340991 (about 21312 per sample)
+#> Peak Groups: 18314 
+#> Sample classes: 0_uM_H2O2, 150_uM_H2O2, 30_uM_H2O2 
+#> 
+#> Profile settings: method = bin
+#>                   step = 0.001
+#> 
+#> Memory usage: 64.5 MB
 ```
 
 Whatever settings are used in xcms, the processed data should contain high-quality features which have been aligned across samples; the quality of the processed data should be verified by individual inspection of a subset of features. At the conclusion of processing with xcms, the user should have a single `xcmsSet` object containing the dataset.
@@ -198,13 +207,51 @@ Before screening a dataset with LOBSTAHS, you should first decide whewther to us
 
 We can access the default databases to examine their scope:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
 library(LOBSTAHS)
 data(default.LOBdbase)
 
 default.LOBdbase$positive # default positive mode database
+#> 
+#> A positive polarity "LOBdbase" object.
+#> 
+#> Contains entries for 76455 possible adduct ions of 13578 unique parent compounds.
+#> 
+#> Parent lipid types ( 4 ): DNPPE, IP_DAG, pigment, TAG 
+#> IP-DAG classes ( 8 ): DGCC, DGDG, DGTS_DGTA, PE, PG, PC, SQDG, MGDG 
+#> Pigments ( 22 ): Chl_a, 19prime_but_fuco, 19prime_hex_fuco, Allox, Alpha_carotene, Beta_carotenes, Chl_b, Chl_c2, Chl_c3, Chlide_a, Croco, Dd_Ddc, Dt, Echin, Fuco, Lut, Neox_Nos, Peri, Pheophytin_a, Pras, Viol, Zeax 
+#> Adducts ( 9 ): [M+2Na-H]+, [M+2Na+Cl]+, [M+C2H3Na2O2]+, [M+C4H10N3]+, [M+H]+, [M+K]+, [M+Na]+, [M+NH4]+, [M+NH4+ACN]+ 
+#> 
+#> m/z range: 516.27208062-1396.1777983 
+#> 
+#> Ranges of chemical parameters represented in molecules other than pigments:
+#> 
+#> Total number of acyl carbon atoms: 20-78 
+#> Total number of acyl carbon-carbon double bonds: 0-18 
+#> Number of additional oxygen atoms: 0-4 
+#> 
+#> Memory usage: 6.3 MB
 
 default.LOBdbase$negative # default negative mode database
+#> 
+#> A negative polarity "LOBdbase" object.
+#> 
+#> Contains entries for 60027 possible adduct ions of 11073 unique parent compounds.
+#> 
+#> Parent lipid types ( 5 ): DNPPE, FFA, IP_DAG, pigment, PUA 
+#> IP-DAG classes ( 8 ): DGCC, DGDG, DGTS_DGTA, PE, PG, PC, SQDG, MGDG 
+#> Pigments ( 22 ): Chl_a, 19prime_but_fuco, 19prime_hex_fuco, Allox, Alpha_carotene, Beta_carotenes, Chl_b, Chl_c2, Chl_c3, Chlide_a, Croco, Dd_Ddc, Dt, Echin, Fuco, Lut, Neox_Nos, Peri, Pheophytin_a, Pras, Viol, Zeax 
+#> Adducts ( 11 ): [M-H]-, [M+2NaAc+Cl]-, [M+3Ac+2Na]-, [M+Cl]-, [M+HAc-H]-, [M+K-2H]-, [M+Na-2H]-, [M+Na+Cl-H]-, [M+NaAc-H]-, [M+NaAc+Cl]-, [M+NaAc+HAc-H]- 
+#> 
+#> m/z range: 95.05023848-1459.92498456 
+#> 
+#> Ranges of chemical parameters represented in molecules other than pigments:
+#> 
+#> Total number of acyl carbon atoms: 6-52 
+#> Total number of acyl carbon-carbon double bonds: 0-12 
+#> Number of additional oxygen atoms: 0-4 
+#> 
+#> Memory usage: 4.97 MB
 ```
 
 ### Input tables required to generate databases
@@ -222,7 +269,7 @@ A fourth table, `adductHierarchies`, contains empirical data on the relative abu
 
 Users can load the default tables into the R workspace (and subsequently view them) at any time:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
 data(default.acylRanges)
 data(default.oxyRanges)
 data(default.componentCompTable)
@@ -256,9 +303,9 @@ Once the user has created his/her database (or has decided to use the appropriat
 
 1. First, if user elected `remove.iso = TRUE`, any secondary isotope peaks identified by CAMERA are removed from the dataset.
 
-1. Using a matching tolerance (`match.ppm`) and database specified by the user, putative (initial) compound assignments are applied to features in the dataset. The `match.ppm` should reflect the accuracy of the mass spectrometer used to acquire the data. If no value is given for `database`, the default database of the appropriate polarity will be used. `polarity = positive` or `polarity = negative` should be specified. If no polarity is given, `doLOBscreen` will attempt to detect it from the dataset... but detection is not perfect. At this point in the screening process, the current version of LOBSTAHS discards any features for which a match was not found in the database.^[A planned improvement, currently under development, will allow the user to retain unidentified features in a separate data object.]
+1. Using a matching tolerance (`match.ppm`) and database specified by the user, putative (initial) compound assignments are applied to features in the dataset. The `match.ppm` should reflect the accuracy of the mass spectrometer used to acquire the data. If no value is given for `database`, the default database of the appropriate polarity will be used. `polarity = positive` or `polarity = negative` should be specified. If no polarity is given, `doLOBscreen` will attempt to detect it from the dataset... but detection is not perfect. At this point in the screening process, the current version of LOBSTAHS discards any features for which a match was not found in the database.<sup>[6](#note6)</sup>
 
-1. If user elected `rt.restrict = TRUE`, the (corrected) retention time of each feature to which an assignment has just been made is compared against the retention time range expected for the assignment's parent lipid class. These expected retention time ranges, or "windows," are specified in a table. The default values (specific to the chromatography under which LOBSTAHS was developed at Woods Hole Oceanographic Institution^[We used a modified version of the chromatography presented in Hummel et al., 2011, "Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids," *Front Plant Sci* **2**; see electronic supplement to Collins et al. 2016 for full specification.]) can be accessed in a manner similar to the database generation input defaults:
+1. If user elected `rt.restrict = TRUE`, the (corrected) retention time of each feature to which an assignment has just been made is compared against the retention time range expected for the assignment's parent lipid class. These expected retention time ranges, or "windows," are specified in a table. The default values (specific to the chromatography under which LOBSTAHS was developed at Woods Hole Oceanographic Institution<sup>[7](#note7)</sup>) can be accessed in a manner similar to the database generation input defaults:
 
     ```{r, eval = FALSE}
     data(default.rt.windows)
@@ -270,7 +317,7 @@ Once the user has created his/her database (or has decided to use the appropriat
 
      **Important note:** To account for shifts in retention time that occur during chromatographic alignment in xcms, LOBSTAHS automatically expands the retention time ranges given in the `rt.windows` table by 10% at each extreme. If xcms retention time correction results in large differences between raw and corrected retention times, the user should elect **not** to apply retention time restriction in LOBSTAHS (i.e., set `rt.restrict = FALSE`) since valid feartures could be lost. The extent of deviation between raw and corrected retention times can be diagnosed using the retention time correction profile plot, obtained with `plottype = "mdevden"` when calling `rector` in xcms. A future version of LOBSTAHS will allow the user to the set the factor by which the lipid class retention time windows should be expanded.
 
-1. Next, assignments with an odd total number of acyl carbon atoms can be eliminated (achieved by setting `exclude.oddFA = TRUE`). Applies only to acyl lipids (i.e., IP-DAG, TAG, PUA, or free fatty acids). Useful if data are (or are believed to be) of exclusively eukaryotic origin, since synthesis of fatty acids with odd numbers of carbon atoms is not known in eukaryotes.^[See A. Pearson, 2014, "Lipidomics for geochemistry" in *Treatise on Geochemistry* (Holland, H. D., and Turekian, K. K. eds.), 2nd Ed., Elsevier, Oxford, pp. 291-336.]
+1. Next, assignments with an odd total number of acyl carbon atoms can be eliminated (achieved by setting `exclude.oddFA = TRUE`). Applies only to acyl lipids (i.e., IP-DAG, TAG, PUA, or free fatty acids). Useful if data are (or are believed to be) of exclusively eukaryotic origin, since synthesis of fatty acids with odd numbers of carbon atoms is not known in eukaryotes.<sup>[8](#note8)</sup>
 
 1. A series of adduct ion hierarchy rules are then applied to the remaining assignments. The theory and development of these rules is described in Collins et al 2016. and summarized in the [schematic above](#schematic). During the adduct ion screening process, a [series of codes](#schematic) are applied to each assignment to indicate the degree to which it satisfied the hierarchy rules Unlike the other screening features, application of the adduct ion hierarchy rules is not optional.
 
@@ -287,20 +334,47 @@ myPtH2O2LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
 
 In this example, the object "myPtH2O2LOBSet" would be identical to the screened `LOBSet` in the PtH2O2lipids package (`ptH2O2lipids$LOBSet`). Information about a `LOBSet` can be viewed by calling the object at the R prompt. For example:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
 ptH2O2lipids$LOBSet
+#> A positive polarity "LOBSet" containing LC-MS peak data. Compound assignments and adduct ion hierarchy screening annotations applied to 16 samples using the "LOBSTAHS" package.
+#> 
+#> Individual peaks: 21869 
+#> Peak groups: 1595 
+#> Compound assignments: 1969 
+#> m/z range: 551.425088845409-1269.09515435315 
+#> 
+#> Peak groups having possible regisomers: 556 
+#> Peak groups having possible structural functional isomers: 375 
+#> Peak groups having isobars indistinguishable within ppm matching tolerance: 84 
+#> 
+#> Restrictions applied prior to conducting adduct ion hierarchy screening: remove.iso, rt.restrict, exclude.oddFA 
+#> 
+#> Match tolerance used for database assignments: 2.5 ppm
+#> 
+#> Memory usage: 1.26 MB
 ```
 
 More detailed diagnostic information can also be obtained from the `LOBSet`. The effectiveness of the various screening criteria are recorded in a data frame `LOBscreen.diagnostics`:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
 ptH2O2lipids$LOBSet@LOBscreen.diagnostics
+#>                     peakgroups  peaks assignments parent_compounds
+#> initial                  18314 251545          NA               NA
+#> post.remove.iso          12146 163938          NA               NA
+#> initial.assignments       5077  67862       15929            14076
+#> post.rt.restrict          4451  60070       13504            11779
+#> post.exclude.oddFA        3871  52337        7458             6283
+#> post.AIHscreen            1595  21869        2056             1969
 ```
 
 The numbers of isomers/isboars identified, and the number of assignments/compounds affected by these identifications, are recorded in `LOBisoID.diagnostics`:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
 ptH2O2lipids$LOBSet@LOBisoID.diagnostics
+#>                      peakgroups parent_compounds assignments features
+#> C3r_regio.iso               556              352         750     7591
+#> C3f_funct.struct.iso        375              577         752     5057
+#> C3c_isobars                  84              162         195     1137
 ```
 
 ### Follow-on analysis of screened data
@@ -330,3 +404,21 @@ Pearson, A. 2014. Lipidomics for geochemistry. In *Treatise on Geochemistry*, Ho
 Smith, C. A., Want, E. J., O'Maille, G., Abagyan, R., and Siuzdak, G. 2006. XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification. *Anal. Chem.* **78**: 779–787
 
 Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature detection for high resolution LC/MS. *BMC Bioinformatics* **9**: 504
+
+<hr>
+
+1. <span id="note1">Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers"</span>
+
+1. <span id="note2">Smith et al., 2006, "XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification," *Anal. Chem.* **78**: 779–787; Tautenhahn et al., 2008, "Highly sensitive feature detection for high resolution LC/MS," *BMC Bioinformatics* **9**: 504; Benton et al., 2010, "Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data," *Bioinformatics* **26**: 2488-2489</span>
+
+1. <span id="note3">Kuhl et al., 2012, "CAMERA: an integrated strategy for compound spectra extraction and annotation of liquid chromatography/mass spectrometry data sets," *Anal. Chem.* **84**: 283-289</span>
+
+1. <span id="note4">See, e.g., Patti et al., 2012, "Meta-analysis of untargeted metabolomic data from multiple profiling experiment," *Nature Protocols* **7**: 508-516</span>
+
+1. <span id="note5">Libiseller et al., 2015, "IPO: a tool for automated optimization of XCMS parameters," *BMC Bioinformatics* **16**: 118</span>
+
+1. <span id="note6">A planned improvement, currently under development, will allow the user to retain unidentified features in a separate data object.</span>
+
+1. <span id="note7">We used a modified version of the chromatography presented in Hummel et al., 2011, "Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids," *Front Plant Sci* **2**; see electronic supplement to Collins et al. 2016 for full specification.</span>
+
+1. <span id="note8">See A. Pearson, 2014, "Lipidomics for geochemistry" in *Treatise on Geochemistry* (Holland, H. D., and Turekian, K. K. eds.), 2nd Ed., Elsevier, Oxford, pp. 291-336.</span>
