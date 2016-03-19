@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^.*\.tar\.gz$
+inst/doc/LOBSTAHS\.Rmd$
+inst/doc/LOBSTAHS\.R$
+inst/doc/LOBSTAHS\.html$
