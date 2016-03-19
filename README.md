@@ -2,7 +2,9 @@
 
 Repo for the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. Installation instructions and some general information about LOBSTAHS are given below.
 
-A [separate, comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) contains detailed, step-by-step user instructions and examples of package functions illustrated with a model dataset. 
+A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) contains detailed, step-by-step user instructions and examples of package functions illustrated with a model dataset. 
+
+Latest package updates (with change notes) are published to the [releases](https://github.com/vanmooylipidomics/LOBSTAHS/releases) page.
 
 <h4>Citation</h4>
 
