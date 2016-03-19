@@ -1,6 +1,7 @@
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
+
 ---
 title: "Discovery, Identification, and Screening of Lipids and Oxylipins in HPLC-MS Datasets Using LOBSTAHS"
 author: "James Collins"
@@ -9,7 +10,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Discovery, Identification, and Screening of Lipids and Oxylipins in HPLC-MS Datasets Using LOBSTAHS}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
 ---
 
 ### Introduction
