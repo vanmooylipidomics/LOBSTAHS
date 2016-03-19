@@ -405,7 +405,7 @@ Smith, C. A., Want, E. J., O'Maille, G., Abagyan, R., and Siuzdak, G. 2006. XCMS
 
 Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature detection for high resolution LC/MS. *BMC Bioinformatics* **9**: 504
 
-<hr>
+## Notes
 
 1. Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers"<span id="note1"> </span>
 
