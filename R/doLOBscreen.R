@@ -249,13 +249,17 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   C3r.parent_compounds = unique(C3r.peakdata$compound_name)
 
   # update dataset.isodata.C3r with correct cross-references
+  
+  if (nrow(C3r.peakdata)>0) { # proceed only if we actually have regioisomers present
 
-  for (i in 1:length(C3r.parent_compounds)) {
-
-    pg.this.parent = screenedpeaks[screenedpeaks$compound_name==C3r.parent_compounds[i],]
-
-    isodata.C3r[screenedpeaks$compound_name==C3r.parent_compounds[i]] = rep(list(pg.this.parent$match_ID),nrow(pg.this.parent))
-
+    for (i in 1:length(C3r.parent_compounds)) {
+      
+      pg.this.parent = screenedpeaks[screenedpeaks$compound_name==C3r.parent_compounds[i],]
+      
+      isodata.C3r[screenedpeaks$compound_name==C3r.parent_compounds[i]] = rep(list(pg.this.parent$match_ID),nrow(pg.this.parent))
+      
+    }
+    
   }
 
   LOBisoID.diagnostics[c("C3r_regio.iso"),c("peakgroups","parent_compounds","assignments","features")] =
@@ -277,31 +281,35 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
 
   C3f_C3c.peakdata = screenedpeaks[screenedpeaks$xcms_peakgroup %in% screenedpeaks$xcms_peakgroup[duplicated(screenedpeaks$xcms_peakgroup)],]
   C3f_C3c.peakgroups = unique(C3f_C3c.peakdata$xcms_peakgroup)
-
-  for (i in 1:length(C3f_C3c.peakgroups)) {
-
-    IDs.this.pg = screenedpeaks[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i],]
-
-    parent.mzs.this.pg = unique(IDs.this.pg$LOBdbase.mz)
-
-    if (length(parent.mzs.this.pg)>1) { # we have a C3c scenario
-
-      screenedpeaks$C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = 1
-      isodata.C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = rep(list(IDs.this.pg$match_ID),nrow(IDs.this.pg))
-
-    }
-
-    for (j in 1:length(parent.mzs.this.pg)) {
-
-      if (nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],])>1) { # we have at least 2 functional structural isomers that go together
-
-        screenedpeaks$C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = 1
-        isodata.C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = rep(list(IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]),nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],]))
-
+  
+  if (nrow(C3f_C3c.peakdata)>0) { # proceed only if we actually have isobars/functional isomers present
+    
+    for (i in 1:length(C3f_C3c.peakgroups)) {
+      
+      IDs.this.pg = screenedpeaks[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i],]
+      
+      parent.mzs.this.pg = unique(IDs.this.pg$LOBdbase.mz)
+      
+      if (length(parent.mzs.this.pg)>1) { # we have a C3c scenario
+        
+        screenedpeaks$C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = 1
+        isodata.C3c[screenedpeaks$xcms_peakgroup==C3f_C3c.peakgroups[i]] = rep(list(IDs.this.pg$match_ID),nrow(IDs.this.pg))
+        
       }
-
+      
+      for (j in 1:length(parent.mzs.this.pg)) {
+        
+        if (nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],])>1) { # we have at least 2 functional structural isomers that go together
+          
+          screenedpeaks$C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = 1
+          isodata.C3f[screenedpeaks$match_ID %in% IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]] = rep(list(IDs.this.pg$match_ID[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j]]),nrow(IDs.this.pg[IDs.this.pg$LOBdbase.mz==parent.mzs.this.pg[j],]))
+          
+        }
+        
+      }
+      
     }
-
+    
   }
 
   LOBisoID.diagnostics[c("C3f_funct.struct.iso"),c("peakgroups","parent_compounds","assignments","features")] =
