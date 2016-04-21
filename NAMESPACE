@@ -1,6 +1,7 @@
 import("xcms",
        "CAMERA",
-       "methods")
+       "methods",
+       "utils")
 
 importFrom("utils",
            "write.csv",
