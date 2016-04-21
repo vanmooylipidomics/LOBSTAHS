@@ -3,7 +3,7 @@
 \docType{class}
 \alias{LOBdbase-class}
 \alias{LOBdbase}
-\alias{[,LOBdbase-method}
+\alias{[,LOBdbase,ANY,ANY,ANY-method}
 \alias{show,LOBdbase-method}
 
 \title{Class LOBdbase: A class for LOBSTAHS lipid-oxylipin databases}
