@@ -17,7 +17,6 @@ Imports:
     utils
 Suggests:
     PtH2O2lipids,
-    IPO,
     knitr,
     rmarkdown
 Description: LOBSTAHS is a multifunction package for screening, annotation, and
