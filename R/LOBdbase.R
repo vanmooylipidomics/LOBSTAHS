@@ -55,38 +55,38 @@ setMethod("show", "LOBdbase", function(object) {
   
 })
 
-setMethod("[", "LOBdbase",
-          function(x,i,drop="missing") {
-            
-            .frag_ID = x@frag_ID[i]
-            .mz = x@mz[i]
-            .exact_parent_neutral_mass = x@exact_parent_neutral_mass[i]
-            .lipid_class = x@lipid_class[i]
-            .species = x@species[i]
-            .adduct = x@adduct[i]
-            .adduct_rank = x@adduct_rank[i]
-            .FA_total_no_C = x@FA_total_no_C[i]
-            .FA_total_no_DB = x@FA_total_no_DB[i]
-            .degree_oxidation = x@degree_oxidation[i]
-            .parent_elem_formula = x@parent_elem_formula[i]
-            .parent_compound_name = x@parent_compound_name[i]
-            .polarity = x@polarity
-            
-            LOBdbase(frag_ID = .frag_ID,
-                     mz = .mz,
-                     exact_parent_neutral_mass = .exact_parent_neutral_mass,
-                     lipid_class = .lipid_class,
-                     species = .species,
-                     adduct = .adduct,
-                     adduct_rank = .adduct_rank,
-                     FA_total_no_C = .FA_total_no_C,
-                     FA_total_no_DB = .FA_total_no_DB,
-                     degree_oxidation = .degree_oxidation,
-                     parent_elem_formula = .parent_elem_formula,
-                     parent_compound_name = .parent_compound_name,
-                     polarity = .polarity)
-            
-          })
+# setMethod("[", signature("LOBdbase", "ANY", "ANY", "missing"),
+#           function(x, i, j, ..., drop=TRUE) {
+#             
+#             .frag_ID = x@frag_ID[i]
+#             .mz = x@mz[i]
+#             .exact_parent_neutral_mass = x@exact_parent_neutral_mass[i]
+#             .lipid_class = x@lipid_class[i]
+#             .species = x@species[i]
+#             .adduct = x@adduct[i]
+#             .adduct_rank = x@adduct_rank[i]
+#             .FA_total_no_C = x@FA_total_no_C[i]
+#             .FA_total_no_DB = x@FA_total_no_DB[i]
+#             .degree_oxidation = x@degree_oxidation[i]
+#             .parent_elem_formula = x@parent_elem_formula[i]
+#             .parent_compound_name = x@parent_compound_name[i]
+#             .polarity = x@polarity
+#             
+#             LOBdbase(frag_ID = .frag_ID,
+#                      mz = .mz,
+#                      exact_parent_neutral_mass = .exact_parent_neutral_mass,
+#                      lipid_class = .lipid_class,
+#                      species = .species,
+#                      adduct = .adduct,
+#                      adduct_rank = .adduct_rank,
+#                      FA_total_no_C = .FA_total_no_C,
+#                      FA_total_no_DB = .FA_total_no_DB,
+#                      degree_oxidation = .degree_oxidation,
+#                      parent_elem_formula = .parent_elem_formula,
+#                      parent_compound_name = .parent_compound_name,
+#                      polarity = .polarity)
+#             
+#           })
 
 ## to generate .Rd file:
 # library(methods)
