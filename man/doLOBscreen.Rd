@@ -67,7 +67,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \examples{
 ## screen & annotate "xsAnnotate" object from the PtH2O2lipids dataset using all
 ## screening options
-library(LOBSTAHS)
 library(PtH2O2lipids)
 
 \donttest{
@@ -77,8 +76,8 @@ myPtH202LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
                              exclude.oddFA = TRUE, match.ppm = 2.5)
 
 ## show some diagnostics
-myPtH202LOBSet@LOBscreen.diagnostics # screening diagnostics
-myPtH202LOBSet@LOBisoID.diagnostics # isomer identification data
+LOBscreen.diagnostics(myPtH202LOBSet) # screening diagnostics
+LOBisoID.diagnostics(myPtH202LOBSet) # isomer identification data
 }
 }
 \keyword{methods}

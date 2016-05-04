@@ -1,5 +1,7 @@
 ################ Set classes, methods for LOBdbase #############
 
+# constructor
+
 LOBdbase = setClass("LOBdbase", representation(frag_ID = "integer",
                                                mz = "numeric",
                                                exact_parent_neutral_mass = "numeric",
@@ -33,6 +35,8 @@ prototype(frag_ID = integer(0),
           num.entries = integer(0),
           num.compounds = integer(0)
 ))
+
+# set generics and accessors
 
 setMethod("show", "LOBdbase", function(object) {
   
@@ -87,6 +91,62 @@ setMethod("show", "LOBdbase", function(object) {
 #                      polarity = .polarity)
 #             
 #           })
+
+setGeneric("frag_ID", function(object) standardGeneric("frag_ID"))
+
+setMethod("frag_ID", "LOBdbase", function(object) object@frag_ID)
+
+setGeneric("exact_parent_neutral_mass", function(object) standardGeneric("exact_parent_neutral_mass"))
+
+setMethod("exact_parent_neutral_mass", "LOBdbase", function(object) object@exact_parent_neutral_mass)
+
+setGeneric("lipid_class", function(object) standardGeneric("lipid_class"))
+
+setMethod("lipid_class", "LOBdbase", function(object) object@lipid_class)
+
+setGeneric("species", function(object) standardGeneric("species"))
+
+setMethod("species", "LOBdbase", function(object) object@species)
+
+setGeneric("adduct", function(object) standardGeneric("adduct"))
+
+setMethod("adduct", "LOBdbase", function(object) object@adduct)
+
+setGeneric("adduct_rank", function(object) standardGeneric("adduct_rank"))
+
+setMethod("adduct_rank", "LOBdbase", function(object) object@adduct_rank)
+
+setGeneric("FA_total_no_C", function(object) standardGeneric("FA_total_no_C"))
+
+setMethod("FA_total_no_C", "LOBdbase", function(object) object@FA_total_no_C)
+
+setGeneric("FA_total_no_DB", function(object) standardGeneric("FA_total_no_DB"))
+
+setMethod("FA_total_no_DB", "LOBdbase", function(object) object@FA_total_no_DB)
+
+setGeneric("degree_oxidation", function(object) standardGeneric("degree_oxidation"))
+
+setMethod("degree_oxidation", "LOBdbase", function(object) object@degree_oxidation)
+
+setGeneric("parent_elem_formula", function(object) standardGeneric("parent_elem_formula"))
+
+setMethod("parent_elem_formula", "LOBdbase", function(object) object@parent_elem_formula)
+
+setGeneric("parent_compound_name", function(object) standardGeneric("parent_compound_name"))
+
+setMethod("parent_compound_name", "LOBdbase", function(object) object@parent_compound_name)
+
+setGeneric("polarity", function(object) standardGeneric("polarity"))
+
+setMethod("polarity", "LOBdbase", function(object) object@polarity)
+
+setGeneric("num.entries", function(object) standardGeneric("num.entries"))
+
+setMethod("num.entries", "LOBdbase", function(object) object@num.entries)
+
+setGeneric("num.compounds", function(object) standardGeneric("num.compounds"))
+
+setMethod("num.compounds", "LOBdbase", function(object) object@num.compounds)
 
 ## to generate .Rd file:
 # library(methods)

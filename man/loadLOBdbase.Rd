@@ -22,6 +22,9 @@ If known, the number of parent compounds represented in the database being impor
 }
 \details{\code{loadLOBdbase} is a glorified implementation of \code{\link[utils]{read.table}} that attempts to determine whether the format of the data in \code{file} is consistent with that of a saved \code{"LOBdbase"} object. Some leeway is allowed for variation in punctuation and spelling of column headers in the source file. Special attention should be paid to how adduct ions are specified (e.g., \code{"[M+H]+"}, \code{"[M+NH4]+"}, or \code{"[M+Cl]-"}).
 }
+\value{
+  A \code{"\link{LOBdbase}"} object.
+}
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
 }
@@ -37,27 +40,25 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \examples{
 ## save the default negative mode database as a .csv file
 
-library(LOBSTAHS)
-
 data(default.LOBdbase)
 
 neg.DB = default.LOBdbase$negative
 
 fname = paste0("LOBSTAHS_lipid-oxy_DB_",
-               strtrim(as.character(neg.DB@polarity),3),".csv")
+               strtrim(as.character(polarity(neg.DB)),3),".csv")
   
-exportmat = data.frame(neg.DB@frag_ID,
-                         neg.DB@mz,
-                         neg.DB@exact_parent_neutral_mass,
-                         as.character(neg.DB@lipid_class),
-                         as.character(neg.DB@species),
-                         as.character(neg.DB@adduct),
-                         as.character(neg.DB@adduct_rank),
-                         neg.DB@FA_total_no_C,
-                         neg.DB@FA_total_no_DB,
-                         neg.DB@degree_oxidation,
-                         neg.DB@parent_elem_formula,
-                         neg.DB@parent_compound_name,
+exportmat = data.frame(frag_ID(neg.DB),
+                         mz(neg.DB),
+                         exact_parent_neutral_mass(neg.DB),
+                         as.character(lipid_class(neg.DB)),
+                         as.character(species(neg.DB)),
+                         as.character(adduct(neg.DB)),
+                         as.character(adduct_rank(neg.DB)),
+                         FA_total_no_C(neg.DB),
+                         FA_total_no_DB(neg.DB),
+                         degree_oxidation(neg.DB),
+                         parent_elem_formula(neg.DB),
+                         parent_compound_name(neg.DB),
                          stringsAsFactors = FALSE)
   
 colnames(exportmat) = c("frag_ID","mz","exact_parent_neutral_mass",

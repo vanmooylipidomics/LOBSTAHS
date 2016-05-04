@@ -38,6 +38,9 @@ The default ranges for the structural properties given in the other files were c
 }
 \source{\url{http://github.com/vanmooylipidomics/LOBSTAHS/}
 }
+\value{
+  Various list and data.frame objects (as indicated above).
+}
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
 }

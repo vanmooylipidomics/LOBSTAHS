@@ -23,7 +23,7 @@ LOBSTAHS contains several functions to help scientists discover and identify lip
 
 ##### Install dependencies:
 
-```{r, eval = FALSE}
+```{r}
 source("http://bioconductor.org/biocLite.R")
 biocLite("CAMERA")
 biocLite("xcms")
@@ -39,19 +39,19 @@ Install the R-development-packages (r-devel or r-base-dev)
 
 ##### Install packages needed for installation from Github:
 
-```{r, eval = FALSE}
+```{r}
 install.packages("devtools")
 ```
 
 ##### Install LOBSTAHS:
 
-```{r, eval = FALSE}
+```{r}
 library("devtools")
 install_github("vanmooylipidomics/LOBSTAHS") 
 ```
 
 ##### Install 'PtH2O2lipids,' containing example data & precursor xsAnnotate object:
-```{r, eval = FALSE}
+```{r}
 ## install dataset 'PtH2O2lipids'
 ## see LOBSTAHS documentation for examples 
 
@@ -93,21 +93,9 @@ The R script [prepOrbidata.R](https://github.com/vanmooylipidomics/LipidomicsToo
 
 The xcmsSet produced using these settings from the *P. tricornutum* data is stored in the [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids) package:
 
-```{r, warning = FALSE, message = FALSE, eval = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(PtH2O2lipids)
 ptH2O2lipids$xsAnnotate@xcmsSet
-#> An "xcmsSet" object with 16 samples
-#> 
-#> Time range: -1.1-1742.4 seconds (0-29 minutes)
-#> Mass range: 100.0397-1499.3326 m/z
-#> Peaks: 340991 (about 21312 per sample)
-#> Peak Groups: 18314 
-#> Sample classes: 0_uM_H2O2, 150_uM_H2O2, 30_uM_H2O2 
-#> 
-#> Profile settings: method = bin
-#>                   step = 0.001
-#> 
-#> Memory usage: 64.5 MB
 ```
 
 Whatever settings are used in xcms, the processed data should contain high-quality features which have been aligned across samples; the quality of the processed data should be verified by individual inspection of a subset of features. At the conclusion of processing with xcms, the user should have a single `xcmsSet` object containing the dataset.
@@ -207,51 +195,13 @@ Before screening a dataset with LOBSTAHS, you should first decide whewther to us
 
 We can access the default databases to examine their scope:
 
-```{r, warning = FALSE, message = FALSE, eval = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(LOBSTAHS)
 data(default.LOBdbase)
 
 default.LOBdbase$positive # default positive mode database
-#> 
-#> A positive polarity "LOBdbase" object.
-#> 
-#> Contains entries for 76455 possible adduct ions of 13578 unique parent compounds.
-#> 
-#> Parent lipid types ( 4 ): DNPPE, IP_DAG, pigment, TAG 
-#> IP-DAG classes ( 8 ): DGCC, DGDG, DGTS_DGTA, PE, PG, PC, SQDG, MGDG 
-#> Pigments ( 22 ): Chl_a, 19prime_but_fuco, 19prime_hex_fuco, Allox, Alpha_carotene, Beta_carotenes, Chl_b, Chl_c2, Chl_c3, Chlide_a, Croco, Dd_Ddc, Dt, Echin, Fuco, Lut, Neox_Nos, Peri, Pheophytin_a, Pras, Viol, Zeax 
-#> Adducts ( 9 ): [M+2Na-H]+, [M+2Na+Cl]+, [M+C2H3Na2O2]+, [M+C4H10N3]+, [M+H]+, [M+K]+, [M+Na]+, [M+NH4]+, [M+NH4+ACN]+ 
-#> 
-#> m/z range: 516.27208062-1396.1777983 
-#> 
-#> Ranges of chemical parameters represented in molecules other than pigments:
-#> 
-#> Total number of acyl carbon atoms: 20-78 
-#> Total number of acyl carbon-carbon double bonds: 0-18 
-#> Number of additional oxygen atoms: 0-4 
-#> 
-#> Memory usage: 6.3 MB
 
 default.LOBdbase$negative # default negative mode database
-#> 
-#> A negative polarity "LOBdbase" object.
-#> 
-#> Contains entries for 60027 possible adduct ions of 11073 unique parent compounds.
-#> 
-#> Parent lipid types ( 5 ): DNPPE, FFA, IP_DAG, pigment, PUA 
-#> IP-DAG classes ( 8 ): DGCC, DGDG, DGTS_DGTA, PE, PG, PC, SQDG, MGDG 
-#> Pigments ( 22 ): Chl_a, 19prime_but_fuco, 19prime_hex_fuco, Allox, Alpha_carotene, Beta_carotenes, Chl_b, Chl_c2, Chl_c3, Chlide_a, Croco, Dd_Ddc, Dt, Echin, Fuco, Lut, Neox_Nos, Peri, Pheophytin_a, Pras, Viol, Zeax 
-#> Adducts ( 11 ): [M-H]-, [M+2NaAc+Cl]-, [M+3Ac+2Na]-, [M+Cl]-, [M+HAc-H]-, [M+K-2H]-, [M+Na-2H]-, [M+Na+Cl-H]-, [M+NaAc-H]-, [M+NaAc+Cl]-, [M+NaAc+HAc-H]- 
-#> 
-#> m/z range: 95.05023848-1459.92498456 
-#> 
-#> Ranges of chemical parameters represented in molecules other than pigments:
-#> 
-#> Total number of acyl carbon atoms: 6-52 
-#> Total number of acyl carbon-carbon double bonds: 0-12 
-#> Number of additional oxygen atoms: 0-4 
-#> 
-#> Memory usage: 4.97 MB
 ```
 
 ### Input tables required to generate databases

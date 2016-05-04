@@ -19,5 +19,23 @@ export("generateLOBdbase")
 exportClasses("LOBSet",
               "LOBdbase")
 
-exportMethods("[",
-              "show")
+exportMethods("show",
+              "LOBisoID.diagnostics",
+              "polarity",
+              "sampnames",
+              "LOBscreen.settings",
+              "LOBscreen.diagnostics",
+              "num.compounds",
+              "num.entries",
+              "frag_ID",
+              "exact_parent_neutral_mass",
+              "lipid_class",
+              "species",
+              "adduct",
+              "adduct_rank",
+              "FA_total_no_C",
+              "FA_total_no_DB",
+              "degree_oxidation",
+              "parent_elem_formula",
+              "parent_compound_name"
+              )

@@ -4,6 +4,17 @@
 \alias{LOBSet-class}
 \alias{LOBSet}
 \alias{show,LOBSet-method}
+\alias{LOBisoID.diagnostics,LOBSet-method}
+\alias{LOBisoID.diagnostics}
+\alias{polarity,LOBSet-method}
+\alias{polarity}
+\alias{sampnames,LOBSet-method}
+\alias{sampnames}
+\alias{LOBscreen.settings,LOBSet-method}
+\alias{LOBscreen.settings}
+\alias{LOBscreen.diagnostics,LOBSet-method}
+\alias{LOBscreen.diagnostics}
+
 
 \title{Class LOBSet: Peak data with annotations, isomers, and compound assignments}
 \description{
@@ -27,7 +38,24 @@ A call of the form \code{new("LOBSet", ...)} will create a new, empty \code{"LOB
 }
 \section{Methods}{
   \describe{
-    \item{show}{\code{signature(object = "LOBSet")}: ... }
+    \item{show}{
+      \code{signature(object = "LOBSet")}: ... 
+    }
+    \item{LOBisoID.diagnostics}{
+      \code{signature(object = "LOBSet")}: get \code{LOBisoID.diagnostics} slot
+    }
+    \item{LOBscreen.diagnostics}{
+      \code{signature(object = "LOBSet")}: get \code{LOBscreen.diagnostics} slot
+    }
+    \item{LOBscreen.settings}{
+      \code{signature(object = "LOBSet")}: get \code{LOBscreen.settings} slot
+    }
+    \item{sampnames}{
+      \code{signature(object = "LOBSet")}: get \code{sampnames} slot
+    }
+    \item{polarity}{
+      \code{signature(object = "LOBSet")}: get \code{polarity} slot
+    }
 	 }
 }
 \references{

@@ -82,8 +82,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \examples{
 ## generate the default positive ionization mode database
 
-library(LOBSTAHS)
-
 \donttest{
 LOBdbase.pos = generateLOBdbase(polarity = "positive", gen.csv = FALSE,
                                 component.defs = NULL, AIH.defs = NULL,

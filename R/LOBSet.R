@@ -1,6 +1,8 @@
 ################ Set classes, methods for LOBSet #############
 
-# create a class "LOBSet" for the results of LOBSTAHS screening & compound assignments
+# create, define class "LOBSet" for the results of LOBSTAHS screening & compound assignments
+
+# constructor
 
 LOBSet = setClass("LOBSet",
                   representation(peakdata = "data.frame",
@@ -24,6 +26,8 @@ LOBSet = setClass("LOBSet",
                             polarity = factor(character(0)),
                             sampnames = character(0)
                   ))
+
+# set generics and accessors
 
 setMethod("show", "LOBSet", function(object) {
   
@@ -49,3 +53,24 @@ setMethod("show", "LOBSet", function(object) {
   cat("Memory usage:", signif(memsize/2^20, 3), "MB\n")
   
 })
+
+setGeneric("LOBscreen.diagnostics", function(object) standardGeneric("LOBscreen.diagnostics"))
+
+setMethod("LOBscreen.diagnostics", "LOBSet", function(object) object@LOBscreen.diagnostics)
+
+setGeneric("LOBisoID.diagnostics", function(object) standardGeneric("LOBisoID.diagnostics"))
+
+setMethod("LOBisoID.diagnostics", "LOBSet", function(object) object@LOBisoID.diagnostics)
+
+setGeneric("polarity", function(object) standardGeneric("polarity"))
+
+setMethod("polarity", "LOBSet", function(object) object@polarity)
+
+setGeneric("sampnames", function(object) standardGeneric("sampnames"))
+
+setMethod("sampnames", "LOBSet", function(object) object@sampnames)
+
+setGeneric("LOBscreen.settings", function(object) standardGeneric("LOBscreen.settings"))
+
+setMethod("LOBscreen.settings", "LOBSet", function(object) object@LOBscreen.settings)
+

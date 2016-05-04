@@ -37,8 +37,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 ## dinitrophenyl-phosphatidylethanolamine (DNPPE), a synthetic lipid used as an
 ## internal standard
 
-library(LOBSTAHS)
-
 data(default.LOBdbase)
 
 DNPPE.data = extractLOBdbasedata(frag_ID = 19801,

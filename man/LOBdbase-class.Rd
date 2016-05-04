@@ -4,6 +4,34 @@
 \alias{LOBdbase-class}
 \alias{LOBdbase}
 \alias{show,LOBdbase-method}
+\alias{frag_ID,LOBdbase-method}
+\alias{frag_ID}
+\alias{exact_parent_neutral_mass,LOBdbase-method}
+\alias{exact_parent_neutral_mass}
+\alias{lipid_class,LOBdbase-method}
+\alias{lipid_class}
+\alias{species,LOBdbase-method}
+\alias{species}
+\alias{adduct,LOBdbase-method}
+\alias{adduct}
+\alias{adduct_rank,LOBdbase-method}
+\alias{adduct_rank}
+\alias{FA_total_no_C,LOBdbase-method}
+\alias{FA_total_no_C}
+\alias{FA_total_no_DB,LOBdbase-method}
+\alias{FA_total_no_DB}
+\alias{degree_oxidation,LOBdbase-method}
+\alias{degree_oxidation}
+\alias{parent_elem_formula,LOBdbase-method}
+\alias{parent_elem_formula}
+\alias{parent_compound_name,LOBdbase-method}
+\alias{parent_compound_name}
+\alias{polarity,LOBdbase-method}
+\alias{polarity}
+\alias{num.entries,LOBdbase-method}
+\alias{num.entries}
+\alias{num.compounds,LOBdbase-method}
+\alias{num.compounds}
 
 \title{Class LOBdbase: A class for LOBSTAHS lipid-oxylipin databases}
 \description{
@@ -33,8 +61,51 @@ A call of the form \code{new("LOBdbase", ...)} will create a new, empty \code{"L
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "LOBdbase")}: ... }
-    \item{show}{\code{signature(object = "LOBdbase")}: ... }
+    \item{show}{
+      \code{signature(object = "LOBdbase")}: ...
+    }
+    \item{polarity}{
+      \code{signature(object = "LOBdbase")}: get \code{polarity} slot
+    }
+    \item{num.compounds}{
+      \code{signature(object = "LOBdbase")}: get \code{num.compounds} slot
+    }
+    \item{num.entries}{
+      \code{signature(object = "LOBdbase")}: get \code{num.entries} slot
+    }
+    \item{frag_ID}{
+      \code{signature(object = "LOBdbase")}: get \code{frag_ID} slot
+    }
+    \item{exact_parent_neutral_mass}{
+      \code{signature(object = "LOBdbase")}: get \code{exact_parent_neutral_mass} slot
+    }
+    \item{lipid_class}{
+      \code{signature(object = "LOBdbase")}: get \code{lipid_class} slot
+    }
+    \item{species}{
+      \code{signature(object = "LOBdbase")}: get \code{species} slot
+    }
+    \item{adduct}{
+      \code{signature(object = "LOBdbase")}: get \code{adduct} slot
+    }
+    \item{adduct_rank}{
+      \code{signature(object = "LOBdbase")}: get \code{adduct_rank} slot
+    }
+    \item{FA_total_no_C}{
+      \code{signature(object = "LOBdbase")}: get \code{FA_total_no_C} slot
+    }
+    \item{FA_total_no_DB}{
+      \code{signature(object = "LOBdbase")}: get \code{FA_total_no_DB} slot
+    }
+    \item{degree_oxidation}{
+      \code{signature(object = "LOBdbase")}: get \code{degree_oxidation} slot
+    }
+    \item{parent_elem_formula}{
+      \code{signature(object = "LOBdbase")}: get \code{parent_elem_formula} slot
+    }
+    \item{parent_compound_name}{
+      \code{signature(object = "LOBdbase")}: get \code{parent_compound_name} slot
+    }
 	 }
 }
 \references{
