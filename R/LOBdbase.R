@@ -96,6 +96,10 @@ setGeneric("frag_ID", function(object) standardGeneric("frag_ID"))
 
 setMethod("frag_ID", "LOBdbase", function(object) object@frag_ID)
 
+setGeneric("mz", function(object) standardGeneric("mz"))
+
+setMethod("mz", "LOBdbase", function(object) object@mz)
+
 setGeneric("exact_parent_neutral_mass", function(object) standardGeneric("exact_parent_neutral_mass"))
 
 setMethod("exact_parent_neutral_mass", "LOBdbase", function(object) object@exact_parent_neutral_mass)
