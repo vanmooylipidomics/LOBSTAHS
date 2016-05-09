@@ -27,7 +27,6 @@
 \alias{parent_compound_name,LOBdbase-method}
 \alias{parent_compound_name}
 \alias{polarity,LOBdbase-method}
-\alias{polarity}
 \alias{num.entries,LOBdbase-method}
 \alias{num.entries}
 \alias{num.compounds,LOBdbase-method}

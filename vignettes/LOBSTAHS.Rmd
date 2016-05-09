@@ -23,7 +23,7 @@ LOBSTAHS contains several functions to help scientists discover and identify lip
 
 ##### Install dependencies:
 
-```{r}
+```{r, eval = FALSE}
 source("http://bioconductor.org/biocLite.R")
 biocLite("CAMERA")
 biocLite("xcms")
@@ -39,19 +39,19 @@ Install the R-development-packages (r-devel or r-base-dev)
 
 ##### Install packages needed for installation from Github:
 
-```{r}
+```{r, eval = FALSE}
 install.packages("devtools")
 ```
 
 ##### Install LOBSTAHS:
 
-```{r}
+```{r, eval = FALSE}
 library("devtools")
 install_github("vanmooylipidomics/LOBSTAHS") 
 ```
 
 ##### Install 'PtH2O2lipids,' containing example data & precursor xsAnnotate object:
-```{r}
+```{r, eval = FALSE}
 ## install dataset 'PtH2O2lipids'
 ## see LOBSTAHS documentation for examples 
 
