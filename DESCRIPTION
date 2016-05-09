@@ -1,6 +1,6 @@
 Package: LOBSTAHS
 Title: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences
-Version: 0.99.5
+Version: 0.99.6
 Date: 2016-05-09
 Authors@R: c(
     person("James", "Collins", email = "james.r.collins@aya.yale.edu", role = c("aut", "cre")),
@@ -37,4 +37,4 @@ License: MIT + file LICENSE
 URL: https://github.com/vanmooylipidomics/LOBSTAHS
 BugReports: https://github.com/vanmooylipidomics/LOBSTAHS/issues/new
 VignetteBuilder: knitr
-biocViews: MassSpectrometry, Metabolomics, Lipidomics
+biocViews: MassSpectrometry, Metabolomics, Lipidomics, DataImport

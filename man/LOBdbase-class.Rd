@@ -6,6 +6,8 @@
 \alias{show,LOBdbase-method}
 \alias{frag_ID,LOBdbase-method}
 \alias{frag_ID}
+\alias{mz,LOBdbase-method}
+\alias{mz}
 \alias{exact_parent_neutral_mass,LOBdbase-method}
 \alias{exact_parent_neutral_mass}
 \alias{lipid_class,LOBdbase-method}
