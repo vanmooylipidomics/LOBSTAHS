@@ -7,6 +7,7 @@
 \alias{LOBisoID.diagnostics,LOBSet-method}
 \alias{LOBisoID.diagnostics}
 \alias{polarity,LOBSet-method}
+\alias{polarity}
 \alias{sampnames,LOBSet-method}
 \alias{sampnames}
 \alias{LOBscreen.settings,LOBSet-method}
