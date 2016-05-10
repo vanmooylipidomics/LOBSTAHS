@@ -6,7 +6,7 @@ A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/ma
 
 Latest package updates (with change notes) are published to the [releases](https://github.com/vanmooylipidomics/LOBSTAHS/releases) page.
 
-LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU Public License](https://github.com/vanmooylipidomics/LOBSTAHS/LICENSE) and subject to terms of reuse as specified therein.
+LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
 
 <h4>Citation</h4>
 
