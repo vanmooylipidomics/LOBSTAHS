@@ -6,9 +6,11 @@ A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/ma
 
 Latest package updates (with change notes) are published to the [releases](https://github.com/vanmooylipidomics/LOBSTAHS/releases) page.
 
+LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU Public License](https://github.com/vanmooylipidomics/LOBSTAHS/LICENSE) and subject to terms of reuse as specified therein.
+
 <h4>Citation</h4>
 
-LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, "LOBSTAHS: A Novel Lipidomics Strategy for Semi-Untargeted Discovery and Identification of Oxidative Stress Biomarkers"
+LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, "LOBSTAHS: A Lipidomics Strategy for Semi-Untargeted Discovery and Identification of Oxidative Stress Biomarkers"
 
 <h4>Installation</h4>
 

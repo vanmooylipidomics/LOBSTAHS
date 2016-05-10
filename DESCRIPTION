@@ -33,7 +33,7 @@ Description: LOBSTAHS is a multifunction package for screening, annotation, and
     specified criteria, identifies potential isomers and isobars, and assigns a
     variety of annotation codes to assist the user in evaluating the accuracy of
     each assignment.
-License: MIT + file LICENSE
+License: GPL (>= 3) + file LICENSE
 URL: https://github.com/vanmooylipidomics/LOBSTAHS
 BugReports: https://github.com/vanmooylipidomics/LOBSTAHS/issues/new
 VignetteBuilder: knitr
