@@ -802,21 +802,29 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
   # take care of secondary isotopes, if user wants
 
   if (remove.iso==TRUE) {
-
-    pgdata = pgdata[(pgdata$isotopes=="") | (grepl("\\[M\\]\\+$",pgdata$isotopes)),]
-
+    
+    if (polarity=="positive") {
+      
+      pgdata = pgdata[(pgdata$isotopes=="") | (grepl("\\[M\\]\\+$",pgdata$isotopes)),]
+      
+    } else if (polarity=="negative") {
+      
+      pgdata = pgdata[(pgdata$isotopes=="") | (grepl("\\[M\\]\\-$",pgdata$isotopes)),]
+      
+    }
+    
     if (nrow(pgdata) > 0) { # we still have matches
-
+      
       diagnostic.data[c("post.remove.iso"),c("peakgroups","peaks")] =
         c(nrow(pgdata),
           sum(pgdata[,(8+num.treatments):(7+num.treatments+length(sampnames(xsA@xcmsSet)))]>0))
-
+      
     } else {
-
+      
       diagnostic.data[c("post.remove.iso"),c("peakgroups","peaks")] = c(0,0)
-
+      
     }
-
+    
   }
 
   # get initial matches, record results
