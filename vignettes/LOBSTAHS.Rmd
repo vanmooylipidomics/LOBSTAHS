@@ -304,23 +304,23 @@ ptH2O2lipids$LOBSet
 #> Memory usage: 1.26 MB
 ```
 
-More detailed diagnostic information can also be obtained from the `LOBSet`. The effectiveness of the various screening criteria are recorded in a data frame `LOBscreen.diagnostics`:
+More detailed diagnostic information can also be obtained from the `LOBSet`. The effectiveness of the various screening criteria are recorded in a data frame `LOBscreen_diagnostics`:
 
 ```{r, warning = FALSE, message = FALSE, eval = FALSE}
-ptH2O2lipids$LOBSet@LOBscreen.diagnostics
+LOBscreen_diagnostics(ptH2O2lipids$LOBSet)
 #>                     peakgroups  peaks assignments parent_compounds
 #> initial                  18314 251545          NA               NA
-#> post.remove.iso          12146 163938          NA               NA
-#> initial.assignments       5077  67862       15929            14076
-#> post.rt.restrict          4451  60070       13504            11779
-#> post.exclude.oddFA        3871  52337        7458             6283
-#> post.AIHscreen            1595  21869        2056             1969
+#> post_remove_iso          12146 163938          NA               NA
+#> initial_assignments       5077  67862       15929            14076
+#> post_rt_restrict          4451  60070       13504            11779
+#> post_exclude_oddFA        3871  52337        7458             6283
+#> post_AIHscreen            1595  21869        2056             1969
 ```
 
-The numbers of isomers/isboars identified, and the number of assignments/compounds affected by these identifications, are recorded in `LOBisoID.diagnostics`:
+The numbers of isomers/isboars identified, and the number of assignments/compounds affected by these identifications, are recorded in `LOBisoID_diagnostics`:
 
 ```{r, warning = FALSE, message = FALSE, eval = FALSE}
-ptH2O2lipids$LOBSet@LOBisoID.diagnostics
+LOBisoID_diagnostics(ptH2O2lipids$LOBSet)
 #>                      peakgroups parent_compounds assignments features
 #> C3r_regio.iso               556              352         750     7591
 #> C3f_funct.struct.iso        375              577         752     5057
@@ -343,7 +343,7 @@ LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy La
 
 Benton, H. P., Want, E. J., and Ebbels, T. M. D. 2010. Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data. *Bioinformatics* **26**: 2488-2489
 
-Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S. 2016. LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers
+Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Anal. Chem.*
 
 Hummel, J., Segu, S., Li, Y., Irgang, S., Jueppner, J., and Giavalisco, P. 2011. Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids. *Front Plant Sci* **2**
 
@@ -361,7 +361,7 @@ Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature de
 
 ### Notes
 
-1. <span id="note1">Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: A novel lipidomics strategy for semi-untargeted discovery and identification of oxidative stress biomarkers"</span>
+1. <span id="note1">Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers," *Anal. Chem.*</span>
 
 1. <span id="note2">Smith et al., 2006, "XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification," *Anal. Chem.* **78**: 779–787; Tautenhahn et al., 2008, "Highly sensitive feature detection for high resolution LC/MS," *BMC Bioinformatics* **9**: 504; Benton et al., 2010, "Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data," *Bioinformatics* **26**: 2488-2489</span>
 

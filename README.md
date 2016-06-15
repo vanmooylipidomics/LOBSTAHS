@@ -6,11 +6,12 @@ A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/ma
 
 Latest package updates (with change notes) are published to the [releases](https://github.com/vanmooylipidomics/LOBSTAHS/releases) page.
 
-LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
+LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
 
 <h4>Citation</h4>
 
-LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, "LOBSTAHS: A Lipidomics Strategy for Semi-Untargeted Discovery and Identification of Oxidative Stress Biomarkers"
+LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers." *Analytical Chemistry*.
+
 
 <h4>Installation</h4>
 
@@ -81,9 +82,9 @@ The function `doLOBscreen()` is then used to assign putative compound identities
 to evaluate and assign confidence scores to this list of preliminary assignments. During the screening routine, `doLOBscreen()` rejects assignments that do not meet the specified criteria, identifies potential isomers and isobars, and assigns a variety of annotation codes to assist the user in evaluating the accuracy of each assignment. Results can be extracted and/or exported to file using the `getLOBpeaklist()` function.
 
 <h4>Example dataset</h4> 
-The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids/) contains a example dataset with which users can familiarize themselves with LOBSTAHS. The dataset contains both a CAMERA "xsAnnotate" object and the LOBSTAHS "LOBSet" generated from it using `doLOBscreen()`. Processing of the dataset is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, "LOBSTAHS: A Novel Lipidomics Strategy for Semi-Untargeted Discovery and Identification of Oxidative Stress Biomarkers."
+The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids/) contains a example dataset with which users can familiarize themselves with LOBSTAHS. The dataset contains both a CAMERA "xsAnnotate" object and the LOBSTAHS "LOBSet" generated from it using `doLOBscreen()`. Processing of the dataset is described in: Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers." *Analytical Chemistry*.
 
 <h4>Code used to generate figures in Collins et al. LOBSTAHS manuscript</h4>
-Scripts used to generate the figures and many of the tables in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, "LOBSTAHS: A Novel Lipidomics Strategy for Semi-Untargeted Discovery and Identification of Oxidative Stress Biomarkers" can be found at https://github.com/jamesrco/LipidomicsDataViz/tree/master/LOBSTAHS
+Scripts used to generate the figures and many of the tables in the above referenced manuscript can be found at https://github.com/jamesrco/LipidomicsDataViz/tree/master/LOBSTAHS
 
 LOBSTAHS is maintained by [Jamie Collins](https://jamesrco.github.io) and replaces the "old" Van Mooy Lab lipidomics pipeline, which has been moved to https://github.com/vanmooylipidomics/old_pipeline.

@@ -1,33 +1,39 @@
 \name{extractLOBdbasedata}
 \alias{extractLOBdbasedata}
 \title{
-Extract Compound Data from a LOBdbase
+Extract compound data from a LOBdbase
 }
 \description{
-Extracts data from a LOBSTAHS \code{"\link{LOBdbase}"} object for a given molecular species.
+Extracts data from a LOBSTAHS \code{\link{LOBdbase-class}} object for a given 
+molecular species.
 }
 \usage{
 extractLOBdbasedata(frag_ID, database)
 }
 \arguments{
   \item{frag_ID}{
-The LOBdbase fragment ID(s) corresponding to the species for which data should be extracted.
+The LOBdbase fragment ID(s) corresponding to the species for which data should 
+be extracted.
 }
   \item{database}{
 The \code{LOBdbase} from which data are to be extracted.
 }
 }
 \value{
-A data frame containing the extracted data, with field names corresponding to the slots in \code{database}.
+A data frame containing the extracted data, with field names corresponding to 
+the slots in \code{database}.
 }
 \references{
-Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy, \dQuote{Untargeted discovery and identification of oxidative stress biomarkers using a lipidomics pipeline for complex datasets}
+Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.
+LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification
+of oxidative stress biomarkers. Analytical Chemistry.
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class{LOBdbase}},
+  \code{\linkS4class{LOBdbase-class}},
+  \code{\link{LOBdbase}}
   \code{\link{loadLOBdbase}},
   \code{\link{generateLOBdbase}},
   \code{\link{default.LOBdbase}}  
