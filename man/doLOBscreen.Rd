@@ -27,12 +27,12 @@ Specify polarity mode of data in \code{xsA}: "positive" or "negative."
   \item{database}{
 Specify the \code{LOBdbase} from which compound identities and adduct ion
 hierarchy data are to be applied. If nothing is specified, \code{doLOBscreen}
-will use the LOBSTAHS default database (\code{\link{default.LOBdbase}}) for the 
+will use the LOBSTAHS default database (\code{\link{default.LOBdbase}}) for the
 appropriate ionization mode.
 
-The database generation function \code{\link{generateLOBdbase}} can be used to 
-create a LOBdbase from structural property ranges specified by the user in a 
-series of input tables. \code{\link{loadLOBdbase}} can be used to import and 
+The database generation function \code{\link{generateLOBdbase}} can be used to
+create a LOBdbase from structural property ranges specified by the user in a
+series of input tables. \code{\link{loadLOBdbase}} can be used to import and
 reconstruct a \code{"LOBdbase"} object from a previously generated database that
 was saved as a .csv file.
 }
@@ -45,40 +45,40 @@ Should lipid class retention time screening criteria be applied to putative
 compound assignments?
 }
   \item{rt.windows}{
-File path to a .csv file containing retention time "window" data to be used for 
+File path to a .csv file containing retention time "window" data to be used for
 screening by lipid class, if \code{rt.restrict = TRUE}. If nothing is specified,
 \code{doLOBscreen} will use the package default windows
-(\code{\link{default.rt.windows}}), which are specific to the HPLC-MS method 
+(\code{\link{default.rt.windows}}), which are specific to the HPLC-MS method
 currently used in the Van Mooy Lab at Woods Hole Oceanographic Institution.
 
-Because the user is advised to provide retention time data specific to his/her 
-HPLC-MS method, failure to specify a value for \code{rt.windows} will result in 
-a warning. A Microsoft Excel spreadsheet template included with the package at 
-Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx can be 
-used to generate a .csv file of retention time data in a format appropriate for 
-\code{rt.windows}. Alternatively, the spreadsheet file may be downloaded at 
+Because the user is advised to provide retention time data specific to his/her
+HPLC-MS method, failure to specify a value for \code{rt.windows} will result in
+a warning. A Microsoft Excel spreadsheet template included with the package at
+Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx can be
+used to generate a .csv file of retention time data in a format appropriate for
+\code{rt.windows}. Alternatively, the spreadsheet file may be downloaded at
 \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx}.
 }
   \item{exclude.oddFA}{
-Should compound assignments with an odd total number of acyl carbon atoms be 
-excluded? (Applies only to assignments where the parent lipid class is TAG, 
-IP-DAG, PUA, or FFA.) Useful if data are (or are believed to be) of exclusively 
+Should compound assignments with an odd total number of acyl carbon atoms be
+excluded? (Applies only to assignments where the parent lipid class is TAG,
+IP-DAG, PUA, or FFA.) Useful if data are (or are believed to be) of exclusively
 eukaryotic origin.
 }
   \item{match.ppm}{
-\emph{m/z} tolerance (in ppm) used for matching observed data against the 
+\emph{m/z} tolerance (in ppm) used for matching observed data against the
 calculated \emph{m/z}'s in the database
 }
 }
-\details{\code{doLOBscreen} draws compound identities from a \code{LOBdbase} 
-database. The function applies various retention time and adduct ion hierarchy 
-screening criteria to winnow the list of putative compound assignments. It 
-returns a table of annotated peak data with compound assignments and various 
-annotation codes to assist the user in interpretation and follow-on data 
+\details{\code{doLOBscreen} draws compound identities from a \code{LOBdbase}
+database. The function applies various retention time and adduct ion hierarchy
+screening criteria to winnow the list of putative compound assignments. It
+returns a table of annotated peak data with compound assignments and various
+annotation codes to assist the user in interpretation and follow-on data
 analysis.
 }
 \value{
-  A \code{"\link{LOBSet}"} object.
+  A \code{"\link{LOBSet-class}"} object.
 }
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.

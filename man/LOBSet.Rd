@@ -30,19 +30,19 @@ obtained using the \code{\link{peakdata}} accessor for objects of
 An object of class \code{"list"}, a list of the \code{match_ID}s of possible
 regioisomers of each compound for which there is a row in \code{peakdata}.
 Length of \code{iso_C3r} should equal the number of rows in the data frame
-given for \code{peakdata}. 
+given for \code{peakdata}.
 }
   \item{iso_C3f}{
 An object of class \code{"list"}, a list of the \code{match_ID}s of possible
 functional structural isomers of each compound for which there is a row in
 \code{peakdata}. Length of \code{iso_C3f} should equal the number of rows in the
-data frame given for \code{peakdata}. 
+data frame given for \code{peakdata}.
 }
   \item{iso_C3c}{
 An object of class \code{"list"}, a list of the \code{match_ID}s of the isobars
 of each compound for which there is a row in \code{peakdata}. Length of
 \code{iso_C3c} should equal the number of rows in the data frame given for
-\code{peakdata}. 
+\code{peakdata}.
 }
   \item{LOBscreen_diagnostics}{
 An object of class \code{"data.frame"}, containing diagnostic information
@@ -55,11 +55,11 @@ screening criterion.
 An object of class \code{"data.frame"}, containing isomer and isobar summary
 statistics. The numbers of peakgroups and parent compounds to which the various
 isomer identifications have been applied by \code{\link{doLOBscreen}} to a given
-\code{LOBSet}. 
+\code{LOBSet}.
 }
   \item{LOBscreen_settings}{
 An object of class \code{"list"}; the settings used in \code{\link{doLOBscreen}}
-to generate the \code{LOBSet} 
+to generate the \code{LOBSet}
 }
   \item{polarity}{
 An object of class \code{"factor"}, polarity of data in the \code{LOBSet}. Must
@@ -76,7 +76,7 @@ An object of class \code{"character"}; the names of the samples from which the
 provided only for manual object creation; it will not be needed by most users.
 }
 \value{
-  A \code{"LOBSet"} object.
+  A \code{"LOBSet-class"} object.
 }
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.
