@@ -10,7 +10,7 @@ LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy La
 
 <h4>Citation</h4>
 
-LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers." In review for *Analytical Chemistry*.
+LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. *LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers.* In review for *Analytical Chemistry*.
 
 
 <h4>Installation</h4>
