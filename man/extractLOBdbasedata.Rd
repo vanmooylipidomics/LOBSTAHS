@@ -32,7 +32,7 @@ of oxidative stress biomarkers. Analytical Chemistry.
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class{LOBdbase-class}},
+  \code{\linkS4class{LOBdbase}},
   \code{\link{LOBdbase}}
   \code{\link{loadLOBdbase}},
   \code{\link{generateLOBdbase}},

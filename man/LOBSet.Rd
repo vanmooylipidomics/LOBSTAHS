@@ -87,7 +87,7 @@ of oxidative stress biomarkers. Analytical Chemistry.
 James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
-  \code{\linkS4class{LOBSet-class}},
+  \code{\link{LOBSet}},
   \code{\link{doLOBscreen}},
   \code{\linkS4class{xsAnnotate}}
 }

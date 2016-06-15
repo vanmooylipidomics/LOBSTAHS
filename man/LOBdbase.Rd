@@ -106,7 +106,7 @@ James Collins, \email{james.r.collins@aya.yale.edu}
   \code{\link{generateLOBdbase}},
   \code{\link{loadLOBdbase}},
   \code{\link{doLOBscreen}},
-  \code{\linkS4class{LOBdbase-class}}
+  \code{\link{LOBdbase}}
 }
 \examples{
 ## create an empty LOBdbase

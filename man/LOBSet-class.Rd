@@ -5,17 +5,28 @@
 \alias{show,LOBSet-method}
 \alias{LOBisoID_diagnostics,LOBSet-method}
 \alias{LOBisoID_diagnostics}
+\alias{LOBisoID_diagnostics<-,LOBSet-method}
+\alias{LOBisoID_diagnostics<-}
 \alias{peakdata,LOBSet-method}
 \alias{peakdata}
+\alias{peakdata<-,LOBSet-method}
+\alias{peakdata<-}
 \alias{polarity,LOBSet-method}
 \alias{polarity}
+\alias{polarity<-,LOBSet-method}
+\alias{polarity<-}
 \alias{sampnames,LOBSet-method}
 \alias{sampnames}
+\alias{sampnames<-,LOBSet-method}
+\alias{sampnames<-}
 \alias{LOBscreen_settings,LOBSet-method}
 \alias{LOBscreen_settings}
+\alias{LOBscreen_settings<-,LOBSet-method}
+\alias{LOBscreen_settings<-}
 \alias{LOBscreen_diagnostics,LOBSet-method}
 \alias{LOBscreen_diagnostics}
-
+\alias{LOBscreen_diagnostics<-,LOBSet-method}
+\alias{LOBscreen_diagnostics<-}
 
 \title{Class LOBSet: Peak data with annotations, isomers, and compound
 assignments}
@@ -88,8 +99,8 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \seealso{
   \code{\link{doLOBscreen}},
   \code{\link{getLOBpeaklist}},
-  \code{\linkS4class{LOBSet-class}},
-  \code{\linkS4class{xsAnnotate-class}}
+  \code{\link{LOBSet}},
+  \code{\linkS4class{xsAnnotate}}
 }
 \examples{
 ## return object information

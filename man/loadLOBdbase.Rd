@@ -50,7 +50,7 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
   \code{\link{LOBdbase}},
-  \code{\linkS4class{LOBdbase-class}},
+  \code{\linkS4class{LOBdbase}},
   \code{\link{doLOBscreen}},
   \code{\link{generateLOBdbase}},
   \code{\link{default.LOBdbase}}

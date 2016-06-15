@@ -121,7 +121,7 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \seealso{
   \code{\link{LOBSet}},
-  \code{\linkS4class{LOBSet-class}},
+  \code{\linkS4class{LOBSet}},
   \code{\link{doLOBscreen}}
 
 }

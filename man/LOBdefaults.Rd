@@ -80,7 +80,7 @@ of oxidative stress biomarkers. Analytical Chemistry.
 \seealso{
   \code{\link{doLOBscreen}},
   \code{\link{generateLOBdbase}},
-  \code{\linkS4class{LOBdbase-class}}
+  \code{\linkS4class{LOBdbase}}
   \code{\link{LOBdbase}}
 }
 \keyword{datasets}
