@@ -6,7 +6,9 @@ import("xcms",
 export("doLOBscreen",
        "loadLOBdbase",
        "extractLOBdbasedata",
-       "getLOBpeaklist")
+       "getLOBpeaklist",
+       "LOBSet",
+       "LOBdbase")
 
 export("generateLOBdbase")
 

@@ -7,7 +7,7 @@ object}
 \description{
 Constructor function for manual creation or reconstruction of a
 \code{LOBSet} object for HPLC-MS peak data that have been screened using
-\code{\link{LOBSTAHS}}.
+\code{LOBSTAHS}.
 }
 \usage{
 LOBSet(peakdata = NULL, iso_C3r = NULL, iso_C3f = NULL, iso_C3c = NULL,
@@ -93,6 +93,8 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \examples{
 ## create an empty LOBSet for positive ion mode data
+
+library(LOBSTAHS)
 
 myLOBSet = LOBSet(peakdata = NULL, iso_C3r = NULL, iso_C3f = NULL,
                   iso_C3c = NULL, LOBscreen_diagnostics = NULL,

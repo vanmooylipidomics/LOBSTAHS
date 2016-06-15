@@ -7,7 +7,7 @@ object}
 \description{
 Constructor function for manual assembly or reconstruction of a
 \code{LOBdbase} object to be used in screening data with the
-\code{\link{LOBSTAHS}} function \code{\link{doLOBscreen}}.
+\code{LOBSTAHS} function \code{\link{doLOBscreen}}.
 }
 \usage{
 LOBdbase(frag_ID = NULL, mz = NULL, exact_parent_neutral_mass = NULL,
@@ -29,7 +29,7 @@ which an entry exists.
 An object of class \code{"numeric"}; calculated (monoisotopic) exact masses of
 the parent compound of each species.
 }
-   \item{exact_parent_neutral_mass}{
+   \item{lipid_class}{
 An object of class \code{"factor"}; parent lipid classes of each species
 }
    \item{species}{
@@ -110,6 +110,8 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \examples{
 ## create an empty LOBdbase
+
+library(LOBSTAHS)
 
 myLOBdbase = LOBdbase(frag_ID = NULL, mz = NULL,
                       exact_parent_neutral_mass = NULL, lipid_class = NULL,

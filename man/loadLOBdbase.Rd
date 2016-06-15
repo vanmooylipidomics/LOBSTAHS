@@ -9,7 +9,7 @@ file. More robust than the generic constructor function
 \code{\link{LOBdbase}}.
 }
 \usage{
-loadLOBdbase(file, polarity, num.compounds = NULL)
+loadLOBdbase(file, polarity, num_compounds = NULL)
 }
 \arguments{
   \item{file}{
@@ -23,7 +23,7 @@ Specify polarity (ionization mode) of the database being imported ("positive" or
 "negative"). \code{loadLOBdbase} will attempt to detect the polarity mode based
 on data in the "adduct" column if nothing is given.
 }
-  \item{num.compounds}{
+  \item{num_compounds}{
 If known, the number of parent compounds represented in the database being
 imported. Can be unspecified.
 }
@@ -90,6 +90,6 @@ write.csv(exportmat, fname)
 
 neg.DB.reimported = loadLOBdbase("LOBSTAHS_lipid-oxy_DB_neg.csv",
                                  polarity = "negative",
-                                 num.compounds = NULL)
+                                 num_compounds = NULL)
 }
 \keyword{methods}
