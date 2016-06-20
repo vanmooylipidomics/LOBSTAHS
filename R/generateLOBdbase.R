@@ -337,6 +337,9 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) {
 # which masses are to be generated in a given ionization mode, based on the 
 # user-specified ranges of lipid classes and chemical properties
 
+# this is a wrapper function; combCalc() performs the actual calculation for 
+# each lipid class
+
 calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies, 
                         baseComponent.masses, adduct.masses) {
   
@@ -356,33 +359,54 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   
   # now, proceed with obtaining number of combinations
   
-  # initialize counters
-  numAddIons = 0
-  numCompounds = 0
+  combSums = apply(
+    apply(
+      data.frame(as.character(baseComponent.masses$Species_class), 
+                 rownames(baseComponent.masses)), 
+      1, 
+      combCalc, 
+      AIHs.thismode = AIHs.thismode,
+      acylRanges = acylRanges,
+      oxyRanges = oxyRanges),
+    1,
+    sum)
   
-  for (i in 1:nrow(baseComponent.masses)) {
-    
+  
+  return(list(numCompounds = as.integer(combSums[1]), 
+              numAddIons = as.integer(combSums[2])))
+  
+}
+
+# combCalc: calculates number of possible DB entires for a given lipid class;
+# designed to work with the wrapper calcNumCombs, which calculates total no.
+# of combinations for an entire theoretical database
+
+combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
+  
+  # classInfo: matrix consisting of species classes and species names
+  # e.g., classInfo = data.frame(as.character(
+  #                        baseComponent.masses$Species_class),
+  #                        rownames(baseComponent.masses))
+  
     # retrieve necessary data for this class
     
-    this.class = baseComponent.masses$Species_class[i]
-    
-    if (this.class %in% c("IP_DAG","FFA","TAG","PUA")) {
+    if (classInfo[1] %in% c("IP_DAG","FFA","TAG","PUA")) {
       
       this.oxymin = as.numeric(oxyRanges[
-        grep(paste0(as.character(baseComponent.masses$Species_class[i]),"_min"),
+        grep(paste0(as.character(classInfo[1]),"_min"),
              colnames(oxyRanges))])
       this.oxymax = as.numeric(oxyRanges[
-        grep(paste0(as.character(baseComponent.masses$Species_class[i]),"_max"),
+        grep(paste0(as.character(classInfo[1]),"_max"),
              colnames(oxyRanges))])
       this.C_DBmindata = acylRanges[
-        ,grep(paste0(as.character(baseComponent.masses$Species_class[i]),
+        ,grep(paste0(as.character(classInfo[1]),
                      "_min"),colnames(acylRanges))]
       this.C_DBmaxdata = acylRanges[
-        ,grep(paste0(as.character(baseComponent.masses$Species_class[i]),
+        ,grep(paste0(as.character(classInfo[1]),
                      "_max"),colnames(acylRanges))]
       
       num.adducts = sum(!is.na(AIHs.thismode[,colnames(AIHs.thismode)[
-        colnames(AIHs.thismode)==rownames(baseComponent.masses)[i]]]))
+        colnames(AIHs.thismode)==classInfo[2]]]))
       
       if (num.adducts>0) {
         
@@ -397,26 +421,26 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       
       num_ions.this_species = num.adducts*num_compounds.this_species
       
-    } else if (this.class %in% c("DNPPE","pigment")) {
+    } else if (classInfo[1] %in% c("DNPPE","pigment")) {
       
-      if (this.class=="pigment") {
+      if (classInfo[1]=="pigment") {
         
         num.adducts = sum(!is.na(AIHs.thismode[
           ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                     baseComponent.masses$Species_class[i]]]))
+                                     classInfo[1]]]))
         
-      } else if (this.class=="DNPPE") {
+      } else if (classInfo[1]=="DNPPE") {
         
         num.adducts = sum(!is.na(AIHs.thismode[
           ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                     rownames(baseComponent.masses)[i]]]))
+                                     classInfo[2]]]))
         
       }
       
       if (num.adducts>0) {
         
         num_compounds.this_species = 1 # because we considered DNPPE and each 
-                                       # pigment individually
+        # pigment individually
         
       } else {
         
@@ -427,14 +451,10 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       num_ions.this_species = num.adducts
       
     }
-    
-    numCompounds = numCompounds + num_compounds.this_species
-    numAddIons = numAddIons + num_ions.this_species
-    
-  }
   
-  return(list(numCompounds = as.integer(numCompounds), 
-              numAddIons = as.integer(numAddIons)))
+  # return number of compounds and adduct ions for this species
+  
+  c(num_compounds.this_species, num_ions.this_species)
   
 }
 
