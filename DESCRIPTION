@@ -1,7 +1,7 @@
 Package: LOBSTAHS
 Title: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences
-Version: 0.99.8
-Date: 2016-06-15
+Version: 0.99.9
+Date: 2016-07-30
 Authors@R: c(
     person("James", "Collins", email = "james.r.collins@aya.yale.edu", 
            role = c("aut", "cre")),
@@ -36,7 +36,7 @@ Description: LOBSTAHS is a multifunction package for screening, annotation, and
     variety of annotation codes to assist the user in evaluating the accuracy of
     each assignment.
 License: GPL (>= 3) + file LICENSE
-URL: https://github.com/vanmooylipidomics/LOBSTAHS
+URL: http://bioconductor.org/packages/LOBSTAHS
 BugReports: https://github.com/vanmooylipidomics/LOBSTAHS/issues/new
 VignetteBuilder: knitr
 biocViews: MassSpectrometry, Metabolomics, Lipidomics, DataImport

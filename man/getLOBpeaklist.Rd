@@ -114,7 +114,7 @@ slots.
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.
 LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification
-of oxidative stress biomarkers. Analytical Chemistry.
+of oxidative stress biomarkers. \emph{Analytical Chemistry} 88:7154-7162 
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}
