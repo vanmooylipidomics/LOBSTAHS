@@ -1,6 +1,6 @@
 # LOBSTAHS
 
-**June 20, 2016:** A citable manuscript describing LOBSTAHS has been accepted for publication in *Analytical Chemistry.* Details (and DOI) are below.
+**August 26, 2016:** A citable manuscript describing LOBSTAHS has been published in *Analytical Chemistry.* Details below. In addition, LOBSTAHS is now available on [Bioconductor](http://bioconductor.org/packages/LOBSTAHS).
 
 This is the repository for the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. Installation instructions and some general information about LOBSTAHS are given below.
 
@@ -72,7 +72,7 @@ install_github("vanmooylipidomics/PtH2O2lipids")
    * total acyl carbon chain length, and
    * degree of acyl carbon chain unsaturation (i.e., number of double bonds)
 
-Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. These default databases contain data on 13,578 and 11,073 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
+Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class. The default databases (as of August 26, 2016) include 14,068 and 11,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
 
 <h4>Identification, screening, and annotation using orthogonal criteria</h4> 
 The function `doLOBscreen()` is then used to assign putative compound identities from these *in silico* databases to peakgroups in any high-mass accuracy dataset that has been processed using [xcms](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). doLOBscreen then applies a series of user-selected orthogonal screening criteria based on
@@ -89,4 +89,4 @@ The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids
 <h4>Code used to generate figures in Collins et al. LOBSTAHS manuscript</h4>
 Scripts used to generate the figures and many of the tables in the above referenced manuscript can be found at https://github.com/jamesrco/LipidomicsDataViz/tree/master/LOBSTAHS
 
-LOBSTAHS is maintained by [Jamie Collins](https://jamesrco.github.io) and replaces the "old" Van Mooy Lab lipidomics pipeline, which has been moved to https://github.com/vanmooylipidomics/old_pipeline.
+LOBSTAHS is maintained by [Jamie Collins](https://jamesrco.github.io).
