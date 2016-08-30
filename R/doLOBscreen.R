@@ -124,7 +124,8 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
 
     }
 	
-	# not using the default database
+	# not using the default database, set defDB to 0 (false)
+
 	defDB = 0
 
   } else { # user didn't specify a database, use the default DB of the correct 
