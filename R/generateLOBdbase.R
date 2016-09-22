@@ -19,7 +19,7 @@ generateLOBdbase = function(polarity = c("positive","negative"),
   # followed the layout of the default tables if creating their own
   
   if (is.null(component.defs)) { # user didn't specify external component 
-                                 # definitions table, use defaults
+    # definitions table, use defaults
     
     componentTable.loc = NULL
     use.default.componentTable = TRUE
@@ -32,17 +32,15 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    cat("User specified external source for basic component composition",
-        "matrix.\n")
-    cat("Ensure .csv file is properly formatted and sufficient entries exist",
-        "in\n")
-    cat("other external files to support any additional adducts, lipid",
-        "classes, or molecules.\n")
+    warning("User specified external source for basic component composition ",
+            "matrix. Ensure .csv file is properly formatted and sufficient ",
+            "entries exist in other external files to support any additional ",
+            "adducts, lipid classes, or molecules.\n")
     
   }
   
   if (is.null(AIH.defs)) { # user didn't specify external AIH table, use 
-                           # defaults
+    # defaults
     
     AIHtable.loc = NULL
     use.default.AIHtable = TRUE
@@ -55,16 +53,15 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    cat("User specified external source for adduct ion hierarchy matrix.\n")
-    cat("Ensure .csv file is properly formatted and sufficient entries exist ",
-        "in\n")
-    cat("other external files to support any additional adducts, lipid",
-        "classes, or molecules.\n")
+    warning("User specified external source for adduct ion hierarchy ",
+            "matrix. Ensure .csv file is properly formatted and sufficient ",
+            "entries exist in other external files to support any additional ",
+            "adducts, lipid classes, or molecules.\n")
     
   }
   
   if (is.null(acyl.ranges)) { # user didn't specify external in silico acyl 
-                              # property range table, use defaults
+    # property range table, use defaults
     
     acylRanges.loc = NULL
     use.default.acylRanges = TRUE
@@ -77,17 +74,15 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    cat("User specified external source for in silico simulation acyl property",
-        "ranges.\n")
-    cat("Ensure .csv file is properly formatted and sufficient entries exist",
-        "in\n")
-    cat("other external files to support any additional adducts, lipid",
-        "classes, or molecules.\n")
+    warning("User specified external source for in silico simulation acyl ",
+            "property ranges. Ensure .csv file is properly formatted and ",
+            "sufficient entries exist in other external files to support any ",
+            "additional adducts, lipid classes, or molecules.\n")
     
   }
   
   if (is.null(oxy.ranges)) { # user didn't specify external AIH table, use 
-                             # defaults
+    # defaults
     
     oxyRanges.loc = NULL
     use.default.oxyRanges = TRUE
@@ -100,12 +95,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    cat("User specified external source for numbers of additional oxygen atoms",
-        "to be considered.\n")
-    cat("Ensure .csv file is properly formatted and sufficient entries exist",
-        "in\n")
-    cat("other external files to support any additional adducts, lipid",
-        "classes, or molecules.\n")
+    warning("User specified external source for additional oxygen atoms to be ",
+            "considered. Ensure .csv file is properly formatted and ",
+            "sufficient entries exist in other external files to support any ",
+            "additional adducts, lipid classes, or molecules.\n")
     
   }
   
@@ -237,7 +230,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   componentCompTable[,ncol(componentCompTable)] = 
     apply(as.matrix(sapply(componentCompTable[
       ,1:(ncol(componentCompTable)-2)], as.numeric)), 1, 
-          function(x) sum(x*exact.masses,na.rm = TRUE))
+      function(x) sum(x*exact.masses,na.rm = TRUE))
   colnames(componentCompTable)[ncol(componentCompTable)] = c("Exact_mass")
   
   # extract masses of adducts into separate table (we'll need these later); 
@@ -388,69 +381,69 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
   #                        baseComponent.masses$Species_class),
   #                        rownames(baseComponent.masses))
   
-    # retrieve necessary data for this class
+  # retrieve necessary data for this class
+  
+  if (classInfo[1] %in% c("IP_DAG","IP_MAG","FFA","TAG","PUA")) {
     
-    if (classInfo[1] %in% c("IP_DAG","FFA","TAG","PUA")) {
+    this.oxymin = as.numeric(oxyRanges[
+      grep(paste0(as.character(classInfo[1]),"_min"),
+           colnames(oxyRanges))])
+    this.oxymax = as.numeric(oxyRanges[
+      grep(paste0(as.character(classInfo[1]),"_max"),
+           colnames(oxyRanges))])
+    this.C_DBmindata = acylRanges[
+      ,grep(paste0(as.character(classInfo[1]),
+                   "_min"),colnames(acylRanges))]
+    this.C_DBmaxdata = acylRanges[
+      ,grep(paste0(as.character(classInfo[1]),
+                   "_max"),colnames(acylRanges))]
+    
+    num.adducts = sum(!is.na(AIHs.thismode[,colnames(AIHs.thismode)[
+      colnames(AIHs.thismode)==classInfo[2]]]))
+    
+    if (num.adducts>0) {
       
-      this.oxymin = as.numeric(oxyRanges[
-        grep(paste0(as.character(classInfo[1]),"_min"),
-             colnames(oxyRanges))])
-      this.oxymax = as.numeric(oxyRanges[
-        grep(paste0(as.character(classInfo[1]),"_max"),
-             colnames(oxyRanges))])
-      this.C_DBmindata = acylRanges[
-        ,grep(paste0(as.character(classInfo[1]),
-                     "_min"),colnames(acylRanges))]
-      this.C_DBmaxdata = acylRanges[
-        ,grep(paste0(as.character(classInfo[1]),
-                     "_max"),colnames(acylRanges))]
+      num_compounds.this_species = (this.oxymax-this.oxymin+1)*
+        sum(this.C_DBmaxdata-this.C_DBmindata+1,na.rm = TRUE)
       
-      num.adducts = sum(!is.na(AIHs.thismode[,colnames(AIHs.thismode)[
-        colnames(AIHs.thismode)==classInfo[2]]]))
+    } else {
       
-      if (num.adducts>0) {
-        
-        num_compounds.this_species = (this.oxymax-this.oxymin+1)*
-          sum(this.C_DBmaxdata-this.C_DBmindata+1,na.rm = TRUE)
-        
-      } else {
-        
-        num_compounds.this_species = 0
-        
-      }
-      
-      num_ions.this_species = num.adducts*num_compounds.this_species
-      
-    } else if (classInfo[1] %in% c("DNPPE","pigment")) {
-      
-      if (classInfo[1]=="pigment") {
-        
-        num.adducts = sum(!is.na(AIHs.thismode[
-          ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                     classInfo[1]]]))
-        
-      } else if (classInfo[1]=="DNPPE") {
-        
-        num.adducts = sum(!is.na(AIHs.thismode[
-          ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                     classInfo[2]]]))
-        
-      }
-      
-      if (num.adducts>0) {
-        
-        num_compounds.this_species = 1 # because we considered DNPPE and each 
-        # pigment individually
-        
-      } else {
-        
-        num_compounds.this_species = 0
-        
-      }
-      
-      num_ions.this_species = num.adducts
+      num_compounds.this_species = 0
       
     }
+    
+    num_ions.this_species = num.adducts*num_compounds.this_species
+    
+  } else if (classInfo[1] %in% c("DNPPE","pigment")) {
+    
+    if (classInfo[1]=="pigment") {
+      
+      num.adducts = sum(!is.na(AIHs.thismode[
+        ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
+                                   classInfo[1]]]))
+      
+    } else if (classInfo[1]=="DNPPE") {
+      
+      num.adducts = sum(!is.na(AIHs.thismode[
+        ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
+                                   classInfo[2]]]))
+      
+    }
+    
+    if (num.adducts>0) {
+      
+      num_compounds.this_species = 1 # because we considered DNPPE and each 
+      # pigment individually
+      
+    } else {
+      
+      num_compounds.this_species = 0
+      
+    }
+    
+    num_ions.this_species = num.adducts
+    
+  }
   
   # return number of compounds and adduct ions for this species
   
@@ -463,10 +456,10 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
 genTimeStamp = function () {
   
   output_DTG = format(Sys.time(), "%Y-%m-%dT%X%z") # return current time in a 
-                                                   # good format
+  # good format
   output_DTG = gsub(" ", "_", output_DTG) # replace any spaces
   output_DTG = gsub(":", "-", output_DTG) # replaces any colons with dashes (Mac
-                                          # compatibility)
+  # compatibility)
   
 }
 
@@ -546,7 +539,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   # now, perform simulation by species
   
   ins.row = 1 # define variable to keep track of insertion point in results 
-              # table
+  # table
   
   for (i in 1:nrow(baseComponent.masses)) {
     
@@ -565,6 +558,11 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
       
     } else if (this.lipid_class=="IP_DAG") {
+      
+      cat("Calculating data for",this.lipid_class,"lipid class:",this.species,
+          "...\n")
+      
+    } else if (this.lipid_class=="IP_MAG") {
       
       cat("Calculating data for",this.lipid_class,"lipid class:",this.species,
           "...\n")
@@ -662,7 +660,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         rm(j)
         
       } else { # this species is not a pigment, or DNPPE --> requires more 
-               # involved simulation
+        # involved simulation
         
         # retrieve, store "base" exact mass for this lipid class
         
@@ -689,12 +687,13 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         num.carboxyl = switch(
           as.character(baseComponent.masses$Species_class[i]),
           IP_DAG=2,
+          IP_MAG=1,
           FFA=1,
           PUA=0,
           TAG=3)
         
         for (j in 1:nrow(these.sim.ranges)) { # cycle thru number of allowable 
-                                              # acyl C atoms
+          # acyl C atoms
           
           # retrieve, store this.FA_total_no_C
           this.FA_total_no_C = these.sim.ranges[j,1]
@@ -704,13 +703,13 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
           these.allowable.DBs = these.sim.ranges[j,2]:these.sim.ranges[j,3]
           
           for (k in 1:length(these.allowable.DBs)) { # cycle thru allowable no. 
-                                                     # of double bonds
+            # of double bonds
             
             # retrieve, store this.FA_total_no_DB
             this.FA_total_no_DB = these.allowable.DBs[k]
             
             for (l in 1:length(these.oxystates)) { # cycle thru allowable 
-                                                   # additional oxygen atoms
+              # additional oxygen atoms
               
               # retrieve, store this.degree_oxidation
               this.degree_oxidation = these.oxystates[l]
@@ -804,7 +803,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                                                         this.species,
                                                         this.adduct,
                                                         this.parent_formula,
-                                                    this.parent_compound_name)
+                                                        this.parent_compound_name)
                 
                 ins.row = ins.row + 1 # advance our insertion point
                 
