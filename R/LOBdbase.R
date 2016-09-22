@@ -318,6 +318,10 @@ setMethod("show", "LOBdbase", function(object) {
       lipid_class(object)=="IP_DAG"]))),"):",
         paste(as.character(unique(species(object)[
           lipid_class(object)=="IP_DAG"])), collapse = ", "),"\n")
+    cat("IP-MAG classes (",length(as.character(unique(species(object)[
+      lipid_class(object)=="IP_MAG"]))),"):",
+      paste(as.character(unique(species(object)[
+        lipid_class(object)=="IP_MAG"])), collapse = ", "),"\n")
     cat("Pigments (",length(as.character(unique(species(object)[
       lipid_class(object)=="pigment"]))),"):",
         paste(as.character(unique(species(object)[
