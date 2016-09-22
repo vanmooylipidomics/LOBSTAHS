@@ -124,7 +124,8 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
 
     }
 	
-	# not using the default database
+	# not using the default database, set defDB to 0 (false)
+
 	defDB = 0
 
   } else { # user didn't specify a database, use the default DB of the correct 
@@ -170,12 +171,15 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
     } else { # load and perform basic check of user-specified rt window data, 
              # assuming they pointed rt.wintable to a valid R matrix with 
              # reasonbly named column headings
+      
       if (!file.exists(rt.windows)) {
         stop("User defined file containing retention time window data does not exist!")
       }
+      
       # load the retention time window data 
       rt.windows = read.csv(rt.windows)
-      defRTwin = 0
+      
+      defRTwin = 0 # set defRTwin to 0 (false)
 
       if (sum(grepl("[Ll][Ii][Pp][Ii][Dd][ |\\.|_]*[Cc][Ll][Aa][Ss][Ss]",
                     colnames(rt.windows)))!=1) {
