@@ -4,15 +4,16 @@ citEntry(entry="article",
    author=c(
    person(c("J.","R."), "Collins"), person(c("B.","R."), "Edwards"),
    person(c("H.","F."),"Fredricks"), person(c("B.","A.","S."), "Van Mooy")),
-   title="LOBSTAHS: An adduct-based lipidomics strategy for discovery and 
+   title="LOBSTAHS: An adduct-based lipidomics strategy for discovery and
    identification of oxidative stress biomarkers",
    journal="Analytical Chemistry",
    year="2016",
-   volume="?",
-   pages="??--??",
-   url="https://github.com/vanmooylipidomics/LOBSTAHS",
+   volume="88",
+   pages="7154-7162",
+   url="http://dx.doi.org/10.1021/acs.analchem.6b01260",
    textVersion = paste("Collins, J. R., B. R. Edwards, H. F. Fredricks, and",
                        "B. A. S. Van Mooy. 2016.",
                        "LOBSTAHS: An adduct-based lipidomics strategy for",
                        "discovery and identification of oxidative stress",
-                       "biomarkers. Analytical Chemistry"))
+                       "biomarkers. Analytical Chemistry 88: 7154-7162;",
+                       "doi:10.1021/acs.analchem.6b01260"))
