@@ -175,6 +175,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
       }
       # load the retention time window data 
       rt.windows = read.csv(rt.windows)
+      defRTwin = 0
 
       if (sum(grepl("[Ll][Ii][Pp][Ii][Dd][ |\\.|_]*[Cc][Ll][Aa][Ss][Ss]",
                     colnames(rt.windows)))!=1) {
