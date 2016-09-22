@@ -343,7 +343,7 @@ LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy La
 
 Benton, H. P., Want, E. J., and Ebbels, T. M. D. 2010. Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data. *Bioinformatics* **26**: 2488-2489
 
-Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Anal. Chem.*; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
+Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Anal. Chem.* **88**: 7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
 Hummel, J., Segu, S., Li, Y., Irgang, S., Jueppner, J., and Giavalisco, P. 2011. Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids. *Front Plant Sci* **2**
 
@@ -361,7 +361,7 @@ Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature de
 
 ### Notes
 
-1. <span id="note1">Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers," *Anal. Chem.*; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)</span>
+1. <span id="note1">Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S., 2016, "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers," *Anal. Chem.* **88**: 7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)</span>
 
 1. <span id="note2">Smith et al., 2006, "XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification," *Anal. Chem.* **78**: 779–787; Tautenhahn et al., 2008, "Highly sensitive feature detection for high resolution LC/MS," *BMC Bioinformatics* **9**: 504; Benton et al., 2010, "Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data," *Bioinformatics* **26**: 2488-2489</span>
 
