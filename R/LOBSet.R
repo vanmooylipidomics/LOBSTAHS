@@ -276,6 +276,9 @@ setMethod("LOBscreen_diagnostics", "LOBSet",
 
             } else if (.hasSlot(object, "LOBscreen.diagnostics")) {
               
+              # likely a LOBSet created before slot names were changed from
+              # dots to underscores; adjust accordingly
+
               object@LOBscreen.diagnostics
               
             }
@@ -305,6 +308,9 @@ setMethod("LOBisoID_diagnostics", "LOBSet",
               object@LOBisoID_diagnostics
               
             } else if (.hasSlot(object, "LOBisoID.diagnostics")) {
+              
+              # likely a LOBSet created before slot names were changed from
+              # dots to underscores; adjust accordingly
               
               object@LOBisoID.diagnostics
               
@@ -384,6 +390,9 @@ setMethod("LOBscreen_settings", "LOBSet",
               object@LOBscreen_settings
               
             } else if (.hasSlot(object, "LOBscreen.settings")) {
+              
+              # likely a LOBSet created before slot names were changed from
+              # dots to underscores; adjust accordingly
               
               object@LOBscreen.settings
               
