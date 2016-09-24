@@ -268,7 +268,19 @@ setGeneric("LOBscreen_diagnostics",
            function(object) standardGeneric("LOBscreen_diagnostics"))
 
 setMethod("LOBscreen_diagnostics", "LOBSet",
-          function(object) object@LOBscreen_diagnostics)
+          function(object) {
+            
+            if (.hasSlot(object, "LOBscreen_diagnostics")) {
+              
+              object@LOBscreen_diagnostics
+
+            } else if (.hasSlot(object, "LOBscreen.diagnostics")) {
+              
+              object@LOBscreen.diagnostics
+              
+            }
+            
+          })
 
 setGeneric(
   "LOBscreen_diagnostics<-", 
@@ -286,7 +298,19 @@ setGeneric("LOBisoID_diagnostics",
            function(object) standardGeneric("LOBisoID_diagnostics"))
 
 setMethod("LOBisoID_diagnostics", "LOBSet",
-          function(object) object@LOBisoID_diagnostics)
+          function(object) {
+            
+            if (.hasSlot(object, "LOBisoID_diagnostics")) {
+              
+              object@LOBisoID_diagnostics
+              
+            } else if (.hasSlot(object, "LOBisoID.diagnostics")) {
+              
+              object@LOBisoID.diagnostics
+              
+            }
+            
+          })
 
 setGeneric(
   "LOBisoID_diagnostics<-", 
@@ -353,7 +377,19 @@ setGeneric("LOBscreen_settings",
            function(object) standardGeneric("LOBscreen_settings"))
 
 setMethod("LOBscreen_settings", "LOBSet",
-          function(object) object@LOBscreen_settings)
+          function(object) {
+            
+            if (.hasSlot(object, "LOBscreen_settings")) {
+              
+              object@LOBscreen_settings
+              
+            } else if (.hasSlot(object, "LOBscreen.settings")) {
+              
+              object@LOBscreen.settings
+              
+            }
+            
+          })
 
 setGeneric(
   "LOBscreen_settings<-", 
