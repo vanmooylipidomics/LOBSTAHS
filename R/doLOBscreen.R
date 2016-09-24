@@ -1023,7 +1023,7 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
   export.df = export.df[,-c(which(colnames(export.df) %in% c("npeaks",
                                                              "isotopes")))]
   
-  if ("match_ID" %in% colnames(export.df)) {
+  if ("peakgroup_rt" %in% colnames(export.df)) {
     
     # can assume this is a "recent" LOBSet created after we replaced periods in
     # column names with underscores
@@ -1041,19 +1041,19 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
                                            "LOBdbase_ppm_match",
                                            "peakgroup_rt")))]
     
-  } else if ("match.ID" %in% colnames(export.df)) {
+  } else if ("peakgroup.rt" %in% colnames(export.df)) {
     
     # can assume this is an older LOBSet created before we replaced periods in
-    # column names with underscores
+    # (some) column names with underscores
     
-    leadcols = export.df[,c("match.ID","compound.name","elem.formula",
+    leadcols = export.df[,c("match_ID","compound_name","elem_formula",
                             "LOBdbase.mz","peakgroup.mz","LOBdbase.ppm.match",
                             "peakgroup.rt")]
     
     export.df = export.df[,-c(which(colnames(export.df) 
-                                    %in% c("match.ID",
-                                           "compound.name",
-                                           "elem.formula",
+                                    %in% c("match_ID",
+                                           "compound_name",
+                                           "elem_formula",
                                            "LOBdbase.mz",
                                            "peakgroup.mz",
                                            "LOBdbase.ppm.match",
