@@ -216,10 +216,26 @@ setMethod("show", "LOBSet", function(object) {
     cat("Compound assignments:",
         LOBscreen_diagnostics(object)$parent_compounds[6],
         "\n")
-    cat("m/z range:",paste(min(peakdata(object)$peakgroup_mz, na.rm = TRUE),
-                           max(peakdata(object)$peakgroup_mz, na.rm = TRUE),
-                           sep = "-"),"\n\n")
     
+    if (.hasSlot(object, "LOBisoID_diagnostics")) {
+      
+      # can assume it is an newer LOBSet that has underscores for column names
+      # in peakdata
+      
+      cat("m/z range:",paste(min(peakdata(object)$peakgroup_mz, na.rm = TRUE),
+                             max(peakdata(object)$peakgroup_mz, na.rm = TRUE),
+                             sep = "-"),"\n\n")
+      
+    } else if (.hasSlot(object, "LOBisoID.diagnostics")) {
+      
+      # can assume it is an older LOBSet that has periods for column names in
+      # peakdata instead of underscores
+      
+      cat("m/z range:",paste(min(peakdata(object)$peakgroup.mz, na.rm = TRUE),
+                             max(peakdata(object)$peakgroup.mz, na.rm = TRUE),
+                             sep = "-"),"\n\n")
+    }
+      
     cat("Peak groups having possible regisomers:",
         paste(LOBisoID_diagnostics(object)$peakgroups[1],"\n"))
     cat("Peak groups having possible structural functional isomers:",
