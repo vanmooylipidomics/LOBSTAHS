@@ -220,7 +220,7 @@ setMethod("show", "LOBSet", function(object) {
     if (.hasSlot(object, "LOBisoID_diagnostics")) {
       
       # can assume it is an newer LOBSet that has underscores for column names
-      # in peakdata
+      # in peakdata 
       
       cat("m/z range:",paste(min(peakdata(object)$peakgroup_mz, na.rm = TRUE),
                              max(peakdata(object)$peakgroup_mz, na.rm = TRUE),
