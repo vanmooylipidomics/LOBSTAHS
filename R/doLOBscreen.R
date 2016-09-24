@@ -11,7 +11,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
 
   cat("\n")
 
-  ################ Check arguments, load necessary data #############
+  ################ Check arguments, load necessary data ############# 
 
   # verify that input xsA is of correct class, has pseudospectra, and that rt 
   # data are in seconds
