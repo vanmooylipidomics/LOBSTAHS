@@ -1022,26 +1022,84 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
 
   export.df = export.df[,-c(which(colnames(export.df) %in% c("npeaks",
                                                              "isotopes")))]
-  leadcols = export.df[,c("match_ID","compound_name","elem_formula",
-                          "LOBdbase_mz","peakgroup_mz","LOBdbase_ppm_match",
-                          "peakgroup_rt")]
-  export.df = export.df[,-c(which(colnames(export.df) %in% c("match_ID",
-                                                             "compound_name",
-                                                             "elem_formula",
-                                                             "LOBdbase_mz",
-                                                             "peakgroup_mz",
-                                                        "LOBdbase_ppm_match",
-                                                        "peakgroup_rt")))]
+  
+  if ("match_ID" %in% colnames(export.df)) {
+    
+    # can assume this is a "recent" LOBSet created after we replaced periods in
+    # column names with underscores
+    
+    leadcols = export.df[,c("match_ID","compound_name","elem_formula",
+                            "LOBdbase_mz","peakgroup_mz","LOBdbase_ppm_match",
+                            "peakgroup_rt")]
+    
+    export.df = export.df[,-c(which(colnames(export.df) 
+                                    %in% c("match_ID",
+                                           "compound_name",
+                                           "elem_formula",
+                                           "LOBdbase_mz",
+                                           "peakgroup_mz",
+                                           "LOBdbase_ppm_match",
+                                           "peakgroup_rt")))]
+    
+  } else if ("match.ID" %in% colnames(export.df)) {
+    
+    # can assume this is an older LOBSet created before we replaced periods in
+    # column names with underscores
+    
+    leadcols = export.df[,c("match.ID","compound.name","elem.formula",
+                            "LOBdbase.mz","peakgroup.mz","LOBdbase.ppm.match",
+                            "peakgroup.rt")]
+    
+    export.df = export.df[,-c(which(colnames(export.df) 
+                                    %in% c("match.ID",
+                                           "compound.name",
+                                           "elem.formula",
+                                           "LOBdbase.mz",
+                                           "peakgroup.mz",
+                                           "LOBdbase.ppm.match",
+                                           "peakgroup.rt")))]
+    
+  }
+  
   export.df = data.frame(leadcols,export.df)
-
+    
   # argument-dependent options
+  
+  # need if/then statements to account for change in slot naming from periods
+  # to underscores
 
   if (include.iso==TRUE) {
-
-    iso_C3r.match_ID = sapply(LOBSet@iso_C3r, paste, collapse = ", ")
-    iso_C3f.match_ID = sapply(LOBSet@iso_C3f, paste, collapse = ", ")
-    iso_C3c.match_ID = sapply(LOBSet@iso_C3c, paste, collapse = ", ")
-
+    
+    if (.hasSlot(LOBSet, "iso_C3r")) {
+      
+      iso_C3r.match_ID = sapply(LOBSet@iso_C3r, paste, collapse = ", ")
+      
+    } else if (.hasSlot(LOBSet, "iso.C3r")) {
+      
+      iso_C3r.match_ID = sapply(LOBSet@iso.C3r, paste, collapse = ", ")
+      
+    }
+    
+    if (.hasSlot(LOBSet, "iso_C3f")) {
+      
+      iso_C3f.match_ID = sapply(LOBSet@iso_C3f, paste, collapse = ", ")
+      
+    } else if (.hasSlot(LOBSet, "iso.C3f")) {
+      
+      iso_C3f.match_ID = sapply(LOBSet@iso.C3f, paste, collapse = ", ")
+      
+    }
+    
+    if (.hasSlot(LOBSet, "iso_C3c")) {
+      
+      iso_C3c.match_ID = sapply(LOBSet@iso_C3c, paste, collapse = ", ")
+      
+    } else if (.hasSlot(LOBSet, "iso.C3c")) {
+      
+      iso_C3c.match_ID = sapply(LOBSet@iso.C3c, paste, collapse = ", ")
+      
+    }
+    
     export.df = data.frame(export.df,iso_C3r.match_ID,iso_C3f.match_ID,
                            iso_C3c.match_ID, stringsAsFactors = FALSE)
 
