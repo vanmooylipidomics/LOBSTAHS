@@ -6,11 +6,11 @@ A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/ma
 
 LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
 
-<h5>Citation</h5>
+<h3>Citation</h3>
 
 LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
-<h5>Installation</h5>
+<h3>Installation</h3>
 
 <h4>Install current production version</h4>
 
@@ -57,11 +57,11 @@ install_github("vanmooylipidomics/LOBSTAHS")
 
 ```
 
-<h5>LOBSTAHS dataset preparation in xcms and CAMERA</h5>
+<h3>LOBSTAHS dataset preparation in xcms and CAMERA</h3>
 
 (See [this comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) for a much more detailed treatment of package functionality.) HPLC-MS data must be assembled into a CAMERA xsAnnotate object prior to analysis with LOBSTAHS. Scripts are provided in the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox) for preparing HPLC-ESI-MS data from an Orbitrap Exactive mass spectrometer in [**xcms**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and then [**CAMERA**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). Or, the user can use his/her own implementation of xcms and CAMERA. We have successfully used the [IPO](https://github.com/glibiseller/IPO/) package to optimize xcms and CAMERA settings for a variety of datasets.
 
-<h5>In silico database generation</h5>
+<h3>In silico database generation</h3>
 
 *In silico* data for a wide range of lipids, oxidized lipids, and oxylipins are generated from user-supplied structural criteria using the database generation function `generateLOBdbase()`. The function pairs these *in silico* data with empirically-determined adduct ion abundance rankings for the major lipid classes. Users can generate their own matrices of structural property ranges to be considered during a `generateLOBdbase()` simulation using the Microsoft Excel spreadsheet templates provided in https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx. (Users should generate .csv files from this Excel spreadsheets.) Ranges of values can be specified for: 
 
@@ -71,7 +71,7 @@ install_github("vanmooylipidomics/LOBSTAHS")
 
 Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class. Functionality for other lipid classes is added regularly. The default databases (as of August 26, 2016) include 14,068 and 11,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
 
-<h5>Identification, screening, and annotation using orthogonal criteria</h5> 
+<h3>Identification, screening, and annotation using orthogonal criteria</h3> 
 
 The function `doLOBscreen()` is then used to assign putative compound identities from these *in silico* databases to peakgroups in any high-mass accuracy dataset that has been processed using [xcms](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). doLOBscreen then applies a series of user-selected orthogonal screening criteria based on
 
@@ -81,11 +81,11 @@ The function `doLOBscreen()` is then used to assign putative compound identities
 
 to evaluate and assign confidence scores to this list of preliminary assignments. During the screening routine, `doLOBscreen()` rejects assignments that do not meet the specified criteria, identifies potential isomers and isobars, and assigns a variety of annotation codes to assist the user in evaluating the accuracy of each assignment. Results can be extracted and/or exported to file using the `getLOBpeaklist()` function.
 
-<h5>Example dataset</h5> 
+<h3>Example dataset</h3> 
 
 The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids/) contains a example dataset with which users can familiarize themselves with LOBSTAHS. The dataset contains both a CAMERA "xsAnnotate" object and the LOBSTAHS "LOBSet" generated from it using `doLOBscreen()`. Processing of the dataset is described in: Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers." *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
-<h5>Code used to generate figures in Collins et al. LOBSTAHS manuscript</h5>
+<h3>Code used to generate figures in Collins et al. LOBSTAHS manuscript</h3>
 
 Scripts used to generate the figures and many of the tables in the above referenced manuscript can be found at https://github.com/jamesrco/LipidomicsDataViz/tree/master/LOBSTAHS
 
