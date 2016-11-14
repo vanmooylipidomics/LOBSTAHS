@@ -414,7 +414,7 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
     
     num_ions.this_species = num.adducts*num_compounds.this_species
     
-  } else if (classInfo[1] %in% c("DNPPE","pigment")) {
+  } else if (classInfo[1] %in% c("DNPPE","pigment","vGSL","sGSL","hapGSL","hapCER")) {
     
     if (classInfo[1]=="pigment") {
       
@@ -600,7 +600,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       # these differently in the simulation (they're the only species for which 
       # we don't consider ranges in # of acyl C, double bonds, etc.)
       
-      if (adduct.lookup.class %in% c("pigment","DNPPE")) {
+      if (adduct.lookup.class %in% c("DNPPE","pigment","vGSL","sGSL","hapGSL","hapCER")) {
         
         # this element is a pigment or DNPPE; we only need to drill down to the
         # adduct level
