@@ -130,7 +130,7 @@ defineElemExactMasses = function() {
   # specify exact masses of some necessary chemical species
   
   # values from de Laeter et al., 2003, "Atomic weights of the elements," Pure 
-  # Appl. Chem. 75(6): 683â800; C. Amsler et al., 2008, "Review of particle 
+  # Appl. Chem. 75(6): 683-800; C. Amsler et al., 2008, "Review of particle 
   # physics," Physics Letters B667: 1
   
   m_C = 12
