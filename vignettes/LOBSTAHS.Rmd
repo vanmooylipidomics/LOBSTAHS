@@ -9,17 +9,27 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-### Introduction
+## Introduction
 
 This document describes the purpose and use of the R-package **LOBSTAHS: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences**. The package is described in Collins et al. 2016.<sup>[1](#note1)</sup> In the sections below, LOBSTAHS package functions are applied to a model dataset using example code. LOBSTAHS requires the additional packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html)<sup>[2](#note2)</sup> and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html)<sup>[3](#note3)</sup>; the model dataset, consisting of lipid data from cultures of the marine diatom *Phaeodactylum tricornutum*, is contained in the R data package [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids).
 
-### Purpose
+## Purpose
 
 LOBSTAHS contains several functions to help scientists discover and identify lipid and oxidized lipid biomarkers in HPLC-MS data that have been pre-processed with the popular R packages [xcms](https://bioconductor.org/packages/release/bioc/html/xcms.html) and [CAMERA](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). First, LOBSTAHS uses exact mass to make initial compound assignments from a set of customizable onboard databases. Then, a series of orthogonal screening criteria are applied to refine and winnow the list of assignments. A basic workflow based on xcms, CAMERA, and LOBSTAHS is illustrated in the schematic. Each step in the figure is described in detail in the following paragraphs.
 
 <img src="images/Fig1.jpg" width="695" id="schematic">
 
-### Installing the LOBSTAHS package
+## Installing the LOBSTAHS package
+
+### Install current production version
+
+Users can the [current production version of LOBSTAHS](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html) from Bioconductor by following the [directions here](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html) (under "Installation"). The Bioconductor installation function will prompt you to install the latest versions of some other packages on which LOBSTAHS depends.
+
+Users are also encouraged to [download the PtH2O2lipids data package](http://bioconductor.org/packages/3.4/data/experiment/html/PtH2O2lipids.html), which can be used for familiarization with the software.
+
+### Install "no warranties" development version with latest features
+
+Following these directions, you will install the latest version of the software from the files present in this GitHub repository. Some features may be unstable.
 
 ##### Install dependencies:
 
@@ -58,6 +68,9 @@ install_github("vanmooylipidomics/LOBSTAHS")
 install_github("vanmooylipidomics/PtH2O2lipids")
 ```
 
+
+## "Operating instructions"
+
 ### Acquisition of HPLC-MS data suitable for LOBSTAHS
 
 Data for LOBSTAHS should be acquired using a mass spectrometer with sufficiently high mass accuracy and resolution. Suitable MS acquisition platforms with which LOBSTAHS has been tested include Fourier transform ion cyclotron resonance (FT-ICR) and Orbitrap instruments. A quadrupole time-of-flight (Q-TOF) instrument could also be used if it possessed sufficient mass accuracy (i.e., < 5-7 ppm). While the software will accept any HPLC-MS data as input, insufficient mass accuracy and resolution will produce results with large numbers of database matches for each feature that cannot be distinguished from each other.
@@ -66,13 +79,13 @@ Data for LOBSTAHS should be acquired using a mass spectrometer with sufficiently
 
 After acquisition, each data file should be converted from manufacturer to open source (.mzXML) format in centroid (not profile) mode. If data were acquired on the instrument using ion mode switching, the data from each ionization mode (i.e., polarity) must also be extracted into a separate file. The [msConvert tool](http://proteowizard.sourceforge.net/tools/msconvert.html) (part of the ProteoWizard toolbox) can be used to accomplish these tasks. msConvert commands can be executed with either the provided GUI or at the command line; however, conversion of manufacuter file formats can only be accomplished using the Windows installation. An R script ([Exactive_full_scan_process_ms1+.r](https://github.com/vanmooylipidomics/LipidomicsToolbox/blob/master/Exactive_full_scan_process_ms1%2B.r)) for batch conversion and extraction of data files acquired on a Thermo Exactive Orbitrap instrument is provided as part of the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox). This vignette is not intended as a comprehensive guide to mass spectrometer file conversion; users are encouraged to digest the [msConvert documentation](http://proteowizard.sourceforge.net/tools/msconvert.html). However, assuming a hypothetical data file "Exactive_data.raw" was acquired on an Thermo Orbitrap instrument with ion mode switching, the following code could be within R used to convert and then extract positive and negative mode scans to separate files. (Code presumes you've already installed msConvert.)
 
-##### Initial file conversion; saves converted file to a directory "mzXML_ms1_two_mode":
+#### Initial file conversion; saves converted file to a directory "mzXML_ms1_two_mode":
 
 ```{r, eval = FALSE}
 system(paste("msconvert Exactive_data.raw --mzXML --filter \"peakPicking true 1-\" -o mzXML_ms1_two_mode -v"))
 ```
 
-##### Extract positive, negative mode scans, then save in separate directories:
+#### Extract positive, negative mode scans, then save in separate directories:
 
 ```{r, eval = FALSE}
 system(paste("msconvert mzXML_ms1_two_mode/Exactive_data.mzXML --mzXML --filter \"polarity positive\" -o mzXML_ms1_pos_mode -v"))
@@ -91,12 +104,7 @@ First, data files should be given intuitive file names (containing, e.g., a samp
 
 The R script [prepOrbidata.R](https://github.com/vanmooylipidomics/LipidomicsToolbox/blob/master/prepOrbidata.R) (part of the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox)) contains code for complete preparation in xcms of the PtH2O2lipids (or similar) dataset. The script allows the user to apply parameter values assembled from the literature or obtain them from IPO optimization of a subset of samples. The final parameter values used in Collins et al. 2016 for analysis of the PtH2O2lipids dataset -- obtained using HPLC-ESI-MS on an Exactive Orbitrap instrument -- are given in Table S5 of the electronic supplement. The settings and values listed in the table could be used as a starting point for analysis of similar data.
 
-The xcmsSet produced using these settings from the *P. tricornutum* data is stored in the [PtH2O2lipids](https://github.com/vanmooylipidomics/PtH2O2lipids) package:
-
-```{r, warning = FALSE, message = FALSE}
-library(PtH2O2lipids)
-ptH2O2lipids$xsAnnotate@xcmsSet
-```
+The xcmsSet produced using these settings from the *P. tricornutum* data is stored in the [PtH2O2lipids](http://bioconductor.org/packages/3.4/data/experiment/html/PtH2O2lipids.html) package.
 
 Whatever settings are used in xcms, the processed data should contain high-quality features which have been aligned across samples; the quality of the processed data should be verified by individual inspection of a subset of features. At the conclusion of processing with xcms, the user should have a single `xcmsSet` object containing the dataset.
 
@@ -189,9 +197,9 @@ xsA = annotate(ptH2O2lipids$xsAnnotate@xcmsSet,
 
 We now have an `xsAnnotate` object "xsA" to which we will next apply the screening and identification functions of LOBSTAHS. In the `annotate()` call, we set `quick = FALSE` because we want to run `groupCorr()`. This will also cause CAMERA to perform internal adduct annotation. While we will perform our own adduct annotation later with LOBSTAHS, allowing CAMERA to identify its own adducts doesn't hurt, particularly if it leads to the creation of better pseudospectra.
 
-### The LOBSTAHS database: Use the default, or easily create your own
+### The LOBSTAHS databases: Use the defaults, or easily create your own
 
-Before screening a dataset with LOBSTAHS, you should first decide whewther to use one of two default databases, or generate your own from the templates provided. LOBSTAHS databases contain a mixture of *in silico* and empirical data for the different adduct ions of a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class. The default databases (as of August 26, 2016) include 14,068 and 11,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. The databases can be easily customized (see <a href="#Customization-of-database-inputs">below</a>) if the user wishes to identify additional lipids in new lipid classes. LOBSTAHS databases are contained in S4 `LOBdbase` objects that are generated or accessed by various package functions. Each `LOBdbase` is specific to a particular polarity (i.e., ion mode); if evaluating positive-mode data, you will use a positive mode database (and vice versa). 
+Before screening a dataset with LOBSTAHS, you should first decide whewther to use one of two default databases, or generate your own from the templates provided. LOBSTAHS databases contain a mixture of *in silico* and empirical data for the different adduct ions of a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class. Functionality for other lipid classes is added regularly. The default databases (as of August 26, 2016) include 14,068 and 11,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. The databases can be easily customized (see <a href="#Customization-of-database-inputs">below</a>) if the user wishes to identify additional lipids in new lipid classes. LOBSTAHS databases are contained in S4 `LOBdbase` objects that are generated or accessed by various package functions. Each `LOBdbase` is specific to a particular polarity (i.e., ion mode); if evaluating positive-mode data, you will use a positive mode database (and vice versa). 
 
 We can access the default databases to examine their scope:
 
@@ -204,7 +212,7 @@ default.LOBdbase$positive # default positive mode database
 default.LOBdbase$negative # default negative mode database
 ```
 
-### Input tables required to generate databases
+#### Input tables required to generate custom databases
 
 LOBSTAHS generates databases based on values of parameters defined in simple tables. The values in these tables define the range of molecular properties within each lipid class for which database entries will be created. Database generation is accomplished with the function `generateLOBdbase()`. Default values can be viewed by loading the default tables into the R workspace (directions below); the default input data are also given in Tables 1 and 2 of Collins et al. 2016. 
 
@@ -226,7 +234,7 @@ data(default.componentCompTable)
 data(default.adductHierarchies)
 ```
 
-###<span id="Customization-of-database-inputs"> Customization of database inputs</span>
+####<span id="Customization-of-database-inputs"> Customization of database inputs</span>
 
 Users can easily customize the values of the input parameters used to create databases in LOBSTAHS. This can be accomplished by modidying one or more of the Microsoft Excel templates that are provided with the package. The templates are automatically installed with LOBSTAHS into the /LOBSTAHS/doc/ subdirectory of your R library path. You can use `.libPaths()` to find the location of your R library. Alternatively, the latest versions of the templates can dopwnloaded from the [LOBSTAHS GitHub repository](https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx).
 
@@ -234,9 +242,11 @@ What modifications must be made to which table(s) will depend on the user's goal
 
 Once any modificatons are made, the user should save the table(s) to text file(s) in comma-separated values (.csv) format; these can then be imported into R when the `generateLOBdbase()` function is called.
 
-### Database generation using generateLOBdbase
+**Note:** Some new lipid classes may not not amenable to *in silico* simulation in the same "easy" fashion as one of the existing lipid classes for which functionality already exists in the package code. In these cases, users should <a href="https://github.com/vanmooylipidomics/LOBSTAHS/issues">open a new issue request</a> for new functionality **or** -- in the spirit of open-source collaboration -- modify the code in your own Git fork and then request incorporation of your new feature so others may also discover new lipids!
 
-LOBSTAHS databases are generated using the `generateLOBdbase()` function. `generateLOBdbase` uses an *in silico* simulation to create database entries defined by parameters in the input tables. One entry is created for each possible adduct ion of a parent compound. `generateLOBdbase` can create databases for one or both ion modes. Paths to any .csv files containing user-customized input data should be specified during the call to `generateLOBdbase`; if NULL or no value is specified for any of the input tables, the defaults (see above) will be used. Finally, the user can specify whether a .csv file containing the new database should be created in addition to the `LOBdbase` object.
+#### Database generation using generateLOBdbase
+
+Once inputs have been specified as described above, LOBSTAHS databases are generated using the `generateLOBdbase()` function. `generateLOBdbase` uses an *in silico* simulation to create database entries defined by the parameters in the input tables. One entry is created for each possible adduct ion of a parent compound. `generateLOBdbase` can create databases for one or both ion modes. Paths to any .csv files containing user-customized input data should be specified during the call to `generateLOBdbase`; if NULL or no value is specified for any of the input tables, the defaults (see above) will be used. Finally, the user can specify whether a .csv file containing the new database should be created in addition to the `LOBdbase` object.
 
 To recreate the default databases and store them to an object called "LOBdb", the user would run the following:
 
@@ -247,7 +257,7 @@ LOBdb = generateLOBdbase(polarity = c("positive","negative"), gen.csv = FALSE,
 
 ```
 
-### Compound/biomarker identification and screening using doLOBscreen: The "meat" of LOBSTAHS
+## Compound/biomarker identification and screening using doLOBscreen: The "meat" of LOBSTAHS
 
 Once the user has created his/her database (or has decided to use the appropriate onboard default), compound identification and screening can be performed using the function `doLOBscreen()`. At this point, the user should have in hand an `xsAnnotate` object containing data which have processed in xcms and CAMERA. Working sequentially within each CAMERA pseudospectrum, `doLOBscreen` accomplishes the following (see also the <a href="#schematic">schematic</a>):
 
@@ -333,7 +343,7 @@ With the set of screened compound assignments in hand, the user has several opti
 
 ### Package updates and improvements
 
-Users are encouraged to submit issues with LOBSTAHS via the [package GitHub site](https://github.com/vanmooylipidomics/LOBSTAHS/issues). Several improvements to the package are planned; the package will be updated as these are incorporated. Notice will be posted to the package [releases page](https://github.com/vanmooylipidomics/LOBSTAHS/releases) when updates are published.
+Users are encouraged to submit issues with LOBSTAHS (or feature request) via the [package GitHub site](https://github.com/vanmooylipidomics/LOBSTAHS/issues). Users can also submit bug reports [via Bioconductor](https://support.bioconductor.org/p/new/post/?tag_val=LOBSTAHS).
 
 ### Copyright
 
