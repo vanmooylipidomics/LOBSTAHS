@@ -423,7 +423,7 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
             ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
                                        classInfo[1]]]))
       
-        } else if (classInfo[1]=="DNPPE","vGSL","sGSL","hGSL") {
+        } else if (classInfo[1] %in% c("DNPPE","vGSL","sGSL","hGSL")) {
           
           num.adducts = sum(!is.na(AIHs.thismode[
             ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
