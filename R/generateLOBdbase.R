@@ -130,7 +130,7 @@ defineElemExactMasses = function() {
   # specify exact masses of some necessary chemical species
   
   # values from de Laeter et al., 2003, "Atomic weights of the elements," Pure 
-  # Appl. Chem. 75(6): 683–800; C. Amsler et al., 2008, "Review of particle 
+  # Appl. Chem. 75(6): 683â800; C. Amsler et al., 2008, "Review of particle 
   # physics," Physics Letters B667: 1
   
   m_C = 12
@@ -414,26 +414,28 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
     
     num_ions.this_species = num.adducts*num_compounds.this_species
     
-  } else if (classInfo[1] %in% c("DNPPE","pigment")) {
+  } else if (classInfo[1] %in% c("DNPPE","pigment","vGSL","sGSL","hGSL",
+                                 "hapGSL","hapCER")) {
     
-    if (classInfo[1]=="pigment") {
+          if (classInfo[1] %in% c("pigment","hapGSL","hapCER")) {
+          
+          num.adducts = sum(!is.na(AIHs.thismode[
+            ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
+                                       classInfo[1]]]))
       
-      num.adducts = sum(!is.na(AIHs.thismode[
-        ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                   classInfo[1]]]))
-      
-    } else if (classInfo[1]=="DNPPE") {
-      
-      num.adducts = sum(!is.na(AIHs.thismode[
-        ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                   classInfo[2]]]))
-      
+        } else if (classInfo[1] %in% c("DNPPE","vGSL","sGSL","hGSL")) {
+          
+          num.adducts = sum(!is.na(AIHs.thismode[
+            ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
+                                       classInfo[2]]]))
+                      
     }
     
     if (num.adducts>0) {
       
-      num_compounds.this_species = 1 # because we considered DNPPE and each 
-      # pigment individually
+      num_compounds.this_species = 1 # because we consider DNPPE, each 
+      # pigment, and the each of the ceramides and glycosphingolipids
+      # individually
       
     } else {
       
@@ -553,7 +555,9 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       
       cat("Calculating data for lipid class:",this.species,"...\n")
       
-    } else if (this.lipid_class=="pigment") {
+    } else if (this.lipid_class %in% c("pigment","hapCER","hapGSL")) {
+      
+      # the "one-offs"
       
       cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
       
@@ -569,11 +573,14 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       
     }
     
-    # first, need to define an "adduct lookup class" since pigment adduct 
-    # hierarchy data are currently defined for all pigments, whereas hierarchy
-    # data for other classes are class specific
+    # first, need to define an "adduct lookup class" since pigment, hapCER,
+    # and hapGSL adduct hierarchy data are currently defined for all items in the
+    # respective species class, whereas hierarchy data for other lipids in are
+    # other classes are specific to the sub-class
     
-    if (baseComponent.masses$Species_class[i]==c("pigment")) { # it's a pigment
+    if (baseComponent.masses$Species_class[i] %in% c("pigment",
+                                                     "hapCER","hapGSL")) { 
+      # it's a pigment, hapCER, or hapGSL
       
       adduct.lookup.class = baseComponent.masses$Species_class[i]
       
@@ -596,13 +603,15 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       adducts.thisclass = rownames(AIHs.thismode)[
         !is.na(AIHs.thismode[,as.character(adduct.lookup.class)])]
       
-      # check to see whether this is a pigment or DNP-PE, since we will treat 
-      # these differently in the simulation (they're the only species for which 
-      # we don't consider ranges in # of acyl C, double bonds, etc.)
+      # check to see whether this is a pigment, DNP-PE, GSL, or ceramide
+      # since we currently treat these differently in the simulation (they're
+      # essentially "one-offs", i.e., the only species for which we don't
+      # consider ranges in # of acyl C, double bonds, etc.)
       
-      if (adduct.lookup.class %in% c("pigment","DNPPE")) {
+      if (adduct.lookup.class %in% c("DNPPE","pigment","vGSL","sGSL","hGSL",
+                                     "hapGSL","hapCER")) {
         
-        # this element is a pigment or DNPPE; we only need to drill down to the
+        # this element is "one-off"; we only need to drill down to the
         # adduct level
         
         for (j in 1:length(adducts.thisclass)) { # cycle thru adducts
@@ -659,8 +668,8 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         
         rm(j)
         
-      } else { # this species is not a pigment, or DNPPE --> requires more 
-        # involved simulation
+      } else { # this species is not a GSL, ceramide, pigment, or DNPPE -->
+        # requires more involved simulation
         
         # retrieve, store "base" exact mass for this lipid class
         
@@ -668,8 +677,8 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         
         # load acyl C - double bond distributions from sim.ranges; oxidation 
         # state parameters from user-specified oxy_range variable; set variable
-        # for number of carboxyl groups (for calculation IP-DAG, FFA, TAG, PUA 
-        # masses)
+        # for number of carboxyl groups (for calculation IP-DAG, IP-MAG, FFA,
+        # TAG, PUA masses)
         
         these.sim.ranges = acylRanges[!is.na(acylRanges[,grep(paste0(
           as.character(baseComponent.masses$Species_class[i]),"_min"),
