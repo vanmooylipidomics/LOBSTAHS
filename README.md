@@ -1,10 +1,12 @@
 # LOBSTAHS
 
-This is the primary GitHub repository for the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. Installation instructions and some general information about LOBSTAHS are given below. This repository will always contain the latest development version of LOBSTAHS. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html). 
+This is the home of the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. Installation instructions and some general information about LOBSTAHS are given below. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html).
+
+The primary repository at [https://github.com/vanmooylipidomics/LOBSTAHS](https://github.com/vanmooylipidomics/LOBSTAHS) will **always** contain the latest development version of LOBSTAHS. Changes are pushed as frequently as possible to Bioconductor, where they will appear in the read-only mirror at [https://github.com/Bioconductor-mirror/LOBSTAHS](https://github.com/Bioconductor-mirror/LOBSTAHS).
 
 A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) contains detailed, step-by-step user instructions and examples of package functions illustrated with a model dataset. 
 
-LOBSTAHS is copyright (c) 2015-2016, by the following members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
+LOBSTAHS is copyright (c) 2015-2016, by the following current and former members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2016, James R. Collins. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
 
 <h2>Citation</h2>
 
