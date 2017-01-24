@@ -205,12 +205,13 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   
   # calculate exact masses of basic components and extract into a few separate 
   # tables
-  # note: this will calculate full exact masses of pigments and DNP-PE
+  # note: this will calculate full exact masses of all species in the component
+  # composition table for which DB_gen_type = "Unique_species" 
   
   # check to make sure we have same number of elemental building blocks in our 
   # exact.masses table and along the second dimension of the composition table
   
-  if (length(exact.masses)!=(ncol(componentCompTable)-1)) {
+  if (length(exact.masses)!=(ncol(componentCompTable)-3)) {
     
     stop("Different number of chemical building blocks in the component ",
          "composition matrix and in the onboard list of exact masses. Check ",
@@ -229,7 +230,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   
   componentCompTable[,ncol(componentCompTable)] = 
     apply(as.matrix(sapply(componentCompTable[
-      ,1:(ncol(componentCompTable)-2)], as.numeric)), 1, 
+      ,1:(ncol(componentCompTable)-4)], as.numeric)), 1, 
       function(x) sum(x*exact.masses,na.rm = TRUE))
   colnames(componentCompTable)[ncol(componentCompTable)] = c("Exact_mass")
   
@@ -354,8 +355,10 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   
   combSums = apply(
     apply(
-      data.frame(as.character(baseComponent.masses$Species_class), 
-                 rownames(baseComponent.masses)), 
+      data.frame(
+        as.character(baseComponent.masses$Adduct_hierarchy_lookup_class),
+        as.character(baseComponent.masses$Species_class),
+        as.character(baseComponent.masses$DB_gen_type)),
       1, 
       combCalc, 
       AIHs.thismode = AIHs.thismode,
@@ -376,30 +379,48 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies,
 
 combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
   
-  # classInfo: matrix consisting of species classes and species names
-  # e.g., classInfo = data.frame(as.character(
-  #                        baseComponent.masses$Species_class),
-  #                        rownames(baseComponent.masses))
+  # classInfo: matrix consisting of the adduct hierarchy lookup classes,
+  # species class name, and DB generation type
+  #
+  # e.g., classInfo = data.frame(
+  #       as.character(baseComponent.masses$Adduct_hierarchy_lookup_class),
+  #       as.character(baseComponent.masses$Species_class),
+  #       as.character(baseComponent.masses$DB_gen_type))
+  
+  # first, check to make sure baseComponent.masses$DB_gen_type are of acceptable
+  # kind
+  
+  if (!(classInfo[3] %in% c("Unique_species","Acyl_iteration"))) {
+    
+  stop("The database generation type must be either Acyl_iteration or ",
+       "Unique_species. Check your composition matrix carefully. Aborting...\n")
+  # stop script if this is the case
+    
+  }
   
   # retrieve necessary data for this class
   
-  if (classInfo[1] %in% c("IP_DAG","IP_MAG","FFA","TAG","PUA")) {
+  if (classInfo[3]=="Acyl_iteration") {
+    
+    # i.e., if this is a lipid class for which we will be generating entries for
+    # different molecules with various numbers of acyl C, DB, and additional
+    # oxygen atoms, e.g., "IP_DAG","IP_MAG","FFA","TAG","PUA"
     
     this.oxymin = as.numeric(oxyRanges[
-      grep(paste0(as.character(classInfo[1]),"_min"),
+      grep(paste0(as.character(classInfo[2]),"_min"),
            colnames(oxyRanges))])
     this.oxymax = as.numeric(oxyRanges[
-      grep(paste0(as.character(classInfo[1]),"_max"),
+      grep(paste0(as.character(classInfo[2]),"_max"),
            colnames(oxyRanges))])
     this.C_DBmindata = acylRanges[
-      ,grep(paste0(as.character(classInfo[1]),
+      ,grep(paste0(as.character(classInfo[2]),
                    "_min"),colnames(acylRanges))]
     this.C_DBmaxdata = acylRanges[
-      ,grep(paste0(as.character(classInfo[1]),
+      ,grep(paste0(as.character(classInfo[2]),
                    "_max"),colnames(acylRanges))]
     
     num.adducts = sum(!is.na(AIHs.thismode[,colnames(AIHs.thismode)[
-      colnames(AIHs.thismode)==classInfo[2]]]))
+      colnames(AIHs.thismode)==classInfo[1]]]))
     
     if (num.adducts>0) {
       
@@ -414,28 +435,20 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
     
     num_ions.this_species = num.adducts*num_compounds.this_species
     
-  } else if (classInfo[1] %in% c("DNPPE","pigment","vGSL","sGSL","hGSL",
-                                 "hapGSL","hapCER")) {
+  } else if (classInfo[3]=="Unique_species") {
     
-          if (classInfo[1] %in% c("pigment","hapGSL","hapCER")) {
-          
-          num.adducts = sum(!is.na(AIHs.thismode[
-            ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                       classInfo[1]]]))
-      
-        } else if (classInfo[1] %in% c("DNPPE","vGSL","sGSL","hGSL")) {
-          
-          num.adducts = sum(!is.na(AIHs.thismode[
-            ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
-                                       classInfo[2]]]))
-                      
-    }
+    # this is a unique molecular species for which there will be no iteration
+    # (according to user's specifications in the "DB_gen_type" field of the 
+    # basic component matrix)
+    
+    num.adducts = sum(!is.na(AIHs.thismode[
+      ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
+                                 classInfo[1]]]))
     
     if (num.adducts>0) {
       
-      num_compounds.this_species = 1 # because we consider DNPPE, each 
-      # pigment, and the each of the ceramides and glycosphingolipids
-      # individually
+      num_compounds.this_species = 1 # because each of these "Unique_species"
+      # entries represents only one compound
       
     } else {
       
@@ -545,48 +558,46 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   
   for (i in 1:nrow(baseComponent.masses)) {
     
-    # retrieve, store this.lipid_class and this.species
+    # retrieve, store this.lipid_class, this.species, this.DB_gen_type,
+    # this.adduct_lkup_class
     this.lipid_class = as.character(baseComponent.masses$Species_class[i])
     this.species = rownames(baseComponent.masses)[i]
-    
+    this.DB_gen_type = as.character(baseComponent.masses$DB_gen_type[i])
+    this.adduct_lkup_class = 
+      as.character(baseComponent.masses$Adduct_hierarchy_lookup_class[i])
+
     # provide sensible feedback to user
     
-    if (this.lipid_class==this.species) {
+    # first, check to make sure this.DB_gen_type is one of the two acceptable
+    # types (at least in this version of LOBSTAHS)
+
+    if (!(this.DB_gen_type %in% c("Unique_species","Acyl_iteration"))) {
       
-      cat("Calculating data for lipid class:",this.species,"...\n")
-      
-    } else if (this.lipid_class %in% c("pigment","hapCER","hapGSL")) {
-      
-      # the "one-offs"
-      
-      cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
-      
-    } else if (this.lipid_class=="IP_DAG") {
-      
-      cat("Calculating data for",this.lipid_class,"lipid class:",this.species,
-          "...\n")
-      
-    } else if (this.lipid_class=="IP_MAG") {
-      
-      cat("Calculating data for",this.lipid_class,"lipid class:",this.species,
-          "...\n")
+      stop("The database generation type must be either Acyl_iteration or ",
+           "Unique_species. Check your composition matrix carefully. ",
+           "Aborting...\n")
+      # stop script if this is the case
       
     }
     
-    # first, need to define an "adduct lookup class" since pigment, hapCER,
-    # and hapGSL adduct hierarchy data are currently defined for all items in the
-    # respective species class, whereas hierarchy data for other lipids in are
-    # other classes are specific to the sub-class
+    # now, generate a logical feedback string
     
-    if (baseComponent.masses$Species_class[i] %in% c("pigment",
-                                                     "hapCER","hapGSL")) { 
-      # it's a pigment, hapCER, or hapGSL
+    if (this.DB_gen_type=="Acyl_iteration") {
       
-      adduct.lookup.class = baseComponent.masses$Species_class[i]
+      if (this.lipid_class==this.species) {
+        
+        cat("Calculating data for lipid class:",this.species,"...\n")
+        
+      } else {
+        
+        cat("Calculating data for",this.lipid_class,"lipid class:",this.species,
+            "...\n")
+        
+      }
       
-    } else {
+    } else if (this.DB_gen_type=="Unique_species") {
       
-      adduct.lookup.class = rownames(baseComponent.masses)[i]
+      cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
       
     }
     
@@ -594,22 +605,19 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
     # class in this ionization mode
     
     if (sum(AIHs.thismode[,colnames(AIHs.thismode)[
-      colnames(AIHs.thismode)==adduct.lookup.class]],na.rm = TRUE)>=1) { 
+      colnames(AIHs.thismode)==this.adduct_lkup_class]],na.rm = TRUE)>=1) { 
       
       # hierarchy data exists for this species or class in this mode; proceed
       
       # get number of adducts formed by this species/class
       
       adducts.thisclass = rownames(AIHs.thismode)[
-        !is.na(AIHs.thismode[,as.character(adduct.lookup.class)])]
+        !is.na(AIHs.thismode[,as.character(this.adduct_lkup_class)])]
       
-      # check to see whether this is a pigment, DNP-PE, GSL, or ceramide
-      # since we currently treat these differently in the simulation (they're
-      # essentially "one-offs", i.e., the only species for which we don't
-      # consider ranges in # of acyl C, double bonds, etc.)
+      # check to see whether this is a "one-off", i.e., a unique species for
+      # which we aren't considering ranges # of acyl C, double bonds, etc.
       
-      if (adduct.lookup.class %in% c("DNPPE","pigment","vGSL","sGSL","hGSL",
-                                     "hapGSL","hapCER")) {
+      if (this.DB_gen_type=="Unique_species") {
         
         # this element is "one-off"; we only need to drill down to the
         # adduct level
@@ -643,7 +651,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
           this.adduct = adducts.thisclass[j]
           this.adduct_rank = AIHs.thismode[
             rownames(AIHs.thismode)==this.adduct,
-            colnames(AIHs.thismode)==adduct.lookup.class]
+            colnames(AIHs.thismode)==this.adduct_lkup_class]
           this.FA_total_no_C = NA
           this.FA_total_no_DB = NA
           
@@ -668,8 +676,8 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         
         rm(j)
         
-      } else { # this species is not a GSL, ceramide, pigment, or DNPPE -->
-        # requires more involved simulation
+      } else if (this.DB_gen_type=="Acyl_iteration") {
+        # this species requires more involved simulation/iteration
         
         # retrieve, store "base" exact mass for this lipid class
         
@@ -732,7 +740,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                 this.adduct = adducts.thisclass[m]
                 this.adduct_rank = AIHs.thismode[
                   rownames(AIHs.thismode)==this.adduct,
-                  colnames(AIHs.thismode)==adduct.lookup.class]
+                  colnames(AIHs.thismode)==this.adduct_lkup_class]
                 
                 # now, finally, can assemble and record data for this 
                 # combination
@@ -812,7 +820,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                                                         this.species,
                                                         this.adduct,
                                                         this.parent_formula,
-                                                        this.parent_compound_name)
+                                                     this.parent_compound_name)
                 
                 ins.row = ins.row + 1 # advance our insertion point
                 
