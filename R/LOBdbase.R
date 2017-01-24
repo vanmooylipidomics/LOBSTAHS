@@ -331,8 +331,8 @@ setMethod("show", "LOBdbase", function(object) {
     cat("m/z range:",paste(min(mz(object), na.rm = TRUE),
                            max(mz(object), na.rm = TRUE), sep = "-"),"\n\n")
     
-    cat("Ranges of chemical parameters represented in molecules other than",
-        "pigments:\n\n")
+    cat("Ranges of chemical parameters represented in molecules with acyl",
+        "moieties:\n\n")
     cat("Total number of acyl carbon atoms:",
         paste(min(FA_total_no_C(object), na.rm = TRUE),
               max(FA_total_no_C(object), na.rm = TRUE), sep = "-"),"\n")
