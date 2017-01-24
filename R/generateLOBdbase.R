@@ -315,7 +315,7 @@ loadAIH = function(AIHTableLoc,use.default.AIHtable) {
   } else {
     
     adductHierarchies = read.table(AIHTableLoc, sep=",", skip = 1, 
-                                   header = TRUE)
+                                   header = TRUE, stringsAsFactors = FALSE)
     
   }
   
