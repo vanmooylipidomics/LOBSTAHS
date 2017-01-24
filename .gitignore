@@ -20,3 +20,4 @@ rsmDirectory
 .Rproj.user
 xset_a.RData
 genNewDefaultTables.R
+vignette_graphics
