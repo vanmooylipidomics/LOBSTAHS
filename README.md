@@ -12,6 +12,8 @@ LOBSTAHS is copyright (c) 2015-2016, by the following current and former members
 
 LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
+Adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER (package versions ≥ 1.1.2) are as described in Hunter J. E., M. J. Frada, H. F. Fredricks, A. Vardi, and B. A. S. Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Frontiers in Marine Science* **2**:81; [doi: 10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
+
 <h2>Installation</h2>
 
 <h3>Install current production version</h3>
@@ -71,7 +73,7 @@ install_github("vanmooylipidomics/LOBSTAHS")
    * total acyl carbon chain length, and
    * degree of acyl carbon chain unsaturation (i.e., number of double bonds)
 
-Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class. Functionality for other lipid classes is added regularly. The default databases (as of August 26, 2016) include 14,068 and 11,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
+Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), and quinones. Functionality for other lipid classes is added regularly. The default databases (as of January 23, 2017) include 18,067 and 15,404 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
 
 <h2>Identification, screening, and annotation using orthogonal criteria</h2> 
 
@@ -85,7 +87,7 @@ to evaluate and assign confidence scores to this list of preliminary assignments
 
 <h2>Example dataset</h2> 
 
-The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids/) contains a example dataset with which users can familiarize themselves with LOBSTAHS. The dataset contains both a CAMERA "xsAnnotate" object and the LOBSTAHS "LOBSet" generated from it using `doLOBscreen()`. Processing of the dataset is described in: Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers." *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
+The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids/) contains a example dataset with which users can familiarize themselves with LOBSTAHS. The dataset contains both a CAMERA "xsAnnotate" object and the LOBSTAHS "LOBSet" generated from it using `doLOBscreen()`. Processing of the dataset is described in: Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. "LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers." *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260). **Please note** that lipid identities were assigned to the PtH2O2lipids dataset using an earlier version of the LOBSTAHS database, which included many fewer compounds than the current version.
 
 <h2>Code used to generate figures in Collins et al. LOBSTAHS manuscript</h2>
 
