@@ -45,34 +45,37 @@ basic components such as acteonitrile or acetate and for definition of adduct
 ion types; new entries of these types should only be created in the  compound
 table when a new adduct or basic component must be specified. The first two
 compound types are used to define the way \code{generateLOBdbase} creates its
-databases. There are essentially two kinds of ways to create database entries.
+databases. There are essentially two ways \code{generateLOBdbase} creates
+database entries in LOBSTAHS.
 
-For compounds of \code{DB_gen_compound_type} = "DB_acyl_iteration",
-\code{generateLOBdbase} will create database entries for adduct ions of multiple
-molecular species within the lipid class based on the ranges of acyl
-properties and oxidation states given for the class in \code{acyl.ranges} and
-\code{oxy.ranges} (see below). In these cases, the compound table is used to
-define the exact mass of a "base fragment" for the lipid classs, which
-(in the case of IP-DAG and IP-MAG) includes the entire polar headgroup, the
-glycerol backbone, and both carboxylic oxygen atoms in the fatty acid(s). In the
-case of TAG, the "base fragment" is defined as the glycerol backbone plus the
-carboxylic oxygen atoms on each of the three fatty acids. The base fragments for
-any new lipid classes for which the user desires evaluation of a range of acyl
-properties should be similarly defined. The package vignette contains detailed
-instructions and illustrations of how to specify the base fragment.
-
-For compounds of \code{DB_gen_compound_type} = "DB_unique_species" (the simpler of
-the two cases), database entries will be created only for adduct ions of the
+For compounds of \code{DB_gen_compound_type} = "DB_unique_species" (the simpler
+of the two cases), database entries will be created only for adduct ions of the
 single compound specified. The latter type should be used for pigments and other
 lipids that do not have acyl groups, or when the user does not wish to consider
-any possible variation in acyl properties. In the case of these compounds, the
-exact mass of the complete (neutral) molecule should be specified in the
-component definitions table.
+any possible variation in acyl properties. In this case, the exact mass of the
+complete (neutral) molecule should be specified in the component definitions
+(i.e., component composition) table.
 
-Note than an adduct hierarchy \strong{must} be specified in the adduct ion
-hierarchy matrix (see below) for each compound or compound class specified in
-the \code{Adduct_hierarchy_lookup_class} field of the component definitions
-table.
+Alternatively, for compounds of \code{DB_gen_compound_type} = 
+"DB_acyl_iteration", \code{generateLOBdbase} will create database entries for
+adduct ions of multiple molecular species within the lipid class based on the
+ranges of acyl properties and oxidation states given for the class in 
+\code{acyl.ranges} and \code{oxy.ranges} (see below). In this case, the compound
+table should be used to define the exact mass of a "base fragment" for the lipid
+class. Using this "base fragment" as a starting point, \code{generateLOBdbase}
+creates multiple entries for molecules in the lipid class by iterative addition
+of various combinations of fatty acids. In the case of IP-DAG and IP-MAG, the
+base fragment includes the entire polar headgroup, the glycerol backbone, and
+both carboxylic oxygen atoms in the fatty acid(s). In the case of TAG, the base
+fragment is defined as the glycerol backbone plus the carboxylic oxygen atoms on
+each of the three fatty acids. The base fragments for any new lipid classes for
+which the user desires evaluation of a range of acyl properties should be
+similarly defined.
+
+Note that regardless of the \code{DB_gen_compound_type}, an adduct hierarchy
+\strong{must} be specified in the adduct ion hierarchy matrix (see below) for
+each compound or compound class specified in the
+\code{Adduct_hierarchy_lookup_class} field of the component definitions table.
 }
   \item{AIH.defs}{
 File path to a .csv file containing empirical adduct ion hierarchy (AIH) data
