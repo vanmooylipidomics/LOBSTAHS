@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^.*\.tar\.gz$
 ^genNewDefaultTables\.R$
+^vignette_graphics$
