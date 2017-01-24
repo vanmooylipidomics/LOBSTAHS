@@ -223,9 +223,9 @@ The first, most important table is the `componentCompTable`, which defines the b
 For each lipid class or compound specified in the `componentCompTable`, the field `DB_gen_compound_type` contains one of five values: "DB_acyl_iteration," "DB_unique_species," "basic_component," "adduct_pos," or "adduct_neg." `DB_gen_compound_type` is the field which determines how a particular compound, lipid class, or molecular fragment is used and evaluated by the software. The last three compound types ("basic_component," "adduct_pos," and "adduct_neg") are reserved for definition of
 basic components such as acteonitrile or acetate and for definition of adduct ion types; new entries of these types should only be created in the `componentCompTable` when a new adduct or basic component is to be specified.
 
-##### The two primary `DB_gen_compound_type`s in the `componentCompTable`
+##### The two primary flavors of `DB_gen_compound_type`
 
-The other two compound types ("DB_acyl_iteration" and "DB_unique_species) are used to define the way `generateLOBdbase` creates database entries for different lipids and lipid classes. `generateLOBdbase` essentially can creates two kinds of database entries:
+The other two compound types in the `componentCompTable` ("DB_acyl_iteration" and "DB_unique_species) are used to define the way `generateLOBdbase` creates database entries for different lipids and lipid classes. `generateLOBdbase` essentially can creates two kinds of database entries:
 
 1. When "DB_unique_species" is specified for the `DB_gen_compound_type`, `generateLOBdbase()` will create database entries only for adduct ions of the single compound specified. (This is the simpler of the two cases.) This type should be used for pigments and other lipids that do not have acyl groups, or in cases when the user does not wish to consider any possible variation in acyl properties. *In the case of this `DB_gen_compound_type`, the exact mass of the complete (neutral) molecule is specified in the component definitions table.* The photosynthetic pigments currently in the database provide an excellent template for creation of new compounds of the "DB_unique_species" type.
 
