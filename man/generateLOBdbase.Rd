@@ -49,7 +49,7 @@ databases. There are essentially two kinds of ways to create database entries.
 
 For compounds of \code{DB_gen_compound_type} = "DB_acyl_iteration",
 \code{generateLOBdbase} will create database entries for adduct ions of multiple
-parent molecular species within the lipid class based on the ranges of acyl
+molecular species within the lipid class based on the ranges of acyl
 properties and oxidation states given for the class in \code{acyl.ranges} and
 \code{oxy.ranges} (see below). In these cases, the compound table is used to
 define the exact mass of a "base fragment" for the lipid classs, which
