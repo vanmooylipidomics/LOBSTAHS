@@ -199,10 +199,16 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     
   }
   
-  # put columns in alphabetical order
+  # put columns in alphabetical order, with text fields at end
+  
+  componentCompTable.text = componentCompTable[,((ncol(componentCompTable)-2):
+                                                   ncol(componentCompTable))]
+  componentCompTable = componentCompTable[,-c((ncol(componentCompTable)-2):
+                                                ncol(componentCompTable))]
   
   componentCompTable = componentCompTable[order(colnames(componentCompTable))]
-  
+  componentCompTable = cbind(componentCompTable,componentCompTable.text)
+
   # calculate exact masses of basic components and extract into a few separate 
   # tables
   # note: this will calculate full exact masses of all species in the component
@@ -633,7 +639,9 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
           # ascertain parent compound elemental formula
           
           these.base_elements = subset(baseComponent.masses[i,], 
-                                       select=-c(Species_class,Exact_mass))          
+                                       select=-c(Species_class,Exact_mass,
+                                                 Adduct_hierarchy_lookup_class,
+                                                 DB_gen_type))          
           this.parent_formula = paste0(apply(rbind(colnames(
             these.base_elements)[these.base_elements>=1],
             as.numeric(these.base_elements[these.base_elements>=1])),
@@ -765,7 +773,8 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                 
                 these.base_elements = 
                   subset(baseComponent.masses[i,], 
-                         select=-c(Species_class,Exact_mass)) 
+                         select=-c(Species_class,Exact_mass,
+                                   Adduct_hierarchy_lookup_class,DB_gen_type)) 
                 these.base_elements["C"] = 
                   these.base_elements["C"]+
                   this.FA_total_no_C
