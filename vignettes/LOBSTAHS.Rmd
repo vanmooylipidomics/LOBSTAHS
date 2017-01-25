@@ -263,7 +263,7 @@ If the new entry is a single molecule (e.g., a new pigment), then new entries in
 
 If the user wishes to add an entire class of lipid for which multiple database entries will be created based on ranges of acyl properties and oxidation states specified in `acylRanges` and `oxyRanges`, he or she must pay more care to how the class and its acyl properties are defined. First, "DB_acyl_iteration" should be specified for the `DB_gen_compound_type` in the `componentCompTable`.
 
-####<span id="How-calc-base-fragment"> Determination of the base fragment</span>
+#####<span id="How-calc-base-fragment"> Determination of the base fragment</span>
 
 The user should then define the mass of a "base fragment" upon which the `generateLOBdbase()` function will perform iteration. The base fragment should include the glycerol backbone, any carboxylic oxygen atoms in the fatty acid(s), and (if applicable), the entire lipid headgroup.
 
