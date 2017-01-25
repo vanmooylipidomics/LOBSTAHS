@@ -214,7 +214,7 @@ default.LOBdbase$negative # default negative mode database
 
 ### Input tables required to generate custom databases
 
-LOBSTAHS generates databases based on values of parameters defined in simple tables. The values in these tables define the molecular properties of each individual compound or lipid class for which database entries will be created. Database generation is accomplished with the function `generateLOBdbase()`. Default values can be viewed by loading the default tables into the R workspace (directions below); the default input data are also given in Tables 1 and 2 of Collins et al. 2016.<sup>[1](#note1)</sup> Package versions ≥ 1.1.2 contain adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER, which are described in Hunter et al. 2015.<sup>[6](#note6)</sup>
+LOBSTAHS generates databases based on values of parameters defined in simple tables. The values in these tables define the molecular properties of each individual compound or lipid class for which database entries will be created. Database generation is accomplished with the function `generateLOBdbase()`. Default values can be viewed by loading the default tables into the R workspace (directions below); the default input data are also given in Tables 1 and 2 of Collins et al. 2016.<sup>[1](#note1)</sup> Package versions ≥ 1.1.2 contain adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER, which are described in Fulton et al. 2014 and Hunter et al. 2015.<sup>[6](#note6)</sup>
 
 #### The `componentCompTable`
 
@@ -402,13 +402,15 @@ LOBSTAHS is copyright (c) 2015-2017, by the following members of the Van Mooy La
 
 ### References
 
-Benton, H. P., Want, E. J., and Ebbels, T. M. D. 2010. Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data. *Bioinformatics* **26**: 2488-2489
+Benton, H.P., Want, E.J., and Ebbels, T.M.D. 2010. Correction of mass calibration gaps in liquid chromatography-mass spectrometry metabolomics data. *Bioinformatics* **26**: 2488-2489
 
 Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Anal. Chem.* **88**: 7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
+Fulton, J.M., Fredricks, H.F., Bidle, K.D., Vardi, A., Kendrick, B.J., DiTullio, G.R., and Van Mooy, B.A.S. 2014. Novel molecular determinants of viral susceptibility and resistance in the lipidome of *Emiliania huxleyi*. *Environmental Microbiology* **16**(4): 1137-1149; [doi:10.1111/1462-2920.12358](http://dx.doi.org/10.1111/1462-2920.12358)
+
 Hummel, J., Segu, S., Li, Y., Irgang, S., Jueppner, J., and Giavalisco, P. 2011. Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids. *Front. Plant. Sci.* **2**
 
-Hunter, J. E., Frada, M. J., Fredricks, H. F., Vardi, A., and Van Mooy, B.A.S. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Front. Mar. Sci.* **2**: 81; [doi: 10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
+Hunter, J.E., Frada, M.J., Fredricks, H.F., Vardi, A., and Van Mooy, B.A.S. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Front. Mar. Sci.* **2**: 81; [doi: 10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
 
 Kuhl, C., Tautenhahn, R., Bottcher, C., Larson, T. R., and Neumann, S. 2012. CAMERA: an integrated strategy for compound spectra extraction and annotation of liquid chromatography/mass spectrometry data sets. *Anal. Chem.* **84**: 283-289
 
@@ -418,7 +420,7 @@ Patti, G.J., Tautenhahn, R., and Siuzdak, G. 2012. Meta-analysis of untargeted m
 
 Pearson, A. 2014. Lipidomics for geochemistry. In *Treatise on Geochemistry*, Holland, H. D., and Turekian, K. K. eds., 2nd Ed., pp. 291-336. Elsevier: Oxford. 
 
-Smith, C. A., Want, E. J., O'Maille, G., Abagyan, R., and Siuzdak, G. 2006. XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification. *Anal. Chem.* **78**: 779–787
+Smith, C.A., Want, E.J., O'Maille, G., Abagyan, R., and Siuzdak, G. 2006. XCMS: processing mass spectrometry data for metabolite profiling using nonlinear peak alignment, matching, and identification. *Anal. Chem.* **78**: 779–787
 
 Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature detection for high resolution LC/MS. *BMC Bioinformatics* **9**: 504
 
@@ -434,7 +436,7 @@ Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature de
 
 1. <span id="note5">Libiseller et al., 2015, "IPO: a tool for automated optimization of XCMS parameters," *BMC Bioinformatics* **16**: 118</span>
 
-1. <span id="note6">Hunter et al., 2015, "Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy," *Front. Mar. Sci.* **2**: 81</span>
+1. <span id="note6">Fulton et al., 2014, "Novel molecular determinants of viral susceptibility and resistance in the lipidome of *Emiliania huxleyi*," *Environ. Microbiol.* **16**(4):1137-1149; Hunter et al., 2015, "Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy," *Front. Mar. Sci.* **2**: 81</span>
 
 1. <span id="note7">A planned improvement, currently under development, will allow the user to retain unidentified features in a separate data object.</span>
 
