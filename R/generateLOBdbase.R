@@ -212,7 +212,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   # calculate exact masses of basic components and extract into a few separate 
   # tables
   # note: this will calculate full exact masses of all species in the component
-  # composition table for which DB_gen_type = "Unique_species" 
+  # composition table for which DB_gen_compound_type = "DB_unique_species" 
   
   # check to make sure we have same number of elemental building blocks in our 
   # exact.masses table and along the second dimension of the composition table
@@ -364,7 +364,7 @@ calcNumCombs = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       data.frame(
         as.character(baseComponent.masses$Adduct_hierarchy_lookup_class),
         as.character(baseComponent.masses$Species_class),
-        as.character(baseComponent.masses$DB_gen_type)),
+        as.character(baseComponent.masses$DB_gen_compound_type)),
       1, 
       combCalc, 
       AIHs.thismode = AIHs.thismode,
@@ -391,22 +391,24 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
   # e.g., classInfo = data.frame(
   #       as.character(baseComponent.masses$Adduct_hierarchy_lookup_class),
   #       as.character(baseComponent.masses$Species_class),
-  #       as.character(baseComponent.masses$DB_gen_type))
+  #       as.character(baseComponent.masses$DB_gen_compound_type))
   
-  # first, check to make sure baseComponent.masses$DB_gen_type are of acceptable
-  # kind
+  # first, check to make sure baseComponent.masses$DB_gen_compound_type are of
+  # acceptable kind
   
-  if (!(classInfo[3] %in% c("Unique_species","Acyl_iteration"))) {
+  if (!(classInfo[3] %in% c("DB_unique_species","DB_acyl_iteration",
+                            "basic_component","adduct_neg","adduct_pos"))) {
     
-  stop("The database generation type must be either Acyl_iteration or ",
-       "Unique_species. Check your composition matrix carefully. Aborting...\n")
+  stop("The database generation type must be either DB_acyl_iteration, ",
+       "DB_unique_species, basic_component, adduct_neg, or adduct_pos. Check ",
+       "your composition matrix carefully. Aborting...\n")
   # stop script if this is the case
     
   }
   
   # retrieve necessary data for this class
   
-  if (classInfo[3]=="Acyl_iteration") {
+  if (classInfo[3]=="DB_acyl_iteration") {
     
     # i.e., if this is a lipid class for which we will be generating entries for
     # different molecules with various numbers of acyl C, DB, and additional
@@ -441,11 +443,11 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
     
     num_ions.this_species = num.adducts*num_compounds.this_species
     
-  } else if (classInfo[3]=="Unique_species") {
+  } else if (classInfo[3]=="DB_unique_species") {
     
     # this is a unique molecular species for which there will be no iteration
-    # (according to user's specifications in the "DB_gen_type" field of the 
-    # basic component matrix)
+    # (according to user's specifications in the "DB_gen_compound_type" field of
+    # the basic component matrix)
     
     num.adducts = sum(!is.na(AIHs.thismode[
       ,colnames(AIHs.thismode)[colnames(AIHs.thismode)==
@@ -453,7 +455,7 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
     
     if (num.adducts>0) {
       
-      num_compounds.this_species = 1 # because each of these "Unique_species"
+      num_compounds.this_species = 1 # because each of these "DB_unique_species"
       # entries represents only one compound
       
     } else {
@@ -564,31 +566,35 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   
   for (i in 1:nrow(baseComponent.masses)) {
     
-    # retrieve, store this.lipid_class, this.species, this.DB_gen_type,
+    # retrieve, store this.lipid_class, this.species, this.DB_gen_compound_type,
     # this.adduct_lkup_class
     this.lipid_class = as.character(baseComponent.masses$Species_class[i])
     this.species = rownames(baseComponent.masses)[i]
-    this.DB_gen_type = as.character(baseComponent.masses$DB_gen_type[i])
+    this.DB_gen_compound_type = 
+      as.character(baseComponent.masses$DB_gen_compound_type[i])
     this.adduct_lkup_class = 
       as.character(baseComponent.masses$Adduct_hierarchy_lookup_class[i])
 
     # provide sensible feedback to user
     
-    # first, check to make sure this.DB_gen_type is one of the two acceptable
-    # types (at least in this version of LOBSTAHS)
-
-    if (!(this.DB_gen_type %in% c("Unique_species","Acyl_iteration"))) {
+    # first, check to make sure this.DB_gen_compound_type is of an
+    # acceptable type (at least in this version of LOBSTAHS)
+    
+    if (!(this.DB_gen_compound_type %in% c("DB_unique_species",
+                                           "DB_acyl_iteration",
+                                           "basic_component","adduct_neg",
+                                           "adduct_pos"))) {
       
-      stop("The database generation type must be either Acyl_iteration or ",
-           "Unique_species. Check your composition matrix carefully. ",
-           "Aborting...\n")
+      stop("The database generation type must be either DB_acyl_iteration, ",
+           "DB_unique_species, basic_component, adduct_neg, or adduct_pos. ",
+           "Check your composition matrix carefully. Aborting...\n")
       # stop script if this is the case
       
     }
     
     # now, generate a logical feedback string
     
-    if (this.DB_gen_type=="Acyl_iteration") {
+    if (this.DB_gen_compound_type=="DB_acyl_iteration") {
       
       if (this.lipid_class==this.species) {
         
@@ -601,7 +607,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         
       }
       
-    } else if (this.DB_gen_type=="Unique_species") {
+    } else if (this.DB_gen_compound_type=="DB_unique_species") {
       
       cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
       
@@ -623,7 +629,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       # check to see whether this is a "one-off", i.e., a unique species for
       # which we aren't considering ranges # of acyl C, double bonds, etc.
       
-      if (this.DB_gen_type=="Unique_species") {
+      if (this.DB_gen_compound_type=="DB_unique_species") {
         
         # this element is "one-off"; we only need to drill down to the
         # adduct level
@@ -641,7 +647,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
           these.base_elements = subset(baseComponent.masses[i,], 
                                        select=-c(Species_class,Exact_mass,
                                                  Adduct_hierarchy_lookup_class,
-                                                 DB_gen_type))          
+                                                 DB_gen_compound_type))          
           this.parent_formula = paste0(apply(rbind(colnames(
             these.base_elements)[these.base_elements>=1],
             as.numeric(these.base_elements[these.base_elements>=1])),
@@ -684,7 +690,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
         
         rm(j)
         
-      } else if (this.DB_gen_type=="Acyl_iteration") {
+      } else if (this.DB_gen_compound_type=="DB_acyl_iteration") {
         # this species requires more involved simulation/iteration
         
         # retrieve, store "base" exact mass for this lipid class
@@ -771,12 +777,13 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                 Species_class = NULL # to satisfy R CMD CHECK
                 Exact_mass = NULL # to satisfy R CMD CHECK
                 Adduct_hierarchy_lookup_class = NULL # to satisfy R CMD CHECK
-                DB_gen_type = NULL # to satisfy R CMD CHECK
+                DB_gen_compound_type = NULL # to satisfy R CMD CHECK
                 
                 these.base_elements = 
                   subset(baseComponent.masses[i,], 
                          select=-c(Species_class,Exact_mass,
-                                   Adduct_hierarchy_lookup_class,DB_gen_type)) 
+                                   Adduct_hierarchy_lookup_class,
+                                   DB_gen_compound_type)) 
                 these.base_elements["C"] = 
                   these.base_elements["C"]+
                   this.FA_total_no_C
