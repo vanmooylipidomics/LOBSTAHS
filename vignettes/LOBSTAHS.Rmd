@@ -269,19 +269,19 @@ The user should then define the mass of a "base fragment" upon which the `genera
 
 A example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`.
 
-<img src="images/Fig2.jpg" width="695" id="Intact PC 18:1, 18:2">
+<img src="images/Fig2.png" width="695" id="Intact PC 18:1, 18:2">
 
 This intact molecule has the chemical formula **C<sub>44</sub>H<sub>84</sub>NO<sub>8</sub>P** and an exact mass of **785.59346** amu. The C-1 carbon atom in both fatty acids is shown explicitly for ease of illustration. Using the <a href="#Base-fragment-def">rules above</a>, we define the base fragment for PC (and all other IP-DAG) as the polar headgroup, glycerol backbone, and both the carboxylic oxygen atoms (in red):
 
-<img src="images/Fig3.jpg" width="695" id="PC base fragment in red">
+<img src="images/Fig3.png" width="695" id="PC base fragment in red">
 
 In this case, the base fragment (shown in red) has the chemical formula **C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P** and a mass of **287.07700** amu. One "easy" way to determine the formula (and therefore, the exact mass) of the base fragment is to use the fragmentation feature in an application such as ChemDraw. First, we fragment the bond(s) between the C-1 and C-2 carbon atom(s) in each acyl chain on which iteration is to be performed:
 
-<img src="images/Fig4.jpg" width="695" id="Fragmentation illustration, part 1">
+<img src="images/Fig4.png" width="695" id="Fragmentation illustration, part 1">
 
 We then subtract the appropriate number of carbon atoms and their masses:
 
-<img src="images/Fig5.jpg" width="695" id="Fragmentation illustration, part 2">
+<img src="images/Fig5.png" width="695" id="Fragmentation illustration, part 2">
 
 In this case, we subtract two carbon atoms (in cyan) since we are dealing with an IP-DAG, which has two positions at which we wish to consider a range of possible fatty acids. For TAG, we would subtract three carbon atoms; for molecules containing a single acyl group for which a range of properties are to be considered (e.g., free fatty acids or PUA), we would subtract just one carbon atom and its mass. Once the formula of the base fragment is ascertained (**C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P**, in this instance), it can be specified correctly in the `componentCompTable`.
 
