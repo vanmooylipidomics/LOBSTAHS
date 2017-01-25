@@ -10,7 +10,8 @@ export("doLOBscreen",
        "LOBSet",
        "LOBdbase")
 
-export("generateLOBdbase")
+export("generateLOBdbase",
+       "exportDBtoCSV")
 
 exportClasses("LOBSet",
               "LOBdbase")

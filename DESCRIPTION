@@ -1,7 +1,7 @@
 Package: LOBSTAHS
 Title: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences
 Version: 1.1.2
-Date: 2017-01-23
+Date: 2017-01-24
 Authors@R: c(
     person("James", "Collins", email = "james.r.collins@aya.yale.edu", 
            role = c("aut", "cre")),
