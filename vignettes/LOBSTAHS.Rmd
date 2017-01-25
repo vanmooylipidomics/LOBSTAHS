@@ -69,7 +69,7 @@ install_github("vanmooylipidomics/PtH2O2lipids")
 ```
 
 
-## "Operating instructions"
+## "Operating instructions," part 1: Pre-processing
 
 ### Acquisition of HPLC-MS data suitable for LOBSTAHS
 
@@ -197,7 +197,7 @@ xsA = annotate(ptH2O2lipids$xsAnnotate@xcmsSet,
 
 We now have an `xsAnnotate` object "xsA" to which we will next apply the screening and identification functions of LOBSTAHS. In the `annotate()` call, we set `quick = FALSE` because we want to run `groupCorr()`. This will also cause CAMERA to perform internal adduct annotation. While we will perform our own adduct annotation later with LOBSTAHS, allowing CAMERA to identify its own adducts doesn't hurt, particularly if it leads to the creation of better pseudospectra.
 
-### The LOBSTAHS databases: Use the defaults, or easily create your own
+## "Operating instructions," part 2: The LOBSTAHS databases
 
 Before screening a dataset with LOBSTAHS, you should first decide whewther to use one of two default databases, or generate your own from the templates provided. LOBSTAHS databases contain a mixture of *in silico* and empirical data for the different adduct ions of a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class. Functionality for other lipid classes is added regularly. The default databases (as of January 23, 2017) include 18,067 and 15,404 unique compounds that can be identifed in positive and negative ionization mode data, respectively. The databases can be easily customized (see <a href="#Customization-of-database-inputs">below</a>) if the user wishes to identify additional lipids in new lipid classes. LOBSTAHS databases are contained in S4 `LOBdbase` objects that are generated or accessed by various package functions. Each `LOBdbase` is specific to a particular polarity (i.e., ion mode); if evaluating positive-mode data, you will use a positive mode database (and vice versa). 
 
@@ -212,18 +212,18 @@ default.LOBdbase$positive # default positive mode database
 default.LOBdbase$negative # default negative mode database
 ```
 
-#### Input tables required to generate custom databases
+### Input tables required to generate custom databases
 
 LOBSTAHS generates databases based on values of parameters defined in simple tables. The values in these tables define the molecular properties of each individual compound or lipid class for which database entries will be created. Database generation is accomplished with the function `generateLOBdbase()`. Default values can be viewed by loading the default tables into the R workspace (directions below); the default input data are also given in Tables 1 and 2 of Collins et al. 2016.<sup>[1](#note1)</sup> Package versions ≥ 1.1.2 contain adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER, which are described in Hunter et al. 2015.<sup>[6](#note6)</sup>
 
-##### The `componentCompTable`
+#### The `componentCompTable`
 
 The first, most important table is the `componentCompTable`, which defines the base elemental compositions of each molecule or lipid class to be considered when the database is created. If a user wishes to add additional molecules or classes of molecules to the default set of compounds in the database, he or she will need to first add an additional entry or entries to this table. 
 
 For each lipid class or compound specified in the `componentCompTable`, the field `DB_gen_compound_type` contains one of five values: "DB_acyl_iteration," "DB_unique_species," "basic_component," "adduct_pos," or "adduct_neg." `DB_gen_compound_type` is the field which determines how a particular compound, lipid class, or molecular fragment is used and evaluated by the software. The last three compound types ("basic_component," "adduct_pos," and "adduct_neg") are reserved for definition of
 basic components such as acteonitrile or acetate and for definition of adduct ion types; new entries of these types should only be created in the `componentCompTable` when a new adduct or basic component is to be specified.
 
-##### The two primary flavors of `DB_gen_compound_type`
+#### The two primary flavors of `DB_gen_compound_type`
 
 The other two compound types in the `componentCompTable` ("DB_acyl_iteration" and "DB_unique_species) are used to define the way `generateLOBdbase` creates database entries for different lipids and lipid classes. `generateLOBdbase` can essentially create two kinds of database entries:
 
@@ -236,7 +236,7 @@ The other two compound types in the `componentCompTable` ("DB_acyl_iteration" an
 
 *In the case lipid classes for which `DB_gen_compound_type` = "DB_acyl_iteration," the compound table is used to define the exact mass of a "base fragment" for the lipid class. Using this "base fragment" as a starting point, `generateLOBdbase` creates multiple entries for molecules in the lipid class by iterative addition of various combinations of fatty acids.* <span id="Base-fragment-def">In the case of IP-DAG and IP-MAG, the base fragment includes the entire polar headgroup, the glycerol backbone, and both carboxylic oxygen atoms in the fatty acid(s).</span> In the case of TAG, the base fragment is defined as the glycerol backbone plus the carboxylic oxygen atoms on each of the three fatty acids. The base fragments for any new lipid classes for which the user desires evaluation of a range of acyl properties should be similarly defined; this process is <a href="#How-calc-base-fragment">explained below</a>
 
-##### The `adductHierarchies` table
+#### The `adductHierarchies` table
 
 A fourth table, `adductHierarchies`, contains empirical data on the relative abundances of various adduct ions formed by the compounds that belong to each lipid class. This table is also user-editable, but any additions or changes should first be confirmed by empirical analysis. **Note** that data should be provided in `adductHierarchies` for all lipid classes or compounds, regardless of the `DB_gen_compound_type`, above. In addition, an adduct hierarchy **must** be specified in the `adductHierarchies` table for each compound or compound class specified in the `Adduct_hierarchy_lookup_class` field of the `componentCompTable`.
 
@@ -249,21 +249,23 @@ data(default.componentCompTable)
 data(default.adductHierarchies)
 ```
 
-####<span id="Customization-of-database-inputs"> Customization of database inputs</span>
+###<span id="Customization-of-database-inputs"> Customization of database inputs</span>
 
 Users can easily customize the values of the input parameters used to create databases in LOBSTAHS. This can be accomplished by modidying one or more of the Microsoft Excel templates that are provided with the package. The templates are automatically installed with LOBSTAHS into the /LOBSTAHS/doc/ subdirectory of your R library path. You can use `.libPaths()` to find the location of your R library. Alternatively, the latest versions of the templates can dopwnloaded from the [LOBSTAHS GitHub repository](https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx).
 
 What modifications must be made to which table(s) will depend on the user's goal. For example, if the user wishes only to expand (or constrain) the range of molecular properties for which database entries are to be created within an existing lipid class (of type "DB_acyl_iteration"), only the `acylRanges` and/or `oxyRanges` tables need be modified. However, a user seeking to add a new molecules or lipid class to the database(s) will need to first define the new molecule/class in both the `componentCompTable` and `adductHierarchies` tables. We will consider two cases:
 
-##### Defining single compounds
+#### Defining single compounds
 
 If the new entry is a single molecule (e.g., a new pigment), then new entries in the `componentCompTable` and `adductHierarchies` table (and, if desired, in the `rt.windows` table; see <a href="#Customization-of-rt-windows">below</a>) will be sufficient. In these instances, "DB_unique_species" should be specified for the `DB_gen_compound_type` in the `componentCompTable`. The entire exact mass of neutral compound should be defined in the composition table. (Do not define the mass of a charged adduct ion, since adduct ion masses will be calculated automatically by the software.) Appropriate adduct hierarchies for the compound should then be defined in the `adductHierarchies` table, with a matching compound or class name in the `Adduct_hierarchy_lookup_class` field. The same adduct hierarchy can be used for multiple compounds independently defined using the "DB_unique_species" type so long as the same adduct class name is used. Retention time window data for the compound can also be added (if desired) to the `rt.windows` table (see <a href="#Customization-of-rt-windows">below</a>).
 
-##### Defining entire lipid classes for which an iterative simulation is to be performed
+#### Defining entire lipid classes for which an iterative simulation is to be performed
 
 If the user wishes to add an entire class of lipid for which multiple database entries will be created based on ranges of acyl properties and oxidation states specified in `acylRanges` and `oxyRanges`, he or she must pay more care to how the class and its acyl properties are defined. First, "DB_acyl_iteration" should be specified for the `DB_gen_compound_type` in the `componentCompTable`.
 
-<span id="How-calc-base-fragment">The user should then define the mass of a "base fragment" upon which the `generateLOBdbase()` function will perform iteration.</span> The base fragment should include the glycerol backbone, any carboxylic oxygen atoms in the fatty acid(s), and (if applicable), the entire lipid headgroup.
+####<span id="How-calc-base-fragment"> Determination of the base fragment</span>
+
+The user should then define the mass of a "base fragment" upon which the `generateLOBdbase()` function will perform iteration. The base fragment should include the glycerol backbone, any carboxylic oxygen atoms in the fatty acid(s), and (if applicable), the entire lipid headgroup.
 
 A example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`.
 
@@ -285,15 +287,15 @@ In this case, we subtract two carbon atoms (in cyan) since we are dealing with a
 
 Once the chemical formula of the base fragment is ascertained and specified correctly in the `componentCompTable`, the ranges of acyl carbon atoms, double bonds, and additional oxygen atoms to be considered during simulation of the lipid class should be specified in the `acylRanges` and `oxyRanges` tables. As above in the "DB_unique_species" case, appropriate adduct hierarchies for the new lipid class should then be defined in the `adductHierarchies` table, with a matching compound or class name in the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. Retention time window data for the class can also be added (if desired) to the `rt.windows` table (see see <a href="#Customization-of-rt-windows">below</a>).
 
-#### Universal guidance applicable no matter the `DB_gen_compound_type`
+### Universal guidance applicable no matter the `DB_gen_compound_type`
 
-##### Saving of files
+#### Saving of files
 
 Once appropriate additions or modifications are made according to the cases above, the user should save the modified table(s) to text file(s) in comma-separated values (.csv) format; these can then be imported into R when the `generateLOBdbase()` function is called.
 
 **Note:** Some new lipid classes may not not amenable to *in silico* simulation in the same "easy" fashion as one of the existing lipid classes for which functionality already exists in the package code. In these cases, users should <a href="https://github.com/vanmooylipidomics/LOBSTAHS/issues">open a new issue request</a> for new functionality **or** -- in the spirit of open-source collaboration -- modify the code in your own Git fork and then request incorporation of your new feature so others may also discover new lipids!
 
-##### Database generation using generateLOBdbase
+#### Database generation using generateLOBdbase
 
 Once inputs have been specified as described above, LOBSTAHS databases are generated using the `generateLOBdbase()` function. `generateLOBdbase` uses an *in silico* simulation to create database entries defined by the parameters in the input tables. One entry is created for each possible adduct ion of a parent compound. `generateLOBdbase` can create databases for one or both ion modes. Paths to any .csv files containing user-customized input data should be specified during the call to `generateLOBdbase`; if NULL or no value is specified for any of the input tables, the defaults (see above) will be used. Finally, the user can specify whether a .csv file containing the new database should be created in addition to the `LOBdbase` object.
 
@@ -306,7 +308,7 @@ LOBdb = generateLOBdbase(polarity = c("positive","negative"), gen.csv = FALSE,
 
 ```
 
-## Compound/biomarker identification and screening using doLOBscreen: The "meat" of LOBSTAHS
+## "Operating instructions," part 3: Compound/biomarker identification and screening using doLOBscreen (or, the "meat" of LOBSTAHS) 
 
 Once the user has created his/her database (or has decided to use the appropriate onboard default), compound identification and screening can be performed using the function `doLOBscreen()`. At this point, the user should have in hand an `xsAnnotate` object containing data which have processed in xcms and CAMERA. Working sequentially within each CAMERA pseudospectrum, `doLOBscreen` accomplishes the following (see also the <a href="#schematic">schematic</a>):
 
