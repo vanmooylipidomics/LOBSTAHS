@@ -94,8 +94,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \examples{
 ## create an empty LOBSet for positive ion mode data
 
-library(LOBSTAHS)
-
 myLOBSet = LOBSet(peakdata = NULL, iso_C3r = NULL, iso_C3f = NULL,
                   iso_C3c = NULL, LOBscreen_diagnostics = NULL,
                   LOBisoID_diagnostics = NULL, LOBscreen_settings = NULL,

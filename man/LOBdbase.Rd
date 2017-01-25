@@ -117,8 +117,6 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 \examples{
 ## create an empty LOBdbase
 
-library(LOBSTAHS)
-
 myLOBdbase = LOBdbase(frag_ID = NULL, mz = NULL,
                       exact_parent_neutral_mass = NULL, lipid_class = NULL,
                       species = NULL, adduct = NULL, adduct_rank = NULL,
