@@ -8,11 +8,19 @@ A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/ma
 
 LOBSTAHS is copyright (c) 2015-2017, by the following current and former members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2017, James R. Collins. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
 
-<h2>Citation</h2>
+<h2>Citations</h2>
 
-LOBSTAHS is described in Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
+LOBSTAHS is described in:
 
-Adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER (package versions ≥ 1.1.2) are as described in Hunter J. E., M. J. Frada, H. F. Fredricks, A. Vardi, and B. A. S. Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Frontiers in Marine Science* **2**:81; [doi: 10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
+Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
+
+Adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER (package versions ≥ 1.1.2) are as described in:
+
+Hunter J.E., M.J. Frada, H.F. Fredricks, A. Vardi, and B.A.S. Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Frontiers in Marine Science* **2**:81; [doi:10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
+
+and 
+
+Fulton, J.M., H.F. Fredricks, K.D. Bidle, A. Vardi, B.J. Kendrick, G.R. DiTullio, and B.A.S. Van Mooy. 2014. Novel molecular determinants of viral susceptibility and resistance in the lipidome of *Emiliania huxleyi*. *Environmental Microbiology* **16**(4):1137-1149; [doi:10.1111/1462-2920.12358](http://dx.doi.org/10.1111/1462-2920.12358)
 
 <h2>Installation</h2>
 
