@@ -770,6 +770,8 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                 
                 Species_class = NULL # to satisfy R CMD CHECK
                 Exact_mass = NULL # to satisfy R CMD CHECK
+                Adduct_hierarchy_lookup_class = NULL # to satisfy R CMD CHECK
+                DB_gen_type = NULL # to satisfy R CMD CHECK
                 
                 these.base_elements = 
                   subset(baseComponent.masses[i,], 
