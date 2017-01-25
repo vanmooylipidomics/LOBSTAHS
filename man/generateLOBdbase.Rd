@@ -38,16 +38,36 @@ format appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet
 may be downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx}.
 
 For each lipid class or compound specified in the component definitions table,
-the field \code{DB_gen_type} must contain one of two values: "Acyl_iteration" or
-"Unique_species." When the former is specified, \code{generateLOBdbase} will
-create dqtabase entries for adduct ions of multiple parent molecular species
-within the lipid class based on the ranges of acyl properties and oxidation
-states given for the class in \code{acyl.ranges} and \code{oxy.ranges} (see
-below). For compounds of \code{DB_gen_type} "Unique_species," database entries
-will be created only for adduct ions of the single compound specified. The
-latter type should be used for pigments and other lipids that do not have acyl
-groups, or when the user does not wish to consider any possible variation in
-acyl properties.
+the field \code{DB_gen_compound_type} must contain one of five values:
+"DB_acyl_iteration," "DB_unique_species," "basic_component," "adduct_pos,"
+or "adduct_neg." The last three compound types are reserved for definition of
+basic components such as acteonitrile or acetate and for definition of adduct
+ion types; new entries of these types should only be created in the  compound
+table when a new adduct or basic component must be specified. The first two
+compound types are used to define the way \code{generateLOBdbase} creates its
+databases. There are essentially two kinds of ways to create database entries.
+
+For compounds of \code{DB_gen_compound_type} = "DB_acyl_iteration",
+\code{generateLOBdbase} will create database entries for adduct ions of multiple
+parent molecular species within the lipid class based on the ranges of acyl
+properties and oxidation states given for the class in \code{acyl.ranges} and
+\code{oxy.ranges} (see below). In these cases, the compound table is used to
+define the exact mass of a "base fragment" for the lipid classs, which
+(in the case of IP-DAG and IP-MAG) includes the entire polar headgroup, the
+glycerol backbone, and both carboxylic oxygen atoms in the fatty acid(s). In the
+case of TAG, the "base fragment" is defined as the glycerol backbone plus the
+carboxylic oxygen atoms on each of the three fatty acids. The base fragments for
+any new lipid classes for which the user desires evaluation of a range of acyl
+properties should be similarly defined. The package vignette contains detailed
+instructions and illustrations of how to specify the base fragment.
+
+For compounds of \code{DB_gen_compound_type} = "DB_unique_species" (the simpler of
+the two cases), database entries will be created only for adduct ions of the
+single compound specified. The latter type should be used for pigments and other
+lipids that do not have acyl groups, or when the user does not wish to consider
+any possible variation in acyl properties. In the case of these compounds, the
+exact mass of the complete (neutral) molecule should be specified in the
+component definitions table.
 
 Note than an adduct hierarchy \strong{must} be specified in the adduct ion
 hierarchy matrix (see below) for each compound or compound class specified in
@@ -72,7 +92,9 @@ spreadsheet may be downloaded at \url{https://github.com/vanmooylipidomics/LOBST
   \item{acyl.ranges}{
 File path to a .csv file containing ranges of values for the total number of
 acyl (i.e., fatty acid) carbon atoms to be considered during the
-\emph{in silico} similation on intact polar diacylglycerols (IP-DAG),
+\emph{in silico} simulation of any lipid classses for which
+\code{DB_gen_compound_type} is specified as "DB_acyl_iteration" in the component
+definitions table, above. These include intact polar diacylglycerols (IP-DAG),
 triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), and free fatty acids
 (FFA). If nothing is specified, \code{generateLOBdbase} will use the default
 acyl carbon atom range data in (\code{\link{default.acylRanges}}).
@@ -85,9 +107,9 @@ downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/ins
 }
   \item{oxy.ranges}{
 File path to a .csv file containing ranges of values for the number of
-additional oxygen atoms to be considered during the \emph{in silico} similation
-on intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG),
-polyunsaturated aldehydes (PUAs), and free fatty acids (FFA). If nothing is
+additional oxygen atoms to be considered during the \emph{in silico} simulation
+of any lipid classses for which \code{DB_gen_compound_type} is specified as
+"DB_acyl_iteration" in the component definitions table, above. If nothing is
 specified, \code{generateLOBdbase} will use the default oxidation state ranges
 in (\code{\link{default.oxyRanges}}).
 
@@ -95,8 +117,9 @@ A Microsoft Excel spreadsheet template included with the package at
 Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx can be used to
 generate a .csv file with custom oxidation state ranges in a format appropriate
 for \code{generateLOBdbase}. Alternatively, the spreadsheet may be downloaded at
-\url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx}. By default, \code{generateLOBdbase} considers 0-4 additional oxygen
-atoms on each chemically possible IP-DAG, TAG, PUA, and FFA.
+\url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx}.
+By default, \code{generateLOBdbase} considers 0-4 additional oxygen atoms on
+each chemically possible IP-DAG, TAG, PUA, and FFA.
 }
 }
 \details{Using the default structural property inputs described here,
