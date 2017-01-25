@@ -35,7 +35,10 @@ A Microsoft Excel spreadsheet template included with the package at
 Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx can be
 used to generate a .custom csv file with elemental composition definitions in a
 format appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet
-may be downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx}.
+may be downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx}{from the package GitHub repository}. Brief instructions
+for customization of the table are given in this help document; full
+instructions, including details on specification of the necessary base fragment,
+are contained in \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd}{the package vignette}.
 
 For each lipid class or compound specified in the component definitions table,
 the field \code{DB_gen_compound_type} must contain one of five values:
@@ -90,7 +93,7 @@ A Microsoft Excel spreadsheet template included with the package at
 Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx can be
 used to generate a .csv file with additional (or alternative) adduct hierarchy
 data in a format appropriate for \code{generateLOBdbase}. Alternatively, the
-spreadsheet may be downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx}.
+spreadsheet may be downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx}{from the package GitHub repository}.
 }
   \item{acyl.ranges}{
 File path to a .csv file containing ranges of values for the total number of
@@ -106,7 +109,7 @@ A Microsoft Excel spreadsheet template included with the package at
 Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_acyl_prop_ranges.xlsx can be used
 to generate a .csv file with custom acyl carbon range data in a format
 appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet may be
-downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_acyl_prop_ranges.xlsx}.
+downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_acyl_prop_ranges.xlsx}{from the package GitHub repository}.
 }
   \item{oxy.ranges}{
 File path to a .csv file containing ranges of values for the number of
@@ -119,10 +122,10 @@ in (\code{\link{default.oxyRanges}}).
 A Microsoft Excel spreadsheet template included with the package at
 Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx can be used to
 generate a .csv file with custom oxidation state ranges in a format appropriate
-for \code{generateLOBdbase}. Alternatively, the spreadsheet may be downloaded at
-\url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx}.
-By default, \code{generateLOBdbase} considers 0-4 additional oxygen atoms on
-each chemically possible IP-DAG, TAG, PUA, and FFA.
+for \code{generateLOBdbase}. Alternatively, the spreadsheet may be downloaded
+\href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx}{from the package GitHub repository}. By default, \code{generateLOBdbase}
+considers 0-4 additional oxygen atoms on each chemically possible IP-DAG, TAG,
+PUA, and FFA.
 }
 }
 \details{Using the default structural property inputs described here,

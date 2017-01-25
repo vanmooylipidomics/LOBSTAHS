@@ -65,8 +65,8 @@ The default ranges for the structural properties given in the other files were
 chosen to yield databases that encompass a broad variety of moieites across 
 lipid types. Microsoft Excel spreadsheet templates are included with the package
 in Resources/library/LOBSTAHS/doc for users wishing to modify any of the default
-data inputs. Alternatively, the spreadsheet files may be downloaded from 
-\url{https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx}. 
+data inputs. Alternatively, the spreadsheet files may be downloaded 
+\href{https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx}{from a directory embedded within the package}.
 These templates can be used to generate .csv files in formats appropriate for 
 \code{\link{generateLOBdbase}} and \code{\link{doLOBscreen}}.
 }
