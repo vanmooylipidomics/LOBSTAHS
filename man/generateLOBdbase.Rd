@@ -36,12 +36,32 @@ Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx can be
 used to generate a .custom csv file with elemental composition definitions in a
 format appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet
 may be downloaded at \url{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx}.
+
+For each lipid class or compound specified in the component definitions table,
+the field \code{DB_gen_type} must contain one of two values: "Acyl_iteration" or
+"Unique_species." When the former is specified, \code{generateLOBdbase} will
+create dqtabase entries for adduct ions of multiple parent molecular species
+within the lipid class based on the ranges of acyl properties and oxidation
+states given for the class in \code{acyl.ranges} and \code{oxy.ranges} (see
+below). For compounds of \code{DB_gen_type} "Unique_species," database entries
+will be created only for adduct ions of the single compound specified. The
+latter type should be used for pigments and other lipids that do not have acyl
+groups, or when the user does not wish to consider any possible variation in
+acyl properties.
+
+Note than an adduct hierarchy \strong{must} be specified in the adduct ion
+hierarchy matrix (see below) for each compound or compound class specified in
+the \code{Adduct_hierarchy_lookup_class} field of the component definitions
+table.
 }
   \item{AIH.defs}{
 File path to a .csv file containing empirical adduct ion hierarchy (AIH) data
-for various pigments and lipid classes. If nothing is specified,
-\code{generateLOBdbase} will use the default AIH data in
-(\code{\link{default.adductHierarchies}}).
+for various pigments, lipids, and lipid classes. If nothing is specified,
+\code{generateLOBdbase} will use the default AIH data (\code{\link{default.adductHierarchies}}).
+Each compound or compound class for which there is an entry in the AIH
+definitions table should have at least one corresponding entry in the
+\code{Adduct_hierarchy_lookup_class} field of the component definitions table
+(default, \code{\link{default.componentCompTable}}).
 
 A Microsoft Excel spreadsheet template included with the package at
 Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx can be
@@ -83,9 +103,9 @@ atoms on each chemically possible IP-DAG, TAG, PUA, and FFA.
 \code{generateLOBdbase} can produce databases with entries for a wide range of
 intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated
 aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments.
-The default databases (as of June 2016) contain data on 13,578 and 11,073 unique
-compounds that can be identifed in positive and negative ion mode spectra,
-respectively.
+The default databases (as of January 2017) contain data on 18,067 and 15,404
+unique compounds that can be identifed in positive and negative ion mode
+spectra, respectively.
 
 \strong{Note} that the default databases have been pre-generated (see
 \code{\link{default.LOBdbase}}) and it is therefore unnecessary to call
@@ -136,6 +156,12 @@ respectively.
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.
 LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification
 of oxidative stress biomarkers. \emph{Analytical Chemistry} 88:7154-7162 
+
+Data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER are as
+described in Hunter J. E., M. J. Frada, H. F. Fredricks, A. Vardi, and B. A. S.
+Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral
+infection and life cycle phases highlights molecular biomarkers of infection, 
+susceptibility, and ploidy. \emph{Frontiers in Marine Science} 2:81
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}

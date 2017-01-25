@@ -83,7 +83,13 @@ analysis.
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.
 LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification
-of oxidative stress biomarkers. \emph{Analytical Chemistry} 88:7154-7162 
+of oxidative stress biomarkers. \emph{Analytical Chemistry} 88:7154-7162
+
+Data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER are as
+described in Hunter J. E., M. J. Frada, H. F. Fredricks, A. Vardi, and B. A. S.
+Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral
+infection and life cycle phases highlights molecular biomarkers of infection, 
+susceptibility, and ploidy. \emph{Frontiers in Marine Science} 2:81.
 }
 \author{
 James Collins, \email{james.r.collins@aya.yale.edu}

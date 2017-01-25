@@ -15,6 +15,9 @@ Default databases (in \code{default.LOBdbase}), and the .RData files containing
 default ranges of structural properties used by \code{\link{generateLOBdbase}} 
 to generate these databases.
 
+Note that the format of these files has changed in LOBSTAHS version 1.1.2 and
+greater.
+
 Also described is \code{default.rt.windows}, which contains the default 
 retention time windows (by lipid class) used by \code{\link{doLOBscreen}} when 
 \code{rt.restrict = TRUE}.
@@ -56,7 +59,7 @@ data(default.rt.windows)}
 \details{
 Empirical determination of the retention time window data in 
 \code{default.rt.windows} and adduct ion hierarchies in 
-\code{default.adductHierarchies} is described in the reference below.
+\code{default.adductHierarchies} are described in the references below.
 
 The default ranges for the structural properties given in the other files were 
 chosen to yield databases that encompass a broad variety of moieites across 
@@ -75,7 +78,13 @@ These templates can be used to generate .csv files in formats appropriate for
 \references{
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016.
 LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification
-of oxidative stress biomarkers. \emph{Analytical Chemistry} 88:7154-7162 
+of oxidative stress biomarkers. \emph{Analytical Chemistry} 88:7154-7162
+
+Data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER are as
+described in Hunter J. E., M. J. Frada, H. F. Fredricks, A. Vardi, and B. A. S.
+Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral
+infection and life cycle phases highlights molecular biomarkers of infection, 
+susceptibility, and ploidy. \emph{Frontiers in Marine Science} 2:81
 }
 \seealso{
   \code{\link{doLOBscreen}},
