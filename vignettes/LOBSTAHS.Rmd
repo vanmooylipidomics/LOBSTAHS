@@ -102,7 +102,7 @@ First, data files should be given intuitive file names (containing, e.g., a samp
 * Values may be obtained from the literature<sup>[4](#note4)</sup>
 * The R-package [IPO](https://github.com/glibiseller/IPO)<sup>[5](#note5)</sup> can be used to optimize the values of many of the required parameters
 
-The R script [prepOrbidata.R](https://github.com/vanmooylipidomics/LipidomicsToolbox/blob/master/prepOrbidata.R) (part of the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox)) contains code for complete preparation in xcms of the PtH2O2lipids (or similar) dataset. The script allows the user to apply parameter values assembled from the literature or obtain them from IPO optimization of a subset of samples. The final parameter values used in Collins et al. 2016 for analysis of the PtH2O2lipids dataset -- obtained using HPLC-ESI-MS on an Exactive Orbitrap instrument -- are given in Table S5 of the electronic supplement. The settings and values listed in the table could be used as a starting point for analysis of similar data.
+The R script [prepOrbidata.R](https://github.com/vanmooylipidomics/LipidomicsToolbox/blob/master/prepOrbidata.R) (part of the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox)) contains code for complete preparation in xcms of the PtH2O2lipids (or similar) dataset. The script allows the user to apply parameter values assembled from the literature or obtain them from IPO optimization of a subset of samples. The final parameter values used in Collins et al. 2016<sup>[1](#note1)</sup> for analysis of the PtH2O2lipids dataset -- obtained using HPLC-ESI-MS on an Exactive Orbitrap instrument -- are given in Table S5 of the electronic supplement. The settings and values listed in the table could be used as a starting point for analysis of similar data.
 
 The xcmsSet produced using these settings from the *P. tricornutum* data is stored in the [PtH2O2lipids](http://bioconductor.org/packages/3.4/data/experiment/html/PtH2O2lipids.html) package.
 
@@ -214,16 +214,14 @@ default.LOBdbase$negative # default negative mode database
 
 #### Input tables required to generate custom databases
 
-LOBSTAHS generates databases based on values of parameters defined in simple tables. The values in these tables define the range of molecular properties within each lipid class for which database entries will be created. Database generation is accomplished with the function `generateLOBdbase()`. Default values can be viewed by loading the default tables into the R workspace (directions below); the default input data are also given in Tables 1 and 2 of Collins et al. 2016. 
+LOBSTAHS generates databases based on values of parameters defined in simple tables. The values in these tables define the range of molecular properties within each lipid class for which database entries will be created. Database generation is accomplished with the function `generateLOBdbase()`. Default values can be viewed by loading the default tables into the R workspace (directions below); the default input data are also given in Tables 1 and 2 of Collins et al. 2016.<sup>[1](#note1)</sup> Package versions ≥ 1.1.2 contain adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER, which are described in Hunter et al. 2015.<sup>[6](#note6)</sup>
 
-A first table, the `componentCompTable`, defines the base elemental compositions of each molecule or lipid class that will be considered when the databsse is created. If a user wishes to add additional molecules or classes of molecules to the default set of compounds, he or she will need to add additional entrires to this table.
-
-Two other user-editable tables define ranges of chemical properties for which databsase entires are created within each lipid class specified in the `componentCompTable`:
+A first table, the `componentCompTable`, defines the base elemental compositions of each molecule or lipid class that will be considered when the database is created. If a user wishes to add additional molecules or classes of molecules to the default set of compounds, he or she will need to add additional entrires to this table. For each lipid class or compound specified in the `componentCompTable`, the field `DB_gen_type` must contain one of two values: "Acyl_iteration" or "Unique_species." For compounds of `DB_gen_type` = "Unique_species," `generateLOBdbase()` will create database entries only for adduct ions of the single compound specified. This type should be used for pigments and other lipids that do not have acyl groups, or in cases when the user does not wish to consider any possible variation in acyl properties. When "Acyl_iteration" is specified, two other user-editable tables must be used to define ranges of chemical properties for which a series of database entries are iteratively created within each lipid class:
 
 *	`acylRanges`: total acyl carbon chain length (i.e., the total number of carbon atoms in the fatty acids that make up TAG, PUA, IP-DAG, and IP-MAG) and degree of acyl carbon chain unsaturation (i.e., the number of possible carbon-carbon fatty acid double bonds) considered for each lipid class
 *	`oxyRanges`: possible oxidation state (i.e., the number of additional oxygen atoms to be considered on each compound)
 
-A fourth table, `adductHierarchies`, contains empirical data on the relative abundances of various adduct ions formed by the compounds that belong to each lipid class. This table is also user-editable, but any additions or changes should first be confirmed by empirical analyusis. 
+A fourth table, `adductHierarchies`, contains empirical data on the relative abundances of various adduct ions formed by the compounds that belong to each lipid class. This table is also user-editable, but any additions or changes should first be confirmed by empirical analysis. **Note** that data should be provided in `adductHierarchies` for all lipid classes or compounds, regardless of `DB_gen_type`. In addition, an adduct hierarchy **must** be specified in the `adductHierarchies` table for each compound or compound class specified in the `Adduct_hierarchy_lookup_class` field of the `componentCompTable`.
 
 Users can load the default tables into the R workspace (and subsequently view them) at any time:
 
@@ -238,7 +236,7 @@ data(default.adductHierarchies)
 
 Users can easily customize the values of the input parameters used to create databases in LOBSTAHS. This can be accomplished by modidying one or more of the Microsoft Excel templates that are provided with the package. The templates are automatically installed with LOBSTAHS into the /LOBSTAHS/doc/ subdirectory of your R library path. You can use `.libPaths()` to find the location of your R library. Alternatively, the latest versions of the templates can dopwnloaded from the [LOBSTAHS GitHub repository](https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx).
 
-What modifications must be made to which table(s) will depend on the user's goal. For example, if the user wishes only to expand (or constrain) the range of molecular properties for which database entries are to be created within an existing lipid class, only the `acylRanges` and/or `oxyRanges` tables need be modified. However, a user seeking to add a new molecules or lipid class to the database(s) will need to first define the new molecule/class in both the `componentCompTable` and `adductHierarchies` tables. If the new entry is a single molecule (e.g., a new pigment), the new data in these two tables will be sufficient. However, if a new class of acyl lipid is defined, corresponding data must also be added to the `acylRanges` and (if necessary) `oxyRanges` tables.
+What modifications must be made to which table(s) will depend on the user's goal. For example, if the user wishes only to expand (or constrain) the range of molecular properties for which database entries are to be created within an existing lipid class (type "Acyl_iteration"), only the `acylRanges` and/or `oxyRanges` tables need be modified. However, a user seeking to add a new molecules or lipid class to the database(s) will need to first define the new molecule/class in both the `componentCompTable` and `adductHierarchies` tables. If the new entry is a single molecule (e.g., a new pigment), the new data in these two tables will be sufficient. However, if a new class of acyl lipid is defined, corresponding data must also be added to the `acylRanges` and (if necessary) `oxyRanges` tables.
 
 Once any modificatons are made, the user should save the table(s) to text file(s) in comma-separated values (.csv) format; these can then be imported into R when the `generateLOBdbase()` function is called.
 
@@ -263,27 +261,27 @@ Once the user has created his/her database (or has decided to use the appropriat
 
 1. First, if user elected `remove.iso = TRUE`, any secondary isotope peaks identified by CAMERA are removed from the dataset.
 
-1. Using a matching tolerance (`match.ppm`) and database specified by the user, putative (initial) compound assignments are applied to features in the dataset. The `match.ppm` should reflect the accuracy of the mass spectrometer used to acquire the data. If no value is given for `database`, the default database of the appropriate polarity will be used. `polarity = positive` or `polarity = negative` should be specified. If no polarity is given, `doLOBscreen` will attempt to detect it from the dataset... but detection is not perfect. At this point in the screening process, the current version of LOBSTAHS discards any features for which a match was not found in the database.<sup>[6](#note6)</sup>
+1. Using a matching tolerance (`match.ppm`) and database specified by the user, putative (initial) compound assignments are applied to features in the dataset. The `match.ppm` should reflect the accuracy of the mass spectrometer used to acquire the data. If no value is given for `database`, the default database of the appropriate polarity will be used. `polarity = positive` or `polarity = negative` should be specified. If no polarity is given, `doLOBscreen` will attempt to detect it from the dataset... but detection is not perfect. At this point in the screening process, the current version of LOBSTAHS discards any features for which a match was not found in the database.<sup>[7](#note7)</sup>
 
-1. If user elected `rt.restrict = TRUE`, the (corrected) retention time of each feature to which an assignment has just been made is compared against the retention time range expected for the assignment's parent lipid class. These expected retention time ranges, or "windows," are specified in a table. The default values (specific to the chromatography under which LOBSTAHS was developed at Woods Hole Oceanographic Institution<sup>[7](#note7)</sup>) can be accessed in a manner similar to the database generation input defaults:
+1. If user elected `rt.restrict = TRUE`, the (corrected) retention time of each feature to which an assignment has just been made is compared against the retention time range expected for the assignment's parent lipid class. These expected retention time ranges, or "windows," are specified in a table. The default values (specific to the chromatography under which LOBSTAHS was developed at Woods Hole Oceanographic Institution<sup>[8](#note8)</sup>) can be accessed in a manner similar to the database generation input defaults:
 
     ```{r, eval = FALSE}
     data(default.rt.windows)
     ```
 
-    The default retention time windows are also given in Table S2 of the electronic supplement to Collins et al. 2016.
+    The default retention time windows are also given in Table S2 of the electronic supplement to Collins et al. 2016.<sup>[1](#note1)</sup> Some additional data are as given in Hunter et al. 2015.<sup>[6](#note6)</sup>
 
     If the user wishes to use the retention time restriction feature with his/her own retention time data (highly recommended) a .csv table can be created from an Excel template available in the same subdirectory (/LOBSTAHS/doc/) of the R library path where the database generation templates reside. The template can also be downloaded from the [LOBSTAHS GitHub repository](https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx).
 
      **Important note:** To account for shifts in retention time that occur during chromatographic alignment in xcms, LOBSTAHS automatically expands the retention time ranges given in the `rt.windows` table by 10% at each extreme. If xcms retention time correction results in large differences between raw and corrected retention times, the user should elect **not** to apply retention time restriction in LOBSTAHS (i.e., set `rt.restrict = FALSE`) since valid feartures could be lost. The extent of deviation between raw and corrected retention times can be diagnosed using the retention time correction profile plot, obtained with `plottype = "mdevden"` when calling `rector` in xcms. A future version of LOBSTAHS will allow the user to the set the factor by which the lipid class retention time windows should be expanded.
 
-1. Next, assignments with an odd total number of acyl carbon atoms can be eliminated (achieved by setting `exclude.oddFA = TRUE`). Applies only to acyl lipids (i.e., IP-DAG, TAG, PUA, or free fatty acids). Useful if data are (or are believed to be) of exclusively eukaryotic origin, since synthesis of fatty acids with odd numbers of carbon atoms is not known in eukaryotes.<sup>[8](#note8)</sup>
+1. Next, assignments with an odd total number of acyl carbon atoms can be eliminated (achieved by setting `exclude.oddFA = TRUE`). Applies only to acyl lipids (i.e., IP-DAG, TAG, PUA, or free fatty acids). Useful if data are (or are believed to be) of exclusively eukaryotic origin, since synthesis of fatty acids with odd numbers of carbon atoms is not known in eukaryotes.<sup>[9](#note9)</sup>
 
-1. A series of adduct ion hierarchy rules are then applied to the remaining assignments. The theory and development of these rules is described in Collins et al 2016. and summarized in the [schematic above](#schematic). During the adduct ion screening process, a [series of codes](#schematic) are applied to each assignment to indicate the degree to which it satisfied the hierarchy rules Unlike the other screening features, application of the adduct ion hierarchy rules is not optional.
+1. A series of adduct ion hierarchy rules are then applied to the remaining assignments. The theory and development of these rules is described in Collins et al 2016.<sup>[1](#note1)</sup> and summarized in the [schematic above](#schematic). During the adduct ion screening process, a [series of codes](#schematic) are applied to each assignment to indicate the degree to which it satisfied the hierarchy rules Unlike the other screening features, application of the adduct ion hierarchy rules is not optional.
 
 1. Once the list of compound assignments has been screened by pseudospectrum according to the user's spefifications, the assignments are then evaluated as a single group to identify possible isomers and isobars (compounds having distinct but very similar *m/z*). These isomers and isobars are annotated with [additional codes](#schematic) so the user can examine them in subsequent analysis.
 
-Once done, `doLOBscreen` returns a `LOBSet` object containing the fully screened dataset. To screen the PtH2O2lipids `xsAnnotate` object using the same settings that produced the results in Collins et al. 2016, the user would run:
+Once done, `doLOBscreen` returns a `LOBSet` object containing the fully screened dataset. To screen the PtH2O2lipids `xsAnnotate` object using the same settings that produced the results in Collins et al. 2016<sup>[1](#note1)</sup>, the user would run:
 
 ```{r, eval = FALSE}
 myPtH2O2LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
@@ -355,7 +353,9 @@ Benton, H. P., Want, E. J., and Ebbels, T. M. D. 2010. Correction of mass calibr
 
 Collins, J.R., Edwards, B.R., Fredricks, H.F., and Van Mooy, B.A.S. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Anal. Chem.* **88**: 7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
-Hummel, J., Segu, S., Li, Y., Irgang, S., Jueppner, J., and Giavalisco, P. 2011. Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids. *Front Plant Sci* **2**
+Hummel, J., Segu, S., Li, Y., Irgang, S., Jueppner, J., and Giavalisco, P. 2011. Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids. *Front. Plant. Sci.* **2**
+
+Hunter, J. E., Frada, M. J., Fredricks, H. F., Vardi, A., and Van Mooy, B.A.S. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Front. Mar. Sci.* **2**: 81; [doi: 10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
 
 Kuhl, C., Tautenhahn, R., Bottcher, C., Larson, T. R., and Neumann, S. 2012. CAMERA: an integrated strategy for compound spectra extraction and annotation of liquid chromatography/mass spectrometry data sets. *Anal. Chem.* **84**: 283-289
 
@@ -377,12 +377,14 @@ Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature de
 
 1. <span id="note3">Kuhl et al., 2012, "CAMERA: an integrated strategy for compound spectra extraction and annotation of liquid chromatography/mass spectrometry data sets," *Anal. Chem.* **84**: 283-289</span>
 
-1. <span id="note4">See, e.g., Patti et al., 2012, "Meta-analysis of untargeted metabolomic data from multiple profiling experiment," *Nature Protocols* **7**: 508-516</span>
+1. <span id="note4">See, e.g., Patti et al., 2012, "Meta-analysis of untargeted metabolomic data from multiple profiling experiment," *Nat. Protocols* **7**: 508-516</span>
 
 1. <span id="note5">Libiseller et al., 2015, "IPO: a tool for automated optimization of XCMS parameters," *BMC Bioinformatics* **16**: 118</span>
 
-1. <span id="note6">A planned improvement, currently under development, will allow the user to retain unidentified features in a separate data object.</span>
+1. <span id="note6">Hunter et al., 2015, "Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy," *Front. Mar. Sci.* **2**: 81</span>
 
-1. <span id="note7">We used a modified version of the chromatography presented in Hummel et al., 2011, "Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids," *Front Plant Sci* **2**; see electronic supplement to Collins et al. 2016 for full specification.</span>
+1. <span id="note7">A planned improvement, currently under development, will allow the user to retain unidentified features in a separate data object.</span>
 
-1. <span id="note8">See A. Pearson, 2014, "Lipidomics for geochemistry" in *Treatise on Geochemistry* (Holland, H. D., and Turekian, K. K. eds.), 2nd Ed., Elsevier, Oxford, pp. 291-336.</span>
+1. <span id="note8">We used a modified version of the chromatography presented in Hummel et al., 2011, "Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids," *Front. Plant. Sci.* **2**; see electronic supplement to Collins et al. 2016 for full specification.</span>
+
+1. <span id="note9">See A. Pearson, 2014, "Lipidomics for geochemistry" in *Treatise on Geochemistry* (Holland, H. D., and Turekian, K. K. eds.), 2nd Ed., Elsevier, Oxford, pp. 291-336.</span>
