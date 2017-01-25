@@ -12,15 +12,15 @@ LOBSTAHS is copyright (c) 2015-2017, by the following current and former members
 
 LOBSTAHS is described in:
 
-Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
+> Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
 Adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER (package versions ≥ 1.1.2) are as described in:
 
-Hunter J.E., M.J. Frada, H.F. Fredricks, A. Vardi, and B.A.S. Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Frontiers in Marine Science* **2**:81; [doi:10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
+> Hunter J.E., M.J. Frada, H.F. Fredricks, A. Vardi, and B.A.S. Van Mooy. 2015. Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy. *Frontiers in Marine Science* **2**:81; [doi:10.3389/fmars.2015.00081](http://dx.doi.org/10.3389/fmars.2015.00081)
 
 and 
 
-Fulton, J.M., H.F. Fredricks, K.D. Bidle, A. Vardi, B.J. Kendrick, G.R. DiTullio, and B.A.S. Van Mooy. 2014. Novel molecular determinants of viral susceptibility and resistance in the lipidome of *Emiliania huxleyi*. *Environmental Microbiology* **16**(4):1137-1149; [doi:10.1111/1462-2920.12358](http://dx.doi.org/10.1111/1462-2920.12358)
+> Fulton, J.M., H.F. Fredricks, K.D. Bidle, A. Vardi, B.J. Kendrick, G.R. DiTullio, and B.A.S. Van Mooy. 2014. Novel molecular determinants of viral susceptibility and resistance in the lipidome of *Emiliania huxleyi*. *Environmental Microbiology* **16**(4):1137-1149; [doi:10.1111/1462-2920.12358](http://dx.doi.org/10.1111/1462-2920.12358)
 
 <h2>Installation</h2>
 
