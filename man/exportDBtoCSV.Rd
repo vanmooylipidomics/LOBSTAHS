@@ -40,6 +40,7 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \examples{
 ## export default positive mode database to a text file
+
 data("default.LOBdbase")
 
 exportDBtoCSV(default.LOBdbase$positive)
