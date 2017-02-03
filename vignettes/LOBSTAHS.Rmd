@@ -309,13 +309,9 @@ In this case, we subtract two carbon atoms (in cyan) since we are dealing with a
 
 Once the chemical formula of the base fragment is ascertained and specified correctly in the `componentCompTable`, the ranges of acyl carbon atoms, double bonds, and additional oxygen atoms to be considered during simulation of the lipid class should be specified in the `acylRanges` and `oxyRanges` tables. As above in the "DB_unique_species" case, appropriate adduct hierarchies for the new lipid class should then be defined in the `adductHierarchies` table, with a matching compound or class name in the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. Retention time window data for the class can also be added (if desired) to the `rt.windows` table (see see <a href="#Customization-of-rt-windows">below</a>).
 
-#### Universal guidance applicable no matter the `DB_gen_compound_type`
-
-##### Saving of files
+### Saving of files
 
 Once appropriate additions or modifications are made according to the cases above, the user should save the modified table(s) to text file(s) in comma-separated values (.csv) format; these can then be imported into R when the `generateLOBdbase()` function is called.
-
-**Note:** Some new lipid classes (e.g., sphingolipids and most non-glycerolipids) may not be amenable to *in silico* simulation in the same "easy" fashion as one of the existing lipid classes for which functionality already exists in the package code. In these cases, users should <a href="https://github.com/vanmooylipidomics/LOBSTAHS/issues">open a new issue request</a> for new functionality **or** &mdash; in the spirit of open-source collaboration &mdash; modify the code in your own Git fork and then request incorporation of your new feature so others may also discover new lipids!
 
 ### Database generation using generateLOBdbase
 
@@ -329,6 +325,8 @@ LOBdb = generateLOBdbase(polarity = c("positive","negative"), gen.csv = FALSE,
                  oxy.ranges = NULL)
 
 ```
+
+**A final note about database creation:** Some new lipid classes (e.g., sphingolipids and most non-glycerolipids) may not be amenable to *in silico* simulation in the same "easy" fashion as one of the existing lipid classes for which functionality already exists in the package code. In these cases, users should <a href="https://github.com/vanmooylipidomics/LOBSTAHS/issues">open a new issue request</a> for new functionality **or** &mdash; in the spirit of open-source collaboration &mdash; modify the code in your own Git fork and then request incorporation of your new feature so others may also discover new lipids!
 
 ## "Operating instructions," part 3: Compound/biomarker identification and screening using doLOBscreen (or, the "meat" of LOBSTAHS) 
 
