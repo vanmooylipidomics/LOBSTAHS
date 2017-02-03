@@ -1,6 +1,6 @@
 # LOBSTAHS
 
-This is the home of the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. Installation instructions and some general information about LOBSTAHS are given below. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html).
+This is the home of the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. LOBSTAHS allows users to easily generate custom databases containing entries for a wide range of lipids, oxidized lipids, and oxylipins. Databases are created using an automated, iterative computational approach based on structural criteria specified by the user in simple text tables/spreadsheets. The package's default databases contain roughly 18,000 compounds. Installation instructions and some general information about LOBSTAHS are given below. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/LOBSTAHS).
 
 The primary repository at [https://github.com/vanmooylipidomics/LOBSTAHS](https://github.com/vanmooylipidomics/LOBSTAHS) will **always** contain the latest development version of LOBSTAHS. Changes are pushed as frequently as possible to Bioconductor, where they will appear in the read-only mirror at [https://github.com/Bioconductor-mirror/LOBSTAHS](https://github.com/Bioconductor-mirror/LOBSTAHS).
 
@@ -26,13 +26,13 @@ Fulton, J.M., H.F. Fredricks, K.D. Bidle, A. Vardi, B.J. Kendrick, G.R. DiTullio
 
 <h3>Install current production version</h3>
 
-Users can the [current production version of LOBSTAHS](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html) from Bioconductor by following the [directions here](http://bioconductor.org/packages/3.4/bioc/html/LOBSTAHS.html) (under "Installation"). The Bioconductor installation function will prompt you to install the latest versions of some other packages on which LOBSTAHS depends.
+Users can the [current production version of LOBSTAHS](http://bioconductor.org/packages/LOBSTAHS) from Bioconductor by following the [directions here](http://bioconductor.org/packages/LOBSTAHS) (under "Installation"). The Bioconductor installation function will prompt you to install the latest versions of some other packages on which LOBSTAHS depends.
 
-Users are also encouraged to [download the PtH2O2lipids data package](http://bioconductor.org/packages/3.4/data/experiment/html/PtH2O2lipids.html), which can be used for familiarization with the software.
+Users are also encouraged to [download the PtH2O2lipids data package](http://bioconductor.org/packages/PtH2O2lipids), which can be used for familiarization with the software.
 
 <h3>Install "no warranties" development version with latest features</h3>
 
-Following these directions, you will install the latest version of the software from the files present in this GitHub repository. Some features may be unstable.
+Following these directions, you will install the latest version of the software (including the latest default databases) from the files present in this GitHub repository. Some features may be unstable.
 
 **Install dependencies**
 
@@ -71,7 +71,9 @@ install_github("vanmooylipidomics/LOBSTAHS")
 
 <h2>LOBSTAHS dataset preparation in xcms and CAMERA</h2>
 
-(See [this comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) for a much more detailed treatment of package functionality.) HPLC-MS data must be assembled into a CAMERA xsAnnotate object prior to analysis with LOBSTAHS. Scripts are provided in the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox) for preparing HPLC-ESI-MS data from an Orbitrap Exactive mass spectrometer in [**xcms**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and then [**CAMERA**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). Or, the user can use his/her own implementation of xcms and CAMERA. We have successfully used the [IPO](https://github.com/glibiseller/IPO/) package to optimize xcms and CAMERA settings for a variety of datasets.
+See [this comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) for a much more detailed treatment of package functionality.
+
+HPLC-MS data must be assembled into a CAMERA xsAnnotate object prior to analysis with LOBSTAHS. Scripts are provided in the [Van Mooy Lab Lipidomics Toolbox](https://github.com/vanmooylipidomics/LipidomicsToolbox) for preparing HPLC-ESI-MS data from an Orbitrap Exactive mass spectrometer in [**xcms**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html) and then [**CAMERA**](https://bioconductor.org/packages/release/bioc/html/CAMERA.html). Or, the user can use his/her own implementation of xcms and CAMERA. We have successfully used the [IPO](https://github.com/glibiseller/IPO/) package to optimize xcms and CAMERA settings for a variety of datasets.
 
 <h2>In silico database generation</h2>
 
