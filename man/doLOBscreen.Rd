@@ -54,10 +54,10 @@ currently used in the Van Mooy Lab at Woods Hole Oceanographic Institution.
 Because the user is advised to provide retention time data specific to his/her
 HPLC-MS method, failure to specify a value for \code{rt.windows} will result in
 a warning. A Microsoft Excel spreadsheet template included with the package at
-Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx can be
+Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_rt.windows.xlsx can be
 used to generate a .csv file of retention time data in a format appropriate for
 \code{rt.windows}. Alternatively, the spreadsheet file may be downloaded
-\href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_lipid_class_rt_windows.xlsx}{from the package GitHub repository}.
+\href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_rt.windows.xlsx}{from the package GitHub repository}.
 }
   \item{exclude.oddFA}{
 Should compound assignments with an odd total number of acyl carbon atoms be
