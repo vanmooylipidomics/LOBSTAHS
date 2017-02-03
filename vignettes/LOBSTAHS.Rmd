@@ -224,7 +224,7 @@ LOBSTAHS generates databases based on values of parameters defined in simple tab
 
 #### The `componentCompTable`
 
-**For customization:** Modify data in [LOBSTAHS_componentCompTable.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_componentCompTable.xlsx) and save as LOBSTAHS_componentCompTable.csv.
+  * **For customization:** Modify data in [LOBSTAHS_componentCompTable.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_componentCompTable.xlsx) and save as LOBSTAHS_componentCompTable.csv.
 
 The first, most important table is the `componentCompTable`, which defines the base elemental compositions of each molecule or lipid class to be considered when the database is created. If a user wishes to add additional molecules or classes of molecules to the default set of compounds in the database, he or she will need to first add an additional entry or entries to this table. 
 
