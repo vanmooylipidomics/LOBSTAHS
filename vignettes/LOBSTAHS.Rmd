@@ -233,7 +233,7 @@ data(default.adductHierarchies)
 
 ###<span id="Customization-of-database-inputs"> Customization of database inputs</span>
 
-Users can create custom databases in LOBSTAHS by modifying or adding to the default values in the four tables. This is accomplished in three steps:
+Custom databases are created in LOBSTAHS by modifying or adding to the default values in the four tables. This is accomplished in three steps:
 
   * modification of the default values in one or more of the tables, which are provided as Microsoft Excel templates with the standard package installation
      * The Excel templates are automatically installed with LOBSTAHS into the /LOBSTAHS/doc/ subdirectory of your R library path. You can use `.libPaths()` to find the location of your R library. Alternatively, templates to accompany the latest release of LOBSTAHS can downloaded from the [LOBSTAHS GitHub repository](https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx).
