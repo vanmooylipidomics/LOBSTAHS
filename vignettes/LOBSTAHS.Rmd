@@ -288,15 +288,15 @@ If the new entry is a single molecule (e.g., a new pigment), then new entries in
 
 1.  Specify the `DB_gen_compound_type`
 
-  * In this instance, we should set "DB_unique_species" = `DB_gen_compound_type` when defining the species in the `componentCompTable`.
+    In this instance, we should set "DB_unique_species" = `DB_gen_compound_type` when defining the species in the `componentCompTable`.
 
 1. Define neutal mass of molecule
 
-  * The entire **exact mass of the neutral compound** should be defined in the `componentCompTable`; we do not define the mass of a charged adduct ion, since adduct ion masses will be calculated automatically by the software.
+    The entire **exact mass of the neutral compound** should be defined in the `componentCompTable`; we do not define the mass of a charged adduct ion, since adduct ion masses will be calculated automatically by the software.
 
 1. Define adduct hierarchies
 
-  * We'll then need to define appropriate adduct hierarchies for the compound in the `adductHierarchies` table, with compound or class names that match the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. The same adduct hierarchy can be used for multiple compounds independently defined using the "DB_unique_species" type so long as the same adduct class name is used.
+    We'll then need to define appropriate adduct hierarchies for the compound in the `adductHierarchies` table, with compound or class names that match the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. The same adduct hierarchy can be used for multiple compounds independently defined using the "DB_unique_species" type so long as the same adduct class name is used.
 
 1. Specify retention time data, if desired
 
@@ -322,7 +322,7 @@ Alternatively, if we wish to add an entire class of lipid for which multiple dat
 
   * We then subtract the appropriate number of carbon atoms and their masses: <br><br><img style="float: center;" src="images/Fig5.png" width="695" id="Fragmentation illustration, part 2">
 
-  * In this case, we subtract two carbon atoms (in cyan) since we are dealing with an IP-DAG, which has two positions at which we wish to consider a range of possible fatty acids. For TAG, we would subtract three carbon atoms; for molecules containing a single acyl group for which a range of properties are to be considered (e.g., free fatty acids or PUA), we would subtract just one carbon atom and its mass. Once the formula of the base fragment is ascertained (**C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P**, in this instance), it can be specified correctly in the `componentCompTable`.
+  * In this case, we subtracted two carbon atoms (in cyan) since we are dealing with an IP-DAG, which has two positions at which we wish to consider a range of possible fatty acids. For TAG, we would subtract three carbon atoms; for molecules containing a single acyl group for which a range of properties are to be considered (e.g., free fatty acids or PUA), we would subtract just one carbon atom and its mass. Once the formula of the base fragment is ascertained (**C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P**, in this instance), it can be specified correctly in the `componentCompTable`.
 
 1. Define ranges of acyl properties and oxidation states to be considered
 
