@@ -233,14 +233,14 @@ data(default.adductHierarchies)
 
 ###<span id="Customization-of-database-inputs"> Introduction to the four input tables</span>
 
-Custom databases can be created in LOBSTAHS by modifying or adding to the default values in the four tables. We can generate custom databases in three steps:
+[<img align="right" src="images/Flow_thumb.png" width="400" id="Thumbnail of DB customization flow chart">](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg)Custom databases can be created in LOBSTAHS by modifying or adding to the default values in the four tables. We can generate custom databases in three steps:
 
   * Modify the values in one or more of the tables
      * Tables containing the default values are provided with the standard package installation in both Microsoft Excel and .csv format. These are automatically installed into the /LOBSTAHS/doc/ subdirectory of your R library path and can be used as templates for production of custom inputs. (You can use `.libPaths()` to find the location of your R library.) Alternatively, templates for the tables used to generate databases in the latest release of LOBSTAHS can downloaded from the [package GitHub repository](https://github.com/vanmooylipidomics/LOBSTAHS/tree/master/inst/doc/xlsx).
   * Export the new, custom tables as .csv files (if the .xlsx files were used as a starting point), and
   * Load the tables when calling the function `generateLOBdbase()`, which will then uses the value to generate the LOBSTAHS databases
 
-[<img align="right" src="images/Flow_thumb.png" width="400" id="Thumbnail of DB customization flow chart">](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg)Each of the four tables is introduced below, followed by instructions for adding new lipids and lipid classes to the LOBSTAHS databases. We've also created a [flow chart](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg) to help you navigate the database customization process; the flow chart is designed to complement &mdash; not replace &mdash; the detailed instructions below.
+Each of the four tables is introduced below, followed by instructions for adding new lipids and lipid classes to the LOBSTAHS databases. We've also created a [flow chart](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg) to help you navigate the database customization process; the flow chart is designed to complement &mdash; not replace &mdash; the detailed instructions below. (Download a copy of the flow chart: [.pdf](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.pdf) | [.svg](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg))
 
 #### The `componentCompTable`
 
