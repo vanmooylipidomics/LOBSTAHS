@@ -3,3 +3,4 @@
 ^.*\.tar\.gz$
 ^genNewDefaultTables\.R$
 ^vignette_graphics$
+^LOBSTAHS_DB_customization_process\.xml$
