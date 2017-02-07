@@ -199,6 +199,22 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     
   }
   
+  # first, a check to make sure user has supplied a "new" style
+  # componentCompTable (i.e., after renaming and addition of new fields on or
+  # about January 2017)
+  
+  if (sum(c("DB_gen_compound_type","Adduct_hierarchy_lookup_class") %in% 
+          colnames(componentCompTable))!=2) {
+    
+    stop("User-supplied componentCompTable does not appear to have the ",
+         "correct fields. In LOBSTAHS v1.1.3 and later, componentCompTable ",
+         "must include the fields DB_gen_compound_type and ",
+         "Adduct_hierarchy_lookup_class. See package documentation for ",
+         "details. Aborting...\n")
+    # stop script if this is the case
+    
+  }
+  
   # put columns in alphabetical order, with text fields at end
   
   componentCompTable.text = componentCompTable[,((ncol(componentCompTable)-2):
