@@ -282,7 +282,7 @@ A fourth table, `adductHierarchies`, contains empirical data on the relative abu
 
 What modifications we make to the table(s) will depend on our goal. For example, if we wish only to expand (or constrain) the range of molecular properties for which database entries are to be created within an existing lipid class (i.e., of `DB_gen_compound_type` = "DB_acyl_iteration"), we'll only have to modify existing values in the `acylRanges` and/or `oxyRanges` tables. However, if we wish to add new molecule(s) or lipid class(es) to the database(s), we'll first need to define the new molecule/class in both the `componentCompTable` ( [LOBSTAHS_componentCompTable.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_componentCompTable.xlsx)) and `adductHierarchies` table ( [LOBSTAHS_adductHierarchies.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adductHierarchies.xlsx)). This is relatively trivial; don't be discouraged! We will consider two cases:
 
-#### Defining single compounds
+#### First scenario: Defining single compounds
 
 If the new entry is a single molecule (e.g., a new pigment), then new entries in the `componentCompTable` and `adductHierarchies` table (and, if desired, in the `rt.windows` table; see <a href="#Customization-of-rt-windows">below</a>) will be sufficient.
 
@@ -302,7 +302,7 @@ If the new entry is a single molecule (e.g., a new pigment), then new entries in
 
   * Retention time window data for the compound can also be added (if desired) to the `rt.windows` table (see <a href="#Customization-of-rt-windows">below</a>).
 
-#### Defining entire lipid classes for which an iterative simulation is to be performed
+#### Second scenario: Defining entire lipid classes for which an iterative simulation is to be performed
 
 Alternatively, if we wish to add an entire class of lipid for which multiple database entries will be created based on ranges of acyl properties and oxidation states specified in `acylRanges` ( [LOBSTAHS_acylRanges.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_acylRanges.xlsx)) and `oxyRanges` ( [LOBSTAHS_oxyRanges.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_oxyRanges.xlsx)), we have to take *just a bit* more time to define the class and its acyl properties.
 
@@ -316,15 +316,11 @@ Alternatively, if we wish to add an entire class of lipid for which multiple dat
   
   * An example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`: <br><br><img style="float: center;" src="images/Fig2.png" width="695" id="Intact PC 18:1, 18:2">
 
-  * This intact neutral molecule has the chemical formula **C<sub>44</sub>H<sub>84</sub>NO<sub>8</sub>P** and an exact mass of **785.59346** amu. The C-1 carbon atom in both fatty acids is shown explicitly for ease of illustration. We define the base fragment for PC (and all other IP-DAG) as the polar headgroup, glycerol backbone, and both the carboxylic oxygen atoms (in red):
-<img src="images/Fig3.png" width="695" id="PC base fragment in red">
-  * In this case, the base fragment (shown in red) has the chemical formula **C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P** and a mass of **287.07700** amu. One "easy" way to determine the formula (and therefore, the exact mass) of the base fragment is to use the fragmentation feature in an application such as ChemDraw. First, we homolytically cleave the bond(s) between the C-1 and C-2 carbon atom(s) in each acyl chain on which iteration is to be performed, giving one electron to each atom:
+  * This intact neutral molecule has the chemical formula **C<sub>44</sub>H<sub>84</sub>NO<sub>8</sub>P** and an exact mass of **785.59346** amu. The C-1 carbon atom in both fatty acids is shown explicitly for ease of illustration. We define the base fragment for PC (and all other IP-DAG) as the polar headgroup, glycerol backbone, and both the carboxylic oxygen atoms (in red): <br><br><img style="float: center;" src="images/Fig3.png" width="695" id="PC base fragment in red">
+  
+  * In this case, the base fragment (shown in red) has the chemical formula **C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P** and a mass of **287.07700** amu. One "easy" way to determine the formula (and therefore, the exact mass) of the base fragment is to use the fragmentation feature in an application such as ChemDraw. First, we homolytically cleave the bond(s) between the C-1 and C-2 carbon atom(s) in each acyl chain on which iteration is to be performed, giving one electron to each atom: <br><br><img style="float: center;" src="images/Fig4.png" width="695" id="Fragmentation illustration, part 1">
 
-<img src="images/Fig4.png" width="695" id="Fragmentation illustration, part 1">
-
-  * We then subtract the appropriate number of carbon atoms and their masses:
-
-<img src="images/Fig5.png" width="695" id="Fragmentation illustration, part 2">
+  * We then subtract the appropriate number of carbon atoms and their masses: <br><br><img style="float: center; src="images/Fig5.png" width="695" id="Fragmentation illustration, part 2">
 
   * In this case, we subtract two carbon atoms (in cyan) since we are dealing with an IP-DAG, which has two positions at which we wish to consider a range of possible fatty acids. For TAG, we would subtract three carbon atoms; for molecules containing a single acyl group for which a range of properties are to be considered (e.g., free fatty acids or PUA), we would subtract just one carbon atom and its mass. Once the formula of the base fragment is ascertained (**C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P**, in this instance), it can be specified correctly in the `componentCompTable`.
 
