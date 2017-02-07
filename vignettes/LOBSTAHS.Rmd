@@ -203,7 +203,7 @@ Before screening a dataset with LOBSTAHS, you should first decide whether to use
 
 ### A note about molecular diversity in the current databases
 
-**A note about molecular diversity:** By virtue of the origin of LOBSTAHS --- the study of lipids in marine algae and bacteria --- most of the lipids currently in the database are of marine microbial origin. While algae and marine bacteria have many lipids in common with humans and other mammals, there are many classes (e.g., cholesterols) which are not currently represented in the databases. If you find yourself adding new lipids to the default databases because the existing coverage is insufficient in your research area, consider sharing your additions with others via a pull request or [by opening an issue on the package GitHub page](https://github.com/vanmooylipidomics/LOBSTAHS/issues).
+**A note about molecular diversity:** By virtue of the origin of LOBSTAHS &mdash; the study of lipids in marine algae and bacteria &mdash; most of the lipids currently in the database are of marine microbial origin. While algae and marine bacteria have many lipids in common with humans and other mammals, there are many classes (e.g., cholesterols) which are not currently represented in the databases. If you find yourself adding new lipids to the default databases because the existing coverage is insufficient in your research area, consider sharing your additions with others via a pull request or [by opening an issue on the package GitHub page](https://github.com/vanmooylipidomics/LOBSTAHS/issues).
 
 ### Accessing the default databases
 
@@ -299,7 +299,7 @@ Once the chemical formula of the base fragment is ascertained and specified corr
 
 Once appropriate additions or modifications are made according to the cases above, the user should save the modified table(s) to text file(s) in comma-separated values (.csv) format; these can then be imported into R when the `generateLOBdbase()` function is called.
 
-**Note:** Some new lipid classes (e.g., sphingolipids and most non-glycerolipids) may not be amenable to *in silico* simulation in the same "easy" fashion as one of the existing lipid classes for which functionality already exists in the package code. In these cases, users should <a href="https://github.com/vanmooylipidomics/LOBSTAHS/issues">open a new issue request</a> for new functionality **or** &emdash; in the spirit of open-source collaboration &emdash; modify the code in your own Git fork and then request incorporation of your new feature so others may also discover new lipids!
+**Note:** Some new lipid classes (e.g., sphingolipids and most non-glycerolipids) may not be amenable to *in silico* simulation in the same "easy" fashion as one of the existing lipid classes for which functionality already exists in the package code. In these cases, users should <a href="https://github.com/vanmooylipidomics/LOBSTAHS/issues">open a new issue request</a> for new functionality **or** &mdash; in the spirit of open-source collaboration &mdash; modify the code in your own Git fork and then request incorporation of your new feature so others may also discover new lipids!
 
 #### Database generation using generateLOBdbase
 
