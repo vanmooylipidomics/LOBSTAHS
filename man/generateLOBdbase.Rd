@@ -32,10 +32,10 @@ definitions for the masses of a wide range of adducts, photosynthetic pigments,
 and structural backbones of some major lipid classes.
 
 A Microsoft Excel spreadsheet template included with the package at
-Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx can be
+Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_componentCompTable.xlsx can be
 used to generate a .custom csv file with elemental composition definitions in a
 format appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet
-may be downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_basic_component_matrix.xlsx}{from the package GitHub repository}. Brief instructions
+may be downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_componentCompTable.xlsx}{from the package GitHub repository}. Brief instructions
 for customization of the table are given in this help document; full
 instructions, including details on specification of the necessary base fragment,
 are contained in \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd}{the package vignette}.
@@ -90,10 +90,10 @@ definitions table should have at least one corresponding entry in the
 (default, \code{\link{default.componentCompTable}}).
 
 A Microsoft Excel spreadsheet template included with the package at
-Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx can be
+Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_adductHierarchies.xlsx can be
 used to generate a .csv file with additional (or alternative) adduct hierarchy
 data in a format appropriate for \code{generateLOBdbase}. Alternatively, the
-spreadsheet may be downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adduct_ion_hierarchies.xlsx}{from the package GitHub repository}.
+spreadsheet may be downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adductHierarchies.xlsx}{from the package GitHub repository}.
 }
   \item{acyl.ranges}{
 File path to a .csv file containing ranges of values for the total number of
@@ -106,10 +106,10 @@ triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), and free fatty acids
 acyl carbon atom range data in (\code{\link{default.acylRanges}}).
 
 A Microsoft Excel spreadsheet template included with the package at
-Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_acyl_prop_ranges.xlsx can be used
+Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_acylRanges.xlsx can be used
 to generate a .csv file with custom acyl carbon range data in a format
 appropriate for \code{generateLOBdbase}. Alternatively, the spreadsheet may be
-downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_acyl_prop_ranges.xlsx}{from the package GitHub repository}.
+downloaded \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_acylRanges.xlsx}{from the package GitHub repository}.
 }
   \item{oxy.ranges}{
 File path to a .csv file containing ranges of values for the number of
@@ -120,10 +120,10 @@ specified, \code{generateLOBdbase} will use the default oxidation state ranges
 in (\code{\link{default.oxyRanges}}).
 
 A Microsoft Excel spreadsheet template included with the package at
-Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx can be used to
+Resources/library/LOBSTAHS/doc/xlsx/LOBSTAHS_oxyRanges.xlsx can be used to
 generate a .csv file with custom oxidation state ranges in a format appropriate
 for \code{generateLOBdbase}. Alternatively, the spreadsheet may be downloaded
-\href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_addl_oxy_ranges.xlsx}{from the package GitHub repository}. By default, \code{generateLOBdbase}
+  \href{https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_oxyRanges.xlsx}{from the package GitHub repository}. By default, \code{generateLOBdbase}
 considers 0-4 additional oxygen atoms on each chemically possible IP-DAG, TAG,
 PUA, and FFA.
 }
