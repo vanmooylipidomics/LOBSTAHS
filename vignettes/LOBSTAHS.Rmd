@@ -314,14 +314,10 @@ Alternatively, if we wish to add an entire class of lipid for which multiple dat
 
   * We then have to define the mass of the "base fragment" upon which the `generateLOBdbase()` function will perform iteration. The base fragment should include the glycerol backbone, any carboxylic oxygen atoms in the fatty acid(s), and (if applicable), the entire lipid headgroup. In the case of IP-DAG and IP-MAG, the base fragment will include the entire polar headgroup, the glycerol backbone, and both carboxylic oxygen atoms in the fatty acid(s). In the case of TAG, the base fragment is defined as the glycerol backbone plus the carboxylic oxygen atoms on each of the three fatty acids. The base fragments for any new lipid classes for which the user desires evaluation of a range of acyl properties should be similarly defined.
   
-  * An example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`.
-
-<img src="images/Fig2.png" width="695" id="Intact PC 18:1, 18:2">
+  * An example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`. <img style="float: center;" src="images/Fig2.png" width="695" id="Intact PC 18:1, 18:2">
 
   * This intact neutral molecule has the chemical formula **C<sub>44</sub>H<sub>84</sub>NO<sub>8</sub>P** and an exact mass of **785.59346** amu. The C-1 carbon atom in both fatty acids is shown explicitly for ease of illustration. We define the base fragment for PC (and all other IP-DAG) as the polar headgroup, glycerol backbone, and both the carboxylic oxygen atoms (in red):
-
 <img src="images/Fig3.png" width="695" id="PC base fragment in red">
-
   * In this case, the base fragment (shown in red) has the chemical formula **C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P** and a mass of **287.07700** amu. One "easy" way to determine the formula (and therefore, the exact mass) of the base fragment is to use the fragmentation feature in an application such as ChemDraw. First, we homolytically cleave the bond(s) between the C-1 and C-2 carbon atom(s) in each acyl chain on which iteration is to be performed, giving one electron to each atom:
 
 <img src="images/Fig4.png" width="695" id="Fragmentation illustration, part 1">
