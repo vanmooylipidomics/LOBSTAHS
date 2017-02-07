@@ -260,9 +260,9 @@ For each lipid class or compound specified in the `componentCompTable`, the fiel
 
 The other two compound types in the `componentCompTable` ("DB_acyl_iteration" and "DB_unique_species") are used to define the way `generateLOBdbase` creates database entries for different lipids and lipid classes. `generateLOBdbase` can create two kinds of database entries:
 
-  * When `DB_gen_compound_type` is set to "DB_unique_species", `generateLOBdbase()` will create database entries only for adduct ions of the individual compound specified. (This is the simpler of the two cases.) We use this type for pigments and other lipids that do not have acyl groups, or in cases when we do not wish to consider any possible variation in acyl properties. In the case where `DB_gen_compound_type` = "DB_unique_species", the **exact mass of the complete (neutral) molecule** is specified in the component definitions table. The photosynthetic pigments currently in the database provide an excellent template for creation of new compounds of the "DB_unique_species" type.
+1. When `DB_gen_compound_type` is set to "DB_unique_species", `generateLOBdbase()` will create database entries only for adduct ions of the individual compound specified. (This is the simpler of the two cases.) We use this type for pigments and other lipids that do not have acyl groups, or in cases when we do not wish to consider any possible variation in acyl properties. In the case where `DB_gen_compound_type` = "DB_unique_species", the **exact mass of the complete (neutral) molecule** is specified in the component definitions table. The photosynthetic pigments currently in the database provide an excellent template for creation of new compounds of the "DB_unique_species" type.
   
-  * When `DB_gen_compound_type` is set to "DB_acyl_iteration", `generateLOBdbase` will automatically create multiple database entries for adduct ions of multiple molecular species within a lipid class based on the ranges of acyl properties and oxidation states specified in two other user-editable tables, `acylRanges` and `oxyRanges`. In the case of lipid classes for which `DB_gen_compound_type` = "DB_acyl_iteration," the compound table is used to define the **exact mass of a "base fragment" for the lipid class**. Proper specification of the base fragment is <a href="#How-calc-base-fragment">explained below</a>. Using the fragment as a starting point, `generateLOBdbase` creates multiple entries for molecules in the lipid class by iterative addition of various combinations of fatty acids.
+1. When `DB_gen_compound_type` is set to "DB_acyl_iteration", `generateLOBdbase` will automatically create multiple database entries for adduct ions of multiple molecular species within a lipid class based on the ranges of acyl properties and oxidation states specified in two other user-editable tables, `acylRanges` and `oxyRanges`. In the case of lipid classes for which `DB_gen_compound_type` = "DB_acyl_iteration," the compound table is used to define the **exact mass of a "base fragment" for the lipid class**. Proper specification of the base fragment is <a href="#How-calc-base-fragment">explained below</a>. Using the fragment as a starting point, `generateLOBdbase` creates multiple entries for molecules in the lipid class by iterative addition of various combinations of fatty acids.
 
 #### The `acylRanges` and `oxyRanges` tables
 
@@ -292,15 +292,15 @@ If the new entry is a single molecule (e.g., a new pigment), then new entries in
 
 1. Define neutal mass of molecule
 
-The entire **exact mass of the neutral compound** should be defined in the `componentCompTable`; we do not define the mass of a charged adduct ion, since adduct ion masses will be calculated automatically by the software.
+  * The entire **exact mass of the neutral compound** should be defined in the `componentCompTable`; we do not define the mass of a charged adduct ion, since adduct ion masses will be calculated automatically by the software.
 
 1. Define adduct hierarchies
 
-We'll then need to define appropriate adduct hierarchies for the compound in the `adductHierarchies` table, with compound or class names that match the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. The same adduct hierarchy can be used for multiple compounds independently defined using the "DB_unique_species" type so long as the same adduct class name is used.
+  * We'll then need to define appropriate adduct hierarchies for the compound in the `adductHierarchies` table, with compound or class names that match the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. The same adduct hierarchy can be used for multiple compounds independently defined using the "DB_unique_species" type so long as the same adduct class name is used.
 
 1. Specify retention time data, if desired
 
-Retention time window data for the compound can also be added (if desired) to the `rt.windows` table (see <a href="#Customization-of-rt-windows">below</a>).
+  * Retention time window data for the compound can also be added (if desired) to the `rt.windows` table (see <a href="#Customization-of-rt-windows">below</a>).
 
 #### Defining entire lipid classes for which an iterative simulation is to be performed
 
@@ -308,41 +308,41 @@ Alternatively, if we wish to add an entire class of lipid for which multiple dat
 
 1. Specify the `DB_gen_compound_type`
 
-First, in the `componentCompTable`, we should set `DB_gen_compound_type` = "DB_acyl_iteration".
+  * First, in the `componentCompTable`, we should set `DB_gen_compound_type` = "DB_acyl_iteration".
 
 1. <span id="How-calc-base-fragment"> Determine and define the base fragment</span>
 
-We then have to define the mass of the "base fragment" upon which the `generateLOBdbase()` function will perform iteration. The base fragment should include the glycerol backbone, any carboxylic oxygen atoms in the fatty acid(s), and (if applicable), the entire lipid headgroup. In the case of IP-DAG and IP-MAG, the base fragment will include the entire polar headgroup, the glycerol backbone, and both carboxylic oxygen atoms in the fatty acid(s). In the case of TAG, the base fragment is defined as the glycerol backbone plus the carboxylic oxygen atoms on each of the three fatty acids. The base fragments for any new lipid classes for which the user desires evaluation of a range of acyl properties should be similarly defined.
-
-An example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`.
+  * We then have to define the mass of the "base fragment" upon which the `generateLOBdbase()` function will perform iteration. The base fragment should include the glycerol backbone, any carboxylic oxygen atoms in the fatty acid(s), and (if applicable), the entire lipid headgroup. In the case of IP-DAG and IP-MAG, the base fragment will include the entire polar headgroup, the glycerol backbone, and both carboxylic oxygen atoms in the fatty acid(s). In the case of TAG, the base fragment is defined as the glycerol backbone plus the carboxylic oxygen atoms on each of the three fatty acids. The base fragments for any new lipid classes for which the user desires evaluation of a range of acyl properties should be similarly defined.
+  
+  * An example is given for phosphatidylcholine (PC), one of the eight basic IP-DAG classes that has been included in LOBSTAHS since its first release. We begin with an intact molecule, in this case PC 18:1, 18:1 (which would appear in a LOBSTAHS database as PC 36:2). Any intact PC species could be used as a starting point since our concern here is with the polar (headgroup) end of the molecule, which does not change under the simulation performed by `generateLOBdbase()`.
 
 <img src="images/Fig2.png" width="695" id="Intact PC 18:1, 18:2">
 
-This intact neutral molecule has the chemical formula **C<sub>44</sub>H<sub>84</sub>NO<sub>8</sub>P** and an exact mass of **785.59346** amu. The C-1 carbon atom in both fatty acids is shown explicitly for ease of illustration. We define the base fragment for PC (and all other IP-DAG) as the polar headgroup, glycerol backbone, and both the carboxylic oxygen atoms (in red):
+  * This intact neutral molecule has the chemical formula **C<sub>44</sub>H<sub>84</sub>NO<sub>8</sub>P** and an exact mass of **785.59346** amu. The C-1 carbon atom in both fatty acids is shown explicitly for ease of illustration. We define the base fragment for PC (and all other IP-DAG) as the polar headgroup, glycerol backbone, and both the carboxylic oxygen atoms (in red):
 
 <img src="images/Fig3.png" width="695" id="PC base fragment in red">
 
-In this case, the base fragment (shown in red) has the chemical formula **C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P** and a mass of **287.07700** amu. One "easy" way to determine the formula (and therefore, the exact mass) of the base fragment is to use the fragmentation feature in an application such as ChemDraw. First, we homolytically cleave the bond(s) between the C-1 and C-2 carbon atom(s) in each acyl chain on which iteration is to be performed, giving one electron to each atom:
+  * In this case, the base fragment (shown in red) has the chemical formula **C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P** and a mass of **287.07700** amu. One "easy" way to determine the formula (and therefore, the exact mass) of the base fragment is to use the fragmentation feature in an application such as ChemDraw. First, we homolytically cleave the bond(s) between the C-1 and C-2 carbon atom(s) in each acyl chain on which iteration is to be performed, giving one electron to each atom:
 
 <img src="images/Fig4.png" width="695" id="Fragmentation illustration, part 1">
 
-We then subtract the appropriate number of carbon atoms and their masses:
+  * We then subtract the appropriate number of carbon atoms and their masses:
 
 <img src="images/Fig5.png" width="695" id="Fragmentation illustration, part 2">
 
-In this case, we subtract two carbon atoms (in cyan) since we are dealing with an IP-DAG, which has two positions at which we wish to consider a range of possible fatty acids. For TAG, we would subtract three carbon atoms; for molecules containing a single acyl group for which a range of properties are to be considered (e.g., free fatty acids or PUA), we would subtract just one carbon atom and its mass. Once the formula of the base fragment is ascertained (**C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P**, in this instance), it can be specified correctly in the `componentCompTable`.
+  * In this case, we subtract two carbon atoms (in cyan) since we are dealing with an IP-DAG, which has two positions at which we wish to consider a range of possible fatty acids. For TAG, we would subtract three carbon atoms; for molecules containing a single acyl group for which a range of properties are to be considered (e.g., free fatty acids or PUA), we would subtract just one carbon atom and its mass. Once the formula of the base fragment is ascertained (**C<sub>8</sub>H<sub>18</sub>NO<sub>8</sub>P**, in this instance), it can be specified correctly in the `componentCompTable`.
 
 1. Define ranges of acyl properties and oxidation states to be considered
 
-Once we've correctly ascertained and specified the chemical formula of the base fragment in the `componentCompTable`, we'll have to specify the ranges of acyl carbon atoms, double bonds, and additional oxygen atoms to be considered during simulation of the lipid class. We accomplish this by adding and populating fields for our new class or molecule in the `acylRanges` and `oxyRanges` tables.
+  * Once we've correctly ascertained and specified the chemical formula of the base fragment in the `componentCompTable`, we'll have to specify the ranges of acyl carbon atoms, double bonds, and additional oxygen atoms to be considered during simulation of the lipid class. We accomplish this by adding and populating fields for our new class or molecule in the `acylRanges` and `oxyRanges` tables.
 
 1. Define adduct hierarchies
 
-Finally, as above in the "DB_unique_species" case, we then have to define appropriate adduct hierarchies for the new lipid class in the `adductHierarchies` table, with a compound or class name that matches the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. If necessary, new adduct types can be added to the `componentCompTable` (when defining new adducts, set `DB_gen_compound_type` to "adduct_pos" or "adduct_neg").
+  * Finally, as above in the "DB_unique_species" case, we then have to define appropriate adduct hierarchies for the new lipid class in the `adductHierarchies` table, with a compound or class name that matches the `Adduct_hierarchy_lookup_class` field in the `componentCompTable`. If necessary, new adduct types can be added to the `componentCompTable` (when defining new adducts, set `DB_gen_compound_type` to "adduct_pos" or "adduct_neg").
 
 1. Specify retention time data, if desired
 
-As above, at this point we can also add retention time window data for the class to the `rt.windows` table (see see <a href="#Customization-of-rt-windows">below</a>).
+  * As above, at this point we can also add retention time window data for the class to the `rt.windows` table (see see <a href="#Customization-of-rt-windows">below</a>).
 
 ### Saving of files
 
