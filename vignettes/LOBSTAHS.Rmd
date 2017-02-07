@@ -288,7 +288,7 @@ If the new entry is a single molecule (e.g., a new pigment), then new entries in
 
 1.  Specify the `DB_gen_compound_type`
 
-In this instance, we should set "DB_unique_species" = `DB_gen_compound_type` when defining the species in the `componentCompTable`.
+  * In this instance, we should set "DB_unique_species" = `DB_gen_compound_type` when defining the species in the `componentCompTable`.
 
 1. Define neutal mass of molecule
 
