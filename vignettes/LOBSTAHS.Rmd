@@ -231,7 +231,7 @@ data(default.componentCompTable)
 data(default.adductHierarchies)
 ```
 
-###<span id="Customization-of-database-inputs"> Customization of database inputs</span>
+###<span id="Customization-of-database-inputs"> Introduction to the four input tables</span>
 
 Custom databases are created in LOBSTAHS by modifying or adding to the default values in the four tables. This is accomplished in three steps:
 
@@ -273,7 +273,7 @@ The other two compound types in the `componentCompTable` ("DB_acyl_iteration" an
 
 A fourth table, `adductHierarchies`, contains empirical data on the relative abundances of various adduct ions formed by the compounds that belong to each lipid class. This table is also user-editable, but any additions or changes should first be confirmed by empirical analysis. **Note** that data should be provided in `adductHierarchies` for all lipid classes or compounds, regardless of the `DB_gen_compound_type`, above. In addition, an adduct hierarchy **must** be specified in the `adductHierarchies` table for each compound or compound class specified in the `Adduct_hierarchy_lookup_class` field of the `componentCompTable`.
 
-#### Modification of table data to create new database entries
+### Modification of table data to create new database entries
 
 What modifications must be made to which table(s) will depend on the user's goal. For example, if the user wishes only to expand (or constrain) the range of molecular properties for which database entries are to be created within an existing lipid class (of type "DB_acyl_iteration"), only the `acylRanges` and/or `oxyRanges` tables need be modified. However, a user seeking to add a new molecules or lipid class to the database(s) will need to first define the new molecule/class in both the `componentCompTable` ( [LOBSTAHS_componentCompTable.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_componentCompTable.xlsx)) and `adductHierarchies` table ( [LOBSTAHS_adductHierarchies.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adductHierarchies.xlsx)). We will consider two cases:
 
