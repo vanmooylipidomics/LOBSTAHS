@@ -240,7 +240,7 @@ Custom databases can be created in LOBSTAHS by modifying or adding to the defaul
   * Export the new, custom tables as .csv files (if the .xlsx files were used as a starting point), and
   * Load the tables when calling the function `generateLOBdbase()`, which will then uses the value to generate the LOBSTAHS databases
 
-[<img style="float: right;" src="img src="images/Flow_thumb.png" width="400" id="Thumbnail of DB customization flow chart">](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg)Each of the four tables is introduced below, followed by instructions for adding new lipids and lipid classes to the LOBSTAHS databases. We've also created a [flow chart](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg) to help you navigate the database customization process; the flow chart is designed to complement &mdash; not replace &mdash; the detailed instructions below.
+[<img style="float: right;" src="images/Flow_thumb.png" width="400" id="Thumbnail of DB customization flow chart">](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg)Each of the four tables is introduced below, followed by instructions for adding new lipids and lipid classes to the LOBSTAHS databases. We've also created a [flow chart](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg) to help you navigate the database customization process; the flow chart is designed to complement &mdash; not replace &mdash; the detailed instructions below.
 
 #### The `componentCompTable`
 
