@@ -145,6 +145,7 @@ defineElemExactMasses = function() {
   m_K = 38.96370686
   m_e_minus = 0.00054858
   m_Mg = 23.985045
+  m_Si = 27.97692649
   
   # calculate exact masses of acetonitrile and acetate using data we just 
   # specified
@@ -155,11 +156,11 @@ defineElemExactMasses = function() {
   # create an exact-mass lookup table and put it in alphabetical order
   
   exact.masses = c(m_C,m_H,m_H_plus,m_N,m_O,m_P,m_S,m_Na,m_Cl,m_K,m_e_minus,
-                   m_Mg,m_ACN,m_Ac_minus)
+                   m_Mg,m_ACN,m_Ac_minus,m_Si)
   exact.masses = as.table(exact.masses)
   
   names(exact.masses) = c("m_C","m_H","m_H_plus","m_N","m_O","m_P","m_S","m_Na",
-                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus")
+                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus","m_Si")
   
   exact.masses = exact.masses[order(names(exact.masses))]
   
