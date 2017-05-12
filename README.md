@@ -65,9 +65,11 @@ install.packages("devtools")
 ```R
 
 library("devtools")
-install_github("vanmooylipidomics/LOBSTAHS") 
+install_github("vanmooylipidomics/LOBSTAHS", build_vignettes = TRUE) 
 
 ```
+
+The `build_vignettes = TRUE` argument is required if rendering of the full vignette is desired (recommended). `install_github()` does not render vignettes by default.
 
 <h2>LOBSTAHS dataset preparation in xcms and CAMERA</h2>
 

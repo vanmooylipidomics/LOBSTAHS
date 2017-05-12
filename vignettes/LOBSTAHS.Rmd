@@ -233,7 +233,7 @@ data(default.componentCompTable)
 data(default.adductHierarchies)
 ```
 
-###<span id="Customization-of-database-inputs"> Introduction to the four input tables</span>
+### <span id="Customization-of-database-inputs">Introduction to the four input tables</span>
 
 [<img align="right" src="images/Flow_thumb.png" width="400" id="Thumbnail of DB customization flow chart">](https://vanmooylipidomics.github.io/LOBSTAHS/DB_customization/LOBSTAHS_DB_customization_process.svg)Custom databases can be created in LOBSTAHS by modifying or adding to the default values in the four tables. We can generate custom databases in three steps:
 
