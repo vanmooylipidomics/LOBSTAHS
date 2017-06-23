@@ -35,8 +35,8 @@ Following these directions, you will install the latest version of the software 
 
 ```{r, eval = FALSE}
 source("http://bioconductor.org/biocLite.R")
-biocLite("CAMERA")
 biocLite("xcms")
+biocLite("CAMERA")
 ```
 
 ##### Install RTools:
