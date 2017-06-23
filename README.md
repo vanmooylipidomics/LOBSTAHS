@@ -39,8 +39,8 @@ Following these directions, you will install the latest version of the software 
 ```R
 
 source("http://bioconductor.org/biocLite.R")
-biocLite("CAMERA")
 biocLite("xcms")
+biocLite("CAMERA")
 
 ```
 
