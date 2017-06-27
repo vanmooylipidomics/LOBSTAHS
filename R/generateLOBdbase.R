@@ -223,22 +223,25 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
          "must include the fields DB_gen_compound_type and ",
          "Adduct_hierarchy_lookup_class. See package documentation for ",
          "details. Aborting...\n")
+    
     # stop script if this is the case
     
-    # also, a check to make sure the componentCompTable contains a column for
-    # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
-    # versions (prior to addition of the PDMS contaminant series) did not
-    # contain the Si column
+  }
+  
+  # also, a check to make sure the componentCompTable contains a column for
+  # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
+  # versions (prior to addition of the PDMS contaminant series) did not
+  # contain the Si column
+  
+  if (!(c("Si") %in% colnames(componentCompTable))) {
     
-    if (!(c("Si") %in% colnames(componentCompTable))) {
-      
-      stop("User-supplied componentCompTable does not appear to have the ",
-           "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
-           "must include the field Si, for specifying the number of silicon ",
-           "atoms in a given molecule. See package documentation for ",
-           "details. Aborting...\n")
-      # stop script if this is the case
-
+    stop("User-supplied componentCompTable does not appear to have the ",
+         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "must include the field Si, for specifying the number of silicon ",
+         "atoms in a given molecule. See package documentation for ",
+         "details. Aborting...\n")
+    # stop script if this is the case
+    
   }
   
   # put columns in alphabetical order, with text fields at end
