@@ -198,6 +198,17 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     componentCompTable = read.table(componentTableLoc, sep=",", header = TRUE, 
                                     row.names = 1)
     
+    # # in the future, may want to consider using this alternative code instead;
+    # # could help avoid problems with .csv file formatting, which can be
+    # # affected by the platform (Linux, Mac, PC) on which they were created 
+    # 
+    # raw.componentCompTable = readChar(componentTableLoc,
+    #                                   file.info(componentTableLoc)$size)
+    # componentCompTable = read.table(text=gsub("\\r\\n","\\\n",
+    #                                           raw.componentCompTable,
+    #                                           perl=T),
+    #                                 sep=",", header = TRUE, row.names = 1)
+
   }
   
   # first, a check to make sure user has supplied a "new" style
@@ -214,6 +225,20 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
          "details. Aborting...\n")
     # stop script if this is the case
     
+    # also, a check to make sure the componentCompTable contains a column for
+    # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
+    # versions (prior to addition of the PDMS contaminant series) did not
+    # contain the Si column
+    
+    if (!(c("Si") %in% colnames(componentCompTable))) {
+      
+      stop("User-supplied componentCompTable does not appear to have the ",
+           "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+           "must include the field Si, for specifying the number of silicon ",
+           "atoms in a given molecule. See package documentation for ",
+           "details. Aborting...\n")
+      # stop script if this is the case
+
   }
   
   # put columns in alphabetical order, with text fields at end
