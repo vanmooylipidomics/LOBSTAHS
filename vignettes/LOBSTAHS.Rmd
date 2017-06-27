@@ -57,8 +57,10 @@ install.packages("devtools")
 
 ```{r, eval = FALSE}
 library("devtools")
-install_github("vanmooylipidomics/LOBSTAHS") 
+install_github("vanmooylipidomics/LOBSTAHS", build_vignettes = TRUE) 
 ```
+
+The `build_vignettes = TRUE` argument is required if rendering of the full vignette is desired (recommended). `install_github()` does not render vignettes by default.
 
 ##### Install 'PtH2O2lipids,' containing example data & precursor xsAnnotate object:
 ```{r, eval = FALSE}
@@ -276,7 +278,7 @@ The other two compound types in the `componentCompTable` ("DB_acyl_iteration" an
 
 #### The `adductHierarchies` table
 
-  * **For customization"** Modify data in [LOBSTAHS_adductHierarchies.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adductHierarchies.xlsx) and save as LOBSTAHS_adductHierarchies.csv.
+  * **For customization:** Modify data in [LOBSTAHS_adductHierarchies.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_adductHierarchies.xlsx) and save as LOBSTAHS_adductHierarchies.csv.
 
 A fourth table, `adductHierarchies`, contains empirical data on the relative abundances of various adduct ions formed by the compounds that belong to each lipid class. This table is also user-editable, but any additions or changes should first be confirmed by empirical analysis. **Note** that data should be provided in `adductHierarchies` for all lipid classes or compounds, regardless of the `DB_gen_compound_type`, above. In addition, an adduct hierarchy **must** be specified in the `adductHierarchies` table for each compound or compound class specified in the `Adduct_hierarchy_lookup_class` field of the `componentCompTable`.
 
