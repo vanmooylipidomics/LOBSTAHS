@@ -28,6 +28,24 @@ Fulton, J.M., H.F. Fredricks, K.D. Bidle, A. Vardi, B.J. Kendrick, G.R. DiTullio
 
 Users can the [current production version of LOBSTAHS](http://bioconductor.org/packages/LOBSTAHS) from Bioconductor by following the [directions here](http://bioconductor.org/packages/LOBSTAHS) (under "Installation"). The Bioconductor installation function will prompt you to install the latest versions of some other packages on which LOBSTAHS depends.
 
+***Note*** that you should first ensure you have the latest version of Bioconductor by running
+
+```R
+
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+
+```
+
+You can then install LOBSTAHS:
+
+```R
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("LOBSTAHS")
+
+```
+
 Users are also encouraged to [download the PtH2O2lipids data package](http://bioconductor.org/packages/PtH2O2lipids), which can be used for familiarization with the software.
 
 <h3>Install "no warranties" development version with latest features</h3>
