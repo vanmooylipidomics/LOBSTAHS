@@ -146,6 +146,8 @@ defineElemExactMasses = function() {
   m_e_minus = 0.00054858
   m_Mg = 23.985045
   m_Si = 27.97692649
+  m_D = 2.014102
+  m_C_thirteen = 13.003355
   
   # calculate exact masses of acetonitrile and acetate using data we just 
   # specified
@@ -156,11 +158,11 @@ defineElemExactMasses = function() {
   # create an exact-mass lookup table and put it in alphabetical order
   
   exact.masses = c(m_C,m_H,m_H_plus,m_N,m_O,m_P,m_S,m_Na,m_Cl,m_K,m_e_minus,
-                   m_Mg,m_ACN,m_Ac_minus,m_Si)
+                   m_Mg,m_ACN,m_Ac_minus,m_Si,m_D,m_C_thirteen)
   exact.masses = as.table(exact.masses)
   
   names(exact.masses) = c("m_C","m_H","m_H_plus","m_N","m_O","m_P","m_S","m_Na",
-                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus","m_Si")
+                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus","m_Si","m_D","m_C_thirteen")
   
   exact.masses = exact.masses[order(names(exact.masses))]
   
@@ -238,6 +240,38 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     stop("User-supplied componentCompTable does not appear to have the ",
          "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
          "must include the field Si, for specifying the number of silicon ",
+         "atoms in a given molecule. See package documentation for ",
+         "details. Aborting...\n")
+    # stop script if this is the case
+    
+  }
+ 
+  # also, a check to make sure the componentCompTable contains a column for
+  # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
+  # versions (prior to addition of the PDMS contaminant series) did not
+  # contain the Si column
+  
+  if (!(c("D") %in% colnames(componentCompTable))) {
+    
+    stop("User-supplied componentCompTable does not appear to have the ",
+         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "must include the field D, for specifying the number of deuterium ",
+         "atoms in a given molecule. See package documentation for ",
+         "details. Aborting...\n")
+    # stop script if this is the case
+    
+  }
+  
+  # also, a check to make sure the componentCompTable contains a column for
+  # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
+  # versions (prior to addition of the PDMS contaminant series) did not
+  # contain the Si column
+  
+  if (!(c("C_thirteen") %in% colnames(componentCompTable))) {
+    
+    stop("User-supplied componentCompTable does not appear to have the ",
+         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "must include the field C_thirteen, for specifying the number of carbon 13 ",
          "atoms in a given molecule. See package documentation for ",
          "details. Aborting...\n")
     # stop script if this is the case
