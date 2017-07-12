@@ -316,7 +316,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
 
   screenedpeaks$match_ID = 1:nrow(screenedpeaks)
 
-  cat("\nInitial screening and annotation complete.",
+  cat("\n\nInitial screening and annotation complete.",
       LOBscreen_diagnostics[c("post_AIHscreen"),c("peakgroups")],
       "peakgroups remain in dataset, to which\n",
       LOBscreen_diagnostics[c("post_AIHscreen"),c("parent_compounds")],
@@ -1320,8 +1320,10 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso,
   # from wrapper function; others self-explanatory or passed down from wrapper 
   # function
 
-  cat("Pseudospectrum:",pseudospectrum,"\n")
-
+  # pass progress to user
+  cat("Pseudospectrum:",pseudospectrum,"of",length(xsA@pspectra),"\r")
+  flush.console()
+  
   # get all peakgroup and isotope data associated with the pseudospectrum, 
   # appending the xcms peakgroup number, isotope data, and the pseudospectrum 
   # number
