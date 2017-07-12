@@ -12,7 +12,7 @@ Identify and annotate possible isomers and isobars.
 \usage{
 doLOBscreen(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
             rt.restrict =  TRUE, rt.windows = NULL, exclude.oddFA = TRUE,
-            match.ppm = NULL)
+            match.ppm = NULL, retain.unidentified = TRUE)
 }
 \arguments{
   \item{xsA}{
@@ -69,6 +69,12 @@ eukaryotic origin.
 \emph{m/z} tolerance (in ppm) used for matching observed data against the
 calculated \emph{m/z}'s in the database
 }
+  \item{retain.unidentified}{
+Should data for unidentified or discarded features be retained and appended to 
+user's results? Useful if untargeted follow-on data analysis is anticipated, or
+when user wants to retain data for \emph{all} features present in the original
+dataset, not just those for which a LOBSTAHS identity was found.
+}
 }
 \details{\code{doLOBscreen} draws compound identities from a \code{LOBdbase}
 database. The function applies various retention time and adduct ion hierarchy
@@ -120,14 +126,15 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 }
 \examples{
 ## screen & annotate xsAnnotate object from the PtH2O2lipids dataset using all
-## screening options
+## screening options, while retaining unidentified/discarded features
 library(PtH2O2lipids)
 
 \donttest{
 myPtH202LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
                              database = NULL, remove.iso = TRUE,
                              rt.restrict =  TRUE, rt.windows = NULL,
-                             exclude.oddFA = TRUE, match.ppm = 2.5)
+                             exclude.oddFA = TRUE, match.ppm = 2.5,
+                             retain.unidentified = TRUE)
 
 ## show some diagnostics
 LOBscreen_diagnostics(myPtH202LOBSet) # screening diagnostics
