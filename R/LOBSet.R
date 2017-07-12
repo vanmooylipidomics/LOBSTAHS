@@ -211,37 +211,89 @@ setMethod("show", "LOBSet", function(object) {
         "and adduct ion hierarchy screening annotations applied to",
         length(sampnames(object)),"samples using the\n",
         "\"LOBSTAHS\" package.\n\n")
-    cat("Individual peaks:",LOBscreen_diagnostics(object)$peaks[6],"\n")
-    cat("Peak groups:",LOBscreen_diagnostics(object)$peakgroups[6],"\n")
-    cat("Compound assignments:",
+    
+    if (!is.null(LOBscreen_settings(object)$retain.unidentified) &&
+        LOBscreen_settings(object)$retain.unidentified==TRUE) {
+      
+      # unidentified/discarded features *were* retained, provide additional
+      # diagnostics
+      
+      cat("Unidentified features and those discarded during the LOBSTAHS",
+          "screening process\n",
+          "have been retained in this LOBSet. These features",
+          "will show a value of 'NA' in\n",
+          "the 'match_ID' field.\n\n")
+      
+      cat("Total no. individual peaks in this LOBSet:",
+          LOBscreen_diagnostics(object)$peaks[1],"\n")
+      cat("Total no. peak groups in this LOBSet:",
+          length(unique(peakdata(object)$xcms_peakgroup)),"\n")
+      
+      if (.hasSlot(object, "LOBisoID_diagnostics")) {
+        
+        # can assume it is an newer LOBSet that has underscores for column names
+        # in peakdata
+        
+        cat("m/z range of all features:",
+            paste(min(peakdata(object)$peakgroup_mz, na.rm = TRUE),
+                  max(peakdata(object)$peakgroup_mz, na.rm = TRUE),
+                  sep = "-"),"\n\n")
+        
+      } else if (.hasSlot(object, "LOBisoID.diagnostics")) {
+        
+        # can assume it is an older LOBSet that has periods for column names in
+        # peakdata instead of underscores
+        
+        cat("m/z range of all features:",
+            paste(min(peakdata(object)$peakgroup.mz, na.rm = TRUE),
+                  max(peakdata(object)$peakgroup.mz, na.rm = TRUE),
+                  sep = "-"),"\n\n")
+        
+      }
+      
+    }
+    
+    cat("No. individual peaks with LOBSTAHS compound assignments:",
+        LOBscreen_diagnostics(object)$peaks[6],"\n")
+    cat("No. peak groups with LOBSTAHS compound assignments:",
+        LOBscreen_diagnostics(object)$peakgroups[6],"\n")
+    cat("No. LOBSTAHS compound assignments:",
         LOBscreen_diagnostics(object)$parent_compounds[6],
         "\n")
     
     if (.hasSlot(object, "LOBisoID_diagnostics")) {
       
       # can assume it is an newer LOBSet that has underscores for column names
-      # in peakdata 
+      # in peakdata
       
-      cat("m/z range:",paste(min(peakdata(object)$peakgroup_mz, na.rm = TRUE),
-                             max(peakdata(object)$peakgroup_mz, na.rm = TRUE),
-                             sep = "-"),"\n\n")
+      cat("m/z range of features identified using LOBSTAHS:",
+          paste(min(peakdata(object)$peakgroup_mz[
+            !is.na(peakdata(object)$match_ID)], na.rm = TRUE),
+            max(peakdata(object)$peakgroup_mz[
+              !is.na(peakdata(object)$match_ID)], na.rm = TRUE),
+            sep = "-"),"\n\n")
       
     } else if (.hasSlot(object, "LOBisoID.diagnostics")) {
       
       # can assume it is an older LOBSet that has periods for column names in
       # peakdata instead of underscores
       
-      cat("m/z range:",paste(min(peakdata(object)$peakgroup.mz, na.rm = TRUE),
-                             max(peakdata(object)$peakgroup.mz, na.rm = TRUE),
-                             sep = "-"),"\n\n")
+      cat("m/z range of features identified using LOBSTAHS:",
+          paste(min(peakdata(object)$peakgroup.mz[
+            !is.na(peakdata(object)$match.ID)], na.rm = TRUE),
+            max(peakdata(object)$peakgroup.mz[
+              !is.na(peakdata(object)$match.ID)], na.rm = TRUE),
+            sep = "-"),"\n\n")
+      
     }
       
-    cat("Peak groups having possible regisomers:",
+    cat("Identified peak groups having possible regisomers:",
         paste(LOBisoID_diagnostics(object)$peakgroups[1],"\n"))
-    cat("Peak groups having possible structural functional isomers:",
+    cat("Identified peak groups having possible structural functional isomers:",
         paste(LOBisoID_diagnostics(object)$peakgroups[2],"\n"))
-    cat("Peak groups having isobars indistinguishable within ppm matching",
-        "tolerance:\n",
+    cat("Identified peak groups having isobars indistinguishable within ppm",
+        "matching\n",
+        "tolerance:",
         paste(LOBisoID_diagnostics(object)$peakgroups[3],"\n\n"))
     
     cat("Restrictions applied prior to conducting adduct ion hierarchy",
@@ -251,7 +303,7 @@ setMethod("show", "LOBSet", function(object) {
             c("remove.iso","rt.restrict","exclude.oddFA")])], 
           collapse = ", "),"\n\n")
     
-    cat("Match tolerance used for database assignments:",
+    cat("Match tolerance used for LOBSTAHS database assignments:",
         LOBscreen_settings(object)$match.ppm,"ppm\n\n")
     #   cat("Ranges of chemical parameters represented in molecules other than",
     #       "pigments:\n\n")
