@@ -285,7 +285,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
                               rt.windows = rt.windows, 
                               exclude.oddFA = exclude.oddFA, 
                               match.ppm = match.ppm, casecodes = casecodes)
-
+  
   # extract & reformat results, plus extract some aggregate diagnostics
 
   screenedpeaks = as.data.frame(
@@ -1321,8 +1321,9 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso,
   # function
 
   # pass progress to user
-  cat("Pseudospectrum:",pseudospectrum,"of",length(xsA@pspectra),"\r")
+  cat("\r")
   flush.console()
+  cat("Pseudospectrum:",pseudospectrum,"of",length(xsA@pspectra))
   
   # get all peakgroup and isotope data associated with the pseudospectrum, 
   # appending the xcms peakgroup number, isotope data, and the pseudospectrum 
