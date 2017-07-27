@@ -81,7 +81,7 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     
   }
   
-  if (is.null(oxy.ranges)) { # user didn't specify external AIH table, use 
+  if (is.null(oxy.ranges)) { # user didn't specify external oxyRanges table, use 
     # defaults
     
     oxyRanges.loc = NULL
@@ -655,6 +655,20 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
     } else if (this.DB_gen_compound_type=="DB_unique_species") {
       
       cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
+      
+    }
+    
+    # need a check here to see if there's a column name in the adductHierarchies
+    # table that matches the Adduct_hierarchy_lookup_class given for this
+    # particular molecular species in the componentCompTable
+    
+    if (!(this.adduct_lkup_class %in% colnames(AIHs.thismode))) {
+      
+      stop("Could not find a column name in the adduct ion hierarchy matrix ",
+           "that matches the Adduct_hierarchy_lookup_class given for this ",
+           "species or lipid class in the component composition table. ",
+           "Check to see that you've specified an adduct hierarchy for each ",
+           "species or class in the component composition table. Aborting...\n")
       
     }
     
