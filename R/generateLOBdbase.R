@@ -10,6 +10,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
   
   polarity = match.arg(polarity, several.ok = TRUE)
   
+  # initial message to user
+  
+  cat("\nPreparing to generate LOBSTAHS database(s)...\n\n")
+  
   # determine whether user has specified external source files for any input 
   # parameters, get correct file paths, and warn user of consequences of using 
   # improperly formatted or incomplete external data
@@ -32,10 +36,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for basic component composition ",
-            "matrix. Ensure .csv file is properly formatted and sufficient ",
-            "entries exist in other external files to support any additional ",
-            "adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for basic component composition",
+            "matrix. Ensure .csv file is properly formatted and sufficient",
+            "entries exist in other external files to support any additional",
+            "adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -53,10 +57,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for adduct ion hierarchy ",
-            "matrix. Ensure .csv file is properly formatted and sufficient ",
-            "entries exist in other external files to support any additional ",
-            "adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for adduct ion hierarchy",
+            "matrix. Ensure .csv file is properly formatted and sufficient",
+            "entries exist in other external files to support any additional",
+            "adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -74,10 +78,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for in silico simulation acyl ",
-            "property ranges. Ensure .csv file is properly formatted and ",
-            "sufficient entries exist in other external files to support any ",
-            "additional adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for in silico simulation acyl",
+            "property ranges. Ensure .csv file is properly formatted and",
+            "sufficient entries exist in other external files to support any",
+            "additional adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -95,10 +99,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for additional oxygen atoms to be ",
-            "considered. Ensure .csv file is properly formatted and ",
-            "sufficient entries exist in other external files to support any ",
-            "additional adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for additional oxygen atoms to",
+            "be considered. Ensure .csv file is properly formatted and",
+            "sufficient entries exist in other external files to support any",
+            "additional adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -564,7 +568,7 @@ exportDBtoCSV = function(LOBdbase) {
   
   write.csv(exportmat, fname)
   
-  cat(as.character(polarity(LOBdbase)),"mode database exported to:",fname,"\n")
+  cat(as.character(polarity(LOBdbase)),"mode database exported to:",fname,"\n\n")
   
 }
 
@@ -582,7 +586,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   
   # provide feedback to user
   
-  cat("\nPerforming in silico simulation to generate data for",polarity,
+  cat("Performing in silico simulation to generate data for",polarity,
       "mode species...\n\n")
   
   cat("Based on user settings, LOBSTAHS will generate exact masses and adduct",
