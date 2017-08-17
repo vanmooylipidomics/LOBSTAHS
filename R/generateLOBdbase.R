@@ -162,7 +162,8 @@ defineElemExactMasses = function() {
   exact.masses = as.table(exact.masses)
   
   names(exact.masses) = c("m_C","m_H","m_H_plus","m_N","m_O","m_P","m_S","m_Na",
-                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus","m_Si","m_D","m_C_thirteen")
+                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus",
+                          "m_Si","m_D","m_C_thirteen")
   
   exact.masses = exact.masses[order(names(exact.masses))]
   
@@ -210,7 +211,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     #                                           raw.componentCompTable,
     #                                           perl=T),
     #                                 sep=",", header = TRUE, row.names = 1)
-
+    
   }
   
   # first, a check to make sure user has supplied a "new" style
@@ -245,11 +246,11 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     # stop script if this is the case
     
   }
- 
+  
   # also, a check to make sure the componentCompTable contains a column for
-  # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
-  # versions (prior to addition of the PDMS contaminant series) did not
-  # contain the Si column
+  # deuterium and carbon 13 atoms; must be the case for v.1.4.0 and later, but  
+  # earlier versions (prior to database expansion) did not
+  # contain these isotopes
   
   if (!(c("D") %in% colnames(componentCompTable))) {
     
@@ -263,16 +264,16 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   }
   
   # also, a check to make sure the componentCompTable contains a column for
-  # silicon atoms; must be the case for v.1.3.0 and later, but earlier 
-  # versions (prior to addition of the PDMS contaminant series) did not
-  # contain the Si column
+  # deuterium and carbon 13 atoms; must be the case for v.1.4.0 and later, but  
+  # earlier versions (prior to database expansion) did not
+  # contain these isotopes
   
   if (!(c("C_thirteen") %in% colnames(componentCompTable))) {
     
     stop("User-supplied componentCompTable does not appear to have the ",
          "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
-         "must include the field C_thirteen, for specifying the number of carbon 13 ",
-         "atoms in a given molecule. See package documentation for ",
+         "must include the field C_thirteen, for specifying the number of ",
+         "carbon 13 atoms in a given molecule. See package documentation for ",
          "details. Aborting...\n")
     # stop script if this is the case
     
@@ -287,7 +288,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   
   componentCompTable = componentCompTable[order(colnames(componentCompTable))]
   componentCompTable = cbind(componentCompTable,componentCompTable.text)
-
+  
   # calculate exact masses of basic components and extract into a few separate 
   # tables
   # note: this will calculate full exact masses of all species in the component
@@ -478,10 +479,10 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
   if (!(classInfo[3] %in% c("DB_unique_species","DB_acyl_iteration",
                             "basic_component","adduct_neg","adduct_pos"))) {
     
-  stop("The database generation type must be either DB_acyl_iteration, ",
-       "DB_unique_species, basic_component, adduct_neg, or adduct_pos. Check ",
-       "your composition matrix carefully. Aborting...\n")
-  # stop script if this is the case
+    stop("The database generation type must be either DB_acyl_iteration, ",
+         "DB_unique_species, basic_component, adduct_neg, or adduct_pos. Check ",
+         "your composition matrix carefully. Aborting...\n")
+    # stop script if this is the case
     
   }
   
@@ -653,7 +654,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       as.character(baseComponent.masses$DB_gen_compound_type[i])
     this.adduct_lkup_class = 
       as.character(baseComponent.masses$Adduct_hierarchy_lookup_class[i])
-
+    
     # provide sensible feedback to user
     
     # first, check to make sure this.DB_gen_compound_type is of an
@@ -917,7 +918,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                                                         this.species,
                                                         this.adduct,
                                                         this.parent_formula,
-                                                     this.parent_compound_name)
+                                                        this.parent_compound_name)
                 
                 ins.row = ins.row + 1 # advance our insertion point
                 
