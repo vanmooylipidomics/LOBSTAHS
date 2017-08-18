@@ -10,6 +10,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
   
   polarity = match.arg(polarity, several.ok = TRUE)
   
+  # initial message to user
+  
+  cat("\nPreparing to generate LOBSTAHS database(s)...\n\n")
+  
   # determine whether user has specified external source files for any input 
   # parameters, get correct file paths, and warn user of consequences of using 
   # improperly formatted or incomplete external data
@@ -32,10 +36,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for basic component composition ",
-            "matrix. Ensure .csv file is properly formatted and sufficient ",
-            "entries exist in other external files to support any additional ",
-            "adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for basic component composition",
+        "matrix. Ensure .csv file is properly formatted and sufficient",
+        "entries exist in other external files to support any additional",
+        "adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -53,10 +57,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for adduct ion hierarchy ",
-            "matrix. Ensure .csv file is properly formatted and sufficient ",
-            "entries exist in other external files to support any additional ",
-            "adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for adduct ion hierarchy",
+        "matrix. Ensure .csv file is properly formatted and sufficient",
+        "entries exist in other external files to support any additional",
+        "adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -74,14 +78,14 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for in silico simulation acyl ",
-            "property ranges. Ensure .csv file is properly formatted and ",
-            "sufficient entries exist in other external files to support any ",
-            "additional adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for in silico simulation acyl",
+        "property ranges. Ensure .csv file is properly formatted and",
+        "sufficient entries exist in other external files to support any",
+        "additional adducts, lipid classes, or molecules.\n\n")
     
   }
   
-  if (is.null(oxy.ranges)) { # user didn't specify external AIH table, use 
+  if (is.null(oxy.ranges)) { # user didn't specify external oxyRanges table, use 
     # defaults
     
     oxyRanges.loc = NULL
@@ -95,10 +99,10 @@ generateLOBdbase = function(polarity = c("positive","negative"),
     # let user know he/she provided external input, and the possible 
     # consequences
     
-    warning("User specified external source for additional oxygen atoms to be ",
-            "considered. Ensure .csv file is properly formatted and ",
-            "sufficient entries exist in other external files to support any ",
-            "additional adducts, lipid classes, or molecules.\n")
+    cat("Note: User specified external source for additional oxygen atoms to",
+        "be considered. Ensure .csv file is properly formatted and",
+        "sufficient entries exist in other external files to support any",
+        "additional adducts, lipid classes, or molecules.\n\n")
     
   }
   
@@ -146,6 +150,8 @@ defineElemExactMasses = function() {
   m_e_minus = 0.00054858
   m_Mg = 23.985045
   m_Si = 27.97692649
+  m_D = 2.014102
+  m_C_thirteen = 13.003355
   
   # calculate exact masses of acetonitrile and acetate using data we just 
   # specified
@@ -156,11 +162,12 @@ defineElemExactMasses = function() {
   # create an exact-mass lookup table and put it in alphabetical order
   
   exact.masses = c(m_C,m_H,m_H_plus,m_N,m_O,m_P,m_S,m_Na,m_Cl,m_K,m_e_minus,
-                   m_Mg,m_ACN,m_Ac_minus,m_Si)
+                   m_Mg,m_ACN,m_Ac_minus,m_Si,m_D,m_C_thirteen)
   exact.masses = as.table(exact.masses)
   
   names(exact.masses) = c("m_C","m_H","m_H_plus","m_N","m_O","m_P","m_S","m_Na",
-                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus","m_Si")
+                          "m_Cl","m_K","m_e_minus","m_Mg","m_ACN","m_Ac_minus",
+                          "m_Si","m_D","m_C_thirteen")
   
   exact.masses = exact.masses[order(names(exact.masses))]
   
@@ -208,7 +215,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     #                                           raw.componentCompTable,
     #                                           perl=T),
     #                                 sep=",", header = TRUE, row.names = 1)
-
+    
   }
   
   # first, a check to make sure user has supplied a "new" style
@@ -244,6 +251,38 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
     
   }
   
+  # also, a check to make sure the componentCompTable contains a column for
+  # deuterium and carbon 13 atoms; must be the case for v.1.4.0 and later, but  
+  # earlier versions (prior to database expansion) did not
+  # contain these isotopes
+  
+  if (!(c("D") %in% colnames(componentCompTable))) {
+    
+    stop("User-supplied componentCompTable does not appear to have the ",
+         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "must include the field D, for specifying the number of deuterium ",
+         "atoms in a given molecule. See package documentation for ",
+         "details. Aborting...\n")
+    # stop script if this is the case
+    
+  }
+  
+  # also, a check to make sure the componentCompTable contains a column for
+  # deuterium and carbon 13 atoms; must be the case for v.1.4.0 and later, but  
+  # earlier versions (prior to database expansion) did not
+  # contain these isotopes
+  
+  if (!(c("C_thirteen") %in% colnames(componentCompTable))) {
+    
+    stop("User-supplied componentCompTable does not appear to have the ",
+         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "must include the field C_thirteen, for specifying the number of ",
+         "carbon 13 atoms in a given molecule. See package documentation for ",
+         "details. Aborting...\n")
+    # stop script if this is the case
+    
+  }
+  
   # put columns in alphabetical order, with text fields at end
   
   componentCompTable.text = componentCompTable[,((ncol(componentCompTable)-2):
@@ -253,7 +292,7 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   
   componentCompTable = componentCompTable[order(colnames(componentCompTable))]
   componentCompTable = cbind(componentCompTable,componentCompTable.text)
-
+  
   # calculate exact masses of basic components and extract into a few separate 
   # tables
   # note: this will calculate full exact masses of all species in the component
@@ -444,10 +483,10 @@ combCalc = function(classInfo, AIHs.thismode, acylRanges, oxyRanges) {
   if (!(classInfo[3] %in% c("DB_unique_species","DB_acyl_iteration",
                             "basic_component","adduct_neg","adduct_pos"))) {
     
-  stop("The database generation type must be either DB_acyl_iteration, ",
-       "DB_unique_species, basic_component, adduct_neg, or adduct_pos. Check ",
-       "your composition matrix carefully. Aborting...\n")
-  # stop script if this is the case
+    stop("The database generation type must be either DB_acyl_iteration, ",
+         "DB_unique_species, basic_component, adduct_neg, or adduct_pos. Check ",
+         "your composition matrix carefully. Aborting...\n")
+    # stop script if this is the case
     
   }
   
@@ -564,7 +603,7 @@ exportDBtoCSV = function(LOBdbase) {
   
   write.csv(exportmat, fname)
   
-  cat(as.character(polarity(LOBdbase)),"mode database exported to:",fname,"\n")
+  cat(as.character(polarity(LOBdbase)),"mode database exported to:",fname,"\n\n")
   
 }
 
@@ -582,7 +621,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   
   # provide feedback to user
   
-  cat("\nPerforming in silico simulation to generate data for",polarity,
+  cat("Performing in silico simulation to generate data for",polarity,
       "mode species...\n\n")
   
   cat("Based on user settings, LOBSTAHS will generate exact masses and adduct",
@@ -619,7 +658,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
       as.character(baseComponent.masses$DB_gen_compound_type[i])
     this.adduct_lkup_class = 
       as.character(baseComponent.masses$Adduct_hierarchy_lookup_class[i])
-
+    
     # provide sensible feedback to user
     
     # first, check to make sure this.DB_gen_compound_type is of an
@@ -655,6 +694,20 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
     } else if (this.DB_gen_compound_type=="DB_unique_species") {
       
       cat("Calculating data for",this.lipid_class,":",this.species,"...\n")
+      
+    }
+    
+    # need a check here to see if there's a column name in the adductHierarchies
+    # table that matches the Adduct_hierarchy_lookup_class given for this
+    # particular molecular species in the componentCompTable
+    
+    if (!(this.adduct_lkup_class %in% colnames(AIHs.thismode))) {
+      
+      stop("Could not find a column name in the adduct ion hierarchy matrix ",
+           "that matches the Adduct_hierarchy_lookup_class given for this ",
+           "species or lipid class in the component composition table. ",
+           "Check to see that you've specified an adduct hierarchy for each ",
+           "species or class in the component composition table. Aborting...\n")
       
     }
     
@@ -883,7 +936,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
                                                         this.species,
                                                         this.adduct,
                                                         this.parent_formula,
-                                                     this.parent_compound_name)
+                                                        this.parent_compound_name)
                 
                 ins.row = ins.row + 1 # advance our insertion point
                 
