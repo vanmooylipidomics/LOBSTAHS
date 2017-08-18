@@ -3,7 +3,7 @@ lithocholic_acid,24,40,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,bile_salt,bilesalt,DB_uniqu
 cholic_acid,24,40,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,bile_salt,bilesalt,DB_unique_species
 deoxycholic_acid,24,40,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,bile_salt,bilesalt,DB_unique_species
 WaxEster,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,IP_DAG,WaxEster,DB_acyl_iteration
-ChloresterolAcetate,29,48,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,sterol,ChloresterolAcetate,DB_unique_species
+CholesterolAcetate,29,48,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,sterol,CholesterolAcetate,DB_unique_species
 Cholesterol2H,27,44,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,sterol,Cholesterol2H,DB_unique_species
 CoprostanolEsters,27,47,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,IP_MAG,Coprostanol,DB_acyl_iteration
 CholesterolEsters,27,45,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,IP_MAG,Cholesterol,DB_acyl_iteration
