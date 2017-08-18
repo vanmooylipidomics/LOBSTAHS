@@ -101,7 +101,7 @@ HPLC-MS data must be assembled into a CAMERA xsAnnotate object prior to analysis
    * total acyl carbon chain length, and
    * degree of acyl carbon chain unsaturation (i.e., number of double bonds)
 
-Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), and quinones. Functionality for other lipid classes is added regularly. The default databases (as of January 23, 2017) include 18,067 and 15,404 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
+Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), bile salts, wax esters, cholesterols, mass spectral contaminants, and quinones. Functionality for other lipid classes is added regularly. The default databases (as of August 18, 2017) include 24,086 and 19,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
 
 <h2>Identification, screening, and annotation using orthogonal criteria</h2> 
 
