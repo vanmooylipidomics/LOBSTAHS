@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ################ Wrapper function #############
 
 # generateLOBdbase: wrapper function for lipid-ox-lipid-oxylipin database
@@ -253,14 +252,14 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   }
   
   # also, a check to make sure the componentCompTable contains a column for
-  # deuterium and carbon 13 atoms; must be the case for v.1.4.0 and later, but  
+  # deuterium and carbon 13 atoms; must be the case for v.1.3.5 and later, but  
   # earlier versions (prior to database expansion) did not
   # contain these isotopes
   
   if (!(c("D") %in% colnames(componentCompTable))) {
     
     stop("User-supplied componentCompTable does not appear to have the ",
-         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "correct fields. In LOBSTAHS v1.3.5 and later, componentCompTable ",
          "must include the field D, for specifying the number of deuterium ",
          "atoms in a given molecule. See package documentation for ",
          "details. Aborting...\n")
@@ -269,14 +268,14 @@ calcComponentMasses = function(componentTableLoc,use.default.componentTable) {
   }
   
   # also, a check to make sure the componentCompTable contains a column for
-  # deuterium and carbon 13 atoms; must be the case for v.1.4.0 and later, but  
+  # deuterium and carbon 13 atoms; must be the case for v.1.3.5 and later, but  
   # earlier versions (prior to database expansion) did not
   # contain these isotopes
   
   if (!(c("C_thirteen") %in% colnames(componentCompTable))) {
     
     stop("User-supplied componentCompTable does not appear to have the ",
-         "correct fields. In LOBSTAHS v1.3.0 and later, componentCompTable ",
+         "correct fields. In LOBSTAHS v1.3.5 and later, componentCompTable ",
          "must include the field C_thirteen, for specifying the number of ",
          "carbon 13 atoms in a given molecule. See package documentation for ",
          "details. Aborting...\n")
@@ -1012,7 +1011,7 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   invisible(assign(paste0(as.character(polarity(object))),object))
   
 }
-=======
+
 ################ Wrapper function #############
 
 # generateLOBdbase: wrapper function for lipid-ox-lipid-oxylipin database
@@ -1991,4 +1990,3 @@ runSim = function(polarity, acylRanges, oxyRanges, adductHierarchies,
   invisible(assign(paste0(as.character(polarity(object))),object))
   
 }
->>>>>>> 6cfcca298e707c8cb8519a728a3febe9310dcbda
