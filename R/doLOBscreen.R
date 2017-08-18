@@ -6,8 +6,8 @@
 doLOBscreen = function(xsA, polarity = NULL, database = NULL, 
                        remove.iso = TRUE, rt.restrict =  TRUE, 
                        rt.windows = NULL, exclude.oddFA = TRUE, 
-                       match.ppm = NULL) { # planning to add nSlaves option at 
-                                           # some point
+                       match.ppm = NULL, retain.unidentified = TRUE) {
+                       # planning to add nSlaves option at some point
 
   cat("\n")
 
@@ -285,7 +285,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
                               rt.windows = rt.windows, 
                               exclude.oddFA = exclude.oddFA, 
                               match.ppm = match.ppm, casecodes = casecodes)
-
+  
   # extract & reformat results, plus extract some aggregate diagnostics
 
   screenedpeaks = as.data.frame(
@@ -316,9 +316,9 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
 
   screenedpeaks$match_ID = 1:nrow(screenedpeaks)
 
-  cat("Initial screening and annotation complete.",
+  cat("\n\nInitial screening and annotation complete.",
       LOBscreen_diagnostics[c("post_AIHscreen"),c("peakgroups")],
-      "peakgroups remain in dataset, to which",
+      "peakgroups remain in dataset, to which\n",
       LOBscreen_diagnostics[c("post_AIHscreen"),c("parent_compounds")],
       "parent compound identities have been assigned from database.\n\n")
 
@@ -471,7 +471,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
   
   cat("Found",LOBisoID_diagnostics$peakgroups[2],"functional structural",
       "isomers and",LOBisoID_diagnostics$peakgroups[3],"isobars, representing",
-      sum(LOBisoID_diagnostics$parent_compounds[c(2,3)]),"parent compounds.\n")
+      sum(LOBisoID_diagnostics$parent_compounds[c(2,3)]),"parent compounds.\n\n")
 
   # populate screenedpeaks.casecodes
 
@@ -528,6 +528,26 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
                                    exclude.oddFA = exclude.oddFA,
                                    match.ppm = match.ppm)
 
+  # append discarded/unidentified features from input xsAnnotate object, if user
+  # desires
+  
+  if (retain.unidentified==TRUE) {
+    
+    cat("Collecting data for all unidentified features present in the",
+        "input 'xsAnnotate' object and\n",
+        "those features discarded during LOBSTAHS screening...\n")
+    object = appendDiscardedFeatures(object, xsA)
+    
+    # calculate no. additional features that we just added back in
+    count.unIDd =
+      length(unique(peakdata(object)$xcms_peakgroup))-
+      LOBscreen_diagnostics(object)$peakgroups[6]
+    
+    cat("Appended data for",count.unIDd,
+        "unidentified or discarded peak groups.\n\n")
+    
+  }
+  
   return(object)
 
 }
@@ -1008,18 +1028,64 @@ trimAssignments = function(matched.frag_IDs, database, pspectrum.frag_IDs,
 # getLOBpeaklist: generates a peaklist from a screened & annotated LOBSet 
 # object, with options to include isotope cross-references and export to .csv
 
-getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
-
+getLOBpeaklist = function(LOBSet, include.iso = TRUE,
+                          include.unidentified = TRUE, gen.csv = FALSE) {
+  
   if (!class(LOBSet)=="LOBSet") {
-
+    
     stop("Input 'LOBSet' is not a 'LOBSet' object.\n")
-
+    
   }
-
+  
+  cat("Exporting peaklist...\n")
+  
   export.df = peakdata(LOBSet)
-
+  
+  # excise unidentified features, if they exist and user wants to get rid of
+  # them
+  
+  if (include.unidentified==TRUE) {
+    
+    if (!is.null(LOBscreen_settings(LOBSet)$retain.unidentified) &&
+        LOBscreen_settings(LOBSet)$retain.unidentified==TRUE) {
+      
+      cat("Exported peaklist will include data for unidentified features and",
+          "those features\n",
+          "discarded during LOBSTAHS screening.\n")
+      
+    } else {
+      
+      cat("No data for unidentified features appears to be present in this",
+          "LOBSet. Peaklist will\n",
+          "include data only for features to which LOBSTAHS compound",
+          "identities have been\n",
+          "assigned.\n")
+      
+    }
+    
+  } else if (include.unidentified==FALSE) {
+    
+    cat("Peaklist will include data only for features to which LOBSTAHS",
+        "compound identities have\n",
+        "been assigned.\n")
+    
+    if (!is.null(LOBscreen_settings(LOBSet)$retain.unidentified) &&
+        LOBscreen_settings(LOBSet)$retain.unidentified==TRUE) {
+      # no point in excising these data if they don't exist in the first place
+      
+      # excise data which don't have a LOBdbase_mz and match_ID (assuming these
+      # are sufficient criteria to declare that a LOBSTAHS compound assignment
+      # isn't present)
+      
+      export.df = export.df[
+        !(apply(is.na(export.df[,c("LOBdbase_mz","match_ID")]), 1, sum)==2),]
+      
+    }
+    
+  }
+  
   # get rid of some junk, reorder some columns
-
+  
   export.df = export.df[,-c(which(colnames(export.df) %in% c("npeaks",
                                                              "isotopes")))]
   
@@ -1062,12 +1128,12 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
   }
   
   export.df = data.frame(leadcols,export.df)
-    
+  
   # argument-dependent options
   
   # need if/then statements to account for change in slot naming from periods
   # to underscores
-
+  
   if (include.iso==TRUE) {
     
     if (.hasSlot(LOBSet, "iso_C3r")) {
@@ -1100,25 +1166,147 @@ getLOBpeaklist = function(LOBSet, include.iso = TRUE, gen.csv = FALSE) {
       
     }
     
-    export.df = data.frame(export.df,iso_C3r.match_ID,iso_C3f.match_ID,
-                           iso_C3c.match_ID, stringsAsFactors = FALSE)
-
+    # collect isomer data, then flow it into the proper cell range
+    
+    isodata = data.frame(iso_C3r.match_ID,iso_C3f.match_ID,
+                         iso_C3c.match_ID, stringsAsFactors = FALSE)
+    
+    export.df = data.frame(export.df, matrix(data = NA, 
+                                             nrow = nrow(export.df),
+                                             ncol = 3,
+                                             dimnames =
+                                               list(NULL,
+                                                    c("iso_C3r.match_ID",
+                                                      "iso_C3f.match_ID",
+                                                      "iso_C3c.match_ID"))),
+                           stringsAsFactors = FALSE)
+    
+    export.df[1:nrow(isodata),c("iso_C3r.match_ID","iso_C3f.match_ID",
+                                "iso_C3c.match_ID")] = isodata
+    
   }
-
+  
   if (gen.csv==TRUE) {
-
+    
     output_DTG = genTimeStamp()
-
+    
     fname = paste0("LOBSTAHS_screened_peakdata_",output_DTG,".csv")
-
+    
     write.csv(export.df, fname, row.names = FALSE)
-
+    
     cat("Peak data exported to:",fname,"\n")
-
+    
+  } else {
+    
+    cat("Peaklist generated.")
+    
   }
-
+  
   return(export.df)
+  
+}
 
+# appendDiscardedFeatures: appends to a LOBSet those features in the parent
+# xsAnnotate object which were discarded durign the screening process; this
+# function will be invoked if user sets retain.unidentified = TRUE
+
+appendDiscardedFeatures = function(LOBSet, xsAnnotate) {
+  
+  # check to ensure the objects are the of the proper class
+  
+  if (!class(LOBSet)=="LOBSet") {
+    
+    stop("Input 'LOBSet' is not a 'LOBSet' object.\n")
+    
+  }
+  
+  if (!class(xsAnnotate)=="xsAnnotate") {
+    
+    stop("Input 'xsAnnotate' is not an 'xsAnnotate' object.\n")
+    
+  }
+  
+  # check to ensure the objects have the same polarity and sample names; this
+  # is a very high-level way of validating that the supplied xsAnnotate object
+  # is in fact the parent of the supplied LOBSet
+  
+  # there is no polarity method (accessor function) for xcmsSet or xsAnnotate
+  # classes so we have to extract it directly from the slot
+  
+  if (as.character(xsAnnotate@polarity)!=as.character(polarity(LOBSet))) {
+    
+    stop("Input 'LOBSet' and 'xsAnnotate' objects do not contain data of the ",
+         "same polarity.\n")
+    
+  }
+  
+  if (!identical(sampnames(xsAnnotate@xcmsSet),sampnames(LOBSet))) {
+    
+    stop("Input 'LOBSet' and 'xsAnnotate' objects do not contain data for the ",
+         "same sample names. Check that the supplied objects are directly ",
+         "related as child and parent.\n")
+    
+  }
+  
+  # retrieve the xsAnnotate peaklist using the CAMERA function getPeaklist
+  
+  xsAnnotate_peaklist = getPeaklist(xsAnnotate)
+  
+  # retrieve the initial LOBSet peakdata table
+  
+  LOBSet_peakdata_initial = peakdata(LOBSet)
+  
+  # extract features from the xsAnnotate.peaklist that do not appear in
+  # LOBSet.peakdata.initial (i.e., those which were not retained for
+  # whatever reason)
+  
+  discarded_peakdata =
+    xsAnnotate_peaklist[!(1:nrow(xsAnnotate_peaklist) %in% 
+                            LOBSet_peakdata_initial$xcms_peakgroup),]
+  
+  # set proper column names
+  
+  colnames(discarded_peakdata)[1:(ncol(discarded_peakdata)-3)] =
+    colnames(LOBSet_peakdata_initial)[1:(ncol(discarded_peakdata)-3)]
+  
+  # preallocate space for discarded feature data in a new data frame
+  # LOBSet_peakdata_appended
+  
+  LOBSet_peakdata_appended = rbind(LOBSet_peakdata_initial,
+                                   matrix(data = NA,
+                                          nrow = nrow(discarded_peakdata),
+                                          ncol = ncol(LOBSet_peakdata_initial),
+                                          dimnames = 
+                                            list(NULL,
+                                            colnames(LOBSet_peakdata_initial))))
+  
+  # append discarded feature data
+  
+  # first, primary data
+  
+  LOBSet_peakdata_appended[
+    (nrow(LOBSet_peakdata_initial)+1):nrow(LOBSet_peakdata_appended),
+    1:(ncol(discarded_peakdata)-3)] =
+    discarded_peakdata[,1:(ncol(discarded_peakdata)-3)]
+  
+  # now xcms_peakgroup, isotope data
+  
+  LOBSet_peakdata_appended[
+    (nrow(LOBSet_peakdata_initial)+1):nrow(LOBSet_peakdata_appended),
+    c("xcms_peakgroup","isotopes")] =
+    data.frame(as.numeric(rownames(discarded_peakdata)),
+               discarded_peakdata$isotopes,
+               stringsAsFactors = FALSE)
+  
+  # replace the peakdata table in the LOBSet, update LOBscreen_settings
+  
+  peakdata(LOBSet) = LOBSet_peakdata_appended
+  LOBscreen_settings(LOBSet)$retain.unidentified = TRUE
+
+  # finally, return the updated object
+  
+  return(LOBSet)
+  
 }
 
 # screenPSpectrum: applies screening & annotation routine to peakgroups that 
@@ -1132,8 +1320,11 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso,
   # from wrapper function; others self-explanatory or passed down from wrapper 
   # function
 
-  cat("Pseudospectrum:",pseudospectrum,"\n")
-
+  # pass progress to user
+  cat("\r")
+  flush.console()
+  cat("Pseudospectrum:",pseudospectrum,"of",length(xsA@pspectra))
+  
   # get all peakgroup and isotope data associated with the pseudospectrum, 
   # appending the xcms peakgroup number, isotope data, and the pseudospectrum 
   # number

@@ -25,8 +25,6 @@ LOBSTAHS contains several functions to help scientists discover and identify lip
 
 Users can the [current production version of LOBSTAHS](http://bioconductor.org/packages/LOBSTAHS) from Bioconductor by following the [directions here](http://bioconductor.org/packages/LOBSTAHS) (under "Installation"). The Bioconductor installation function will prompt you to install the latest versions of some other packages on which LOBSTAHS depends.
 
-***Note*** that you should first ensure you have the latest version of Bioconductor by running
-
 ```R
 
 source("http://bioconductor.org/biocLite.R")
@@ -34,7 +32,7 @@ biocLite()
 
 ```
 
-You can then install LOBSTAHS:
+***Note***: At this point, you should verify that you have, in fact, installed the *most current* version of Bioconductor. You may be required to install the latest version of R itself before you can obtain the latest version of Bioc. If you fail to ensure you are running the latest version of Bioconductor at this point, you won't necessarily be able to install the most up-to-date version of LOBSTAHS since the Bioc installer will only provide you will the most recent versions of packages attached to that version of Bioconductor. (If you are confused by any of this, check out this [help section](https://www.bioconductor.org/install/#troubleshoot-bioconductor-packages). Or, just install the current development version directly from GitHub using the directions, below.) Once you are satisfied that you're running the latest version of Bioconductor, you can then install LOBSTAHS:
 
 ```R
 
@@ -383,9 +381,9 @@ Once we've created our database (or we've decided to use the appropriate onboard
 
 1. First, if user elected `remove.iso = TRUE`, any secondary isotope peaks identified by CAMERA are removed from the dataset.
 
-1. Using a matching tolerance (`match.ppm`) and database specified by the user, putative (initial) compound assignments are applied to features in the dataset. The `match.ppm` should reflect the accuracy of the mass spectrometer used to acquire the data. If no value is given for `database`, the default database of the appropriate polarity will be used. `polarity = positive` or `polarity = negative` should be specified. If no polarity is given, `doLOBscreen` will attempt to detect it from the dataset... but detection is not perfect. At this point in the screening process, the current version of LOBSTAHS discards any features for which a match was not found in the database.<sup>[7](#note7)</sup>
+1. Using a matching tolerance (`match.ppm`) and database specified by the user, putative (initial) compound assignments are applied to features in the dataset. The `match.ppm` should reflect the accuracy of the mass spectrometer used to acquire the data. If no value is given for `database`, the default database of the appropriate polarity will be used. `polarity = positive` or `polarity = negative` should be specified. If no polarity is given, `doLOBscreen` will attempt to detect it from the dataset... but detection is not perfect. In the case of features for which a match is not found in the database, LOBSTAHS will not retain relevant peak data unless the user sets `retain.unidentified = TRUE` when calling `doLOBscreen`.
 
-1. If user elected `rt.restrict = TRUE`, the (corrected) retention time of each feature to which an assignment has just been made is compared against the retention time range expected for the assignment's parent lipid class. <span id="Customization-of-rt-windows">These expected retention time ranges, or "windows," are specified in a table.</span> The default values (specific to the chromatography under which LOBSTAHS was developed at Woods Hole Oceanographic Institution<sup>[8](#note8)</sup>) can be accessed in a manner similar to the database generation input defaults:
+1. If user elected `rt.restrict = TRUE`, the (corrected) retention time of each feature to which an assignment has just been made is compared against the retention time range expected for the assignment's parent lipid class. <span id="Customization-of-rt-windows">These expected retention time ranges, or "windows," are specified in a table.</span> The default values (specific to the chromatography under which LOBSTAHS was developed at Woods Hole Oceanographic Institution<sup>[7](#note7)</sup>) can be accessed in a manner similar to the database generation input defaults:
 
     ```{r, eval = FALSE}
     data(default.rt.windows)
@@ -395,41 +393,48 @@ Once we've created our database (or we've decided to use the appropriate onboard
 
     If the user wishes to use the retention time restriction feature with his/her own retention time data (highly recommended) a .csv table can be created from an Excel template available in the same subdirectory (/LOBSTAHS/doc/) of the R library path where the database generation templates reside. The template can be downloaded as [LOBSTAHS_rt.windows.xlsx](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/inst/doc/xlsx/LOBSTAHS_rt.windows.xlsx) from the LOBSTAHS GitHub repository.
 
-     **Important note:** To account for shifts in retention time that occur during chromatographic alignment in xcms, LOBSTAHS automatically expands the retention time ranges given in the `rt.windows` table by 10% at each extreme. If xcms retention time correction results in large differences between raw and corrected retention times, the user should elect **not** to apply retention time restriction in LOBSTAHS (i.e., set `rt.restrict = FALSE`) since valid feartures could be lost. The extent of deviation between raw and corrected retention times can be diagnosed using the retention time correction profile plot, obtained with `plottype = "mdevden"` when calling `retcor` in xcms. A future version of LOBSTAHS will allow the user to the set the factor by which the lipid class retention time windows should be expanded.
+     **Important note:** To account for shifts in retention time that occur during chromatographic alignment in xcms, LOBSTAHS automatically expands the retention time ranges given in the `rt.windows` table by 10% at each extreme. If xcms retention time correction results in large differences between raw and corrected retention times, the user should elect **not** to apply retention time restriction in LOBSTAHS (i.e., set `rt.restrict = FALSE`) since valid features could be lost. The extent of deviation between raw and corrected retention times can be diagnosed using the retention time correction profile plot, obtained with `plottype = "mdevden"` when calling `retcor` in xcms. A future version of LOBSTAHS will allow the user to the set the factor by which the lipid class retention time windows should be expanded.
 
-1. Next, assignments with an odd total number of acyl carbon atoms can be eliminated (achieved by setting `exclude.oddFA = TRUE`). Applies only to acyl lipids (i.e., IP-DAG, TAG, PUA, or free fatty acids). Useful if data are (or are believed to be) of exclusively eukaryotic origin, since synthesis of fatty acids with odd numbers of carbon atoms is not known in eukaryotes.<sup>[9](#note9)</sup>
+1. Next, assignments with an odd total number of acyl carbon atoms can be eliminated (achieved by setting `exclude.oddFA = TRUE`). Applies only to acyl lipids (i.e., IP-DAG, TAG, PUA, or free fatty acids). Useful if data are (or are believed to be) of exclusively eukaryotic origin, since synthesis of fatty acids with odd numbers of carbon atoms is not known in eukaryotes.<sup>[8](#note8)</sup>
 
 1. A series of adduct ion hierarchy rules are then applied to the remaining assignments. The theory and development of these rules is described in Collins et al 2016.<sup>[1](#note1)</sup> and summarized in the [schematic above](#schematic). During the adduct ion screening process, a [series of codes](#schematic) are applied to each assignment to indicate the degree to which it satisfied the hierarchy rules Unlike the other screening features, application of the adduct ion hierarchy rules is not optional.
 
 1. Once the list of compound assignments has been screened by pseudospectrum according to the user's specifications, the assignments are then evaluated as a single group to identify possible isomers and isobars (compounds having distinct but very similar *m/z*). These isomers and isobars are annotated with [additional codes](#schematic) so the user can examine them in subsequent analysis.
 
-Once done, `doLOBscreen` returns a `LOBSet` object containing the fully screened dataset. To screen the PtH2O2lipids `xsAnnotate` object using the same settings that produced the results in Collins et al. 2016<sup>[1](#note1)</sup>, we would run:
+Once done, `doLOBscreen` returns a `LOBSet` object containing the fully screened dataset. LOBSTAHS v1.3.3 and newer allows the user to retain data for all features in the original `xsAnnotate` object &mdash; those that were not identified or were discarded during the screening process, in addition to data for those features to which a compound assignment was applied from the database. This is useful when untargeted follow-on data analysis is anticipated, or the user simply wants to export data for all features present in the original dataset, not just those for which a LOBSTAHS identity was found.
+
+To screen the PtH2O2lipids `xsAnnotate` object using the same settings that produced the results in Collins et al. 2016<sup>[1](#note1)</sup>, we would run:
 
 ```{r, eval = FALSE}
 myPtH2O2LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
                              database = NULL, remove.iso = TRUE,
                              rt.restrict =  TRUE, rt.windows = NULL,
-                             exclude.oddFA = TRUE, match.ppm = 2.5)
+                             exclude.oddFA = TRUE, match.ppm = 2.5,
+                             retain.unidentified = FALSE)
 ```
 
-In this example, the object "myPtH2O2LOBSet" would be identical to the screened `LOBSet` in the PtH2O2lipids package (`ptH2O2lipids$LOBSet`). Information about a `LOBSet` can be viewed by calling the object at the R prompt. For example:
+In this example, the object "myPtH2O2LOBSet" is not identical to the screened `LOBSet` in the PtH2O2lipids package (`ptH2O2lipids$LOBSet`) because the default database now includes many more comopounds than it did when the package was first released in 2015. Information about a `LOBSet` can be viewed by calling the object at the R prompt. For example:
 
 ```{r, warning = FALSE, message = FALSE, eval = FALSE}
 ptH2O2lipids$LOBSet
-#> A positive polarity "LOBSet" containing LC-MS peak data. Compound assignments and adduct ion hierarchy screening annotations applied to 16 samples using the "LOBSTAHS" package.
+#> A positive polarity "LOBSet" containing LC-MS peak data. Compound assignments
+#> and adduct ion hierarchy screening annotations applied to 16 samples using the
+#> "LOBSTAHS" package.
 #> 
-#> Individual peaks: 21869 
-#> Peak groups: 1595 
-#> Compound assignments: 1969 
-#> m/z range: 551.425088845409-1269.09515435315 
+#> No. individual peaks with LOBSTAHS compound assignments: 21869 
+#> No. peak groups with LOBSTAHS compound assignments: 1595 
+#> No. LOBSTAHS compound assignments: 1969 
+#> m/z range of features identified using LOBSTAHS: 551.425088845409-1269.09515435315 
 #> 
-#> Peak groups having possible regisomers: 556 
-#> Peak groups having possible structural functional isomers: 375 
-#> Peak groups having isobars indistinguishable within ppm matching tolerance: 84 
+#> Identified peak groups having possible regisomers: 556 
+#> Identified peak groups having possible structural functional isomers: 375 
+#> Identified peak groups having isobars indistinguishable within ppm matching
+#>  tolerance: 84 
 #> 
-#> Restrictions applied prior to conducting adduct ion hierarchy screening: remove.iso, rt.restrict, exclude.oddFA 
+#> Restrictions applied prior to conducting adduct ion hierarchy screening:
+#>  remove.iso, rt.restrict, exclude.oddFA 
 #> 
-#> Match tolerance used for database assignments: 2.5 ppm
+#> Match tolerance used for LOBSTAHS database assignments: 2.5 ppm
 #> 
 #> Memory usage: 1.26 MB
 ```
@@ -459,7 +464,7 @@ LOBisoID_diagnostics(ptH2O2lipids$LOBSet)
 
 ### Follow-on analysis of screened data
 
-With the set of screened compound assignments in hand, we now have several options. Users familiar with R can extract data for further analysis or screening directly from the `LOBSet` object. Alternatively, the function `getLOBpeaklist` can be used to extract a table of results from the `LOBSet`. Options in `getLOBpeaklist` allow the user to (1) include isomer and isobar cross-references (the default; recommended) and (2) simultaneously generate a .csv file with the results. The .csv file is exported with a unique timestamp to the R working directory.
+With the set of screened compound assignments in hand, we now have several options. Users familiar with R can extract data for further analysis or screening directly from the `LOBSet` object. Alternatively, the function `getLOBpeaklist` can be used to extract a table of results from the `LOBSet`. Options in `getLOBpeaklist` allow the user to (1) include isomer and isobar cross-references (the default; recommended), (2) include data for features in the original `xsAnnotate` object that were not identified or were discarded during the screening process, and (3) simultaneously generate a .csv file with the results. The .csv file is exported with a unique timestamp to the R working directory.
 
 ### Package updates and improvements
 
@@ -507,8 +512,6 @@ Tautenhahn, R., Boettcher, C., and Neumann, S. 2008. Highly sensitive feature de
 
 1. <span id="note6">Fulton et al., 2014, "Novel molecular determinants of viral susceptibility and resistance in the lipidome of *Emiliania huxleyi*," *Environ. Microbiol.* **16**(4):1137-1149; Hunter et al., 2015, "Targeted and untargeted lipidomics of *Emiliania huxleyi* viral infection and life cycle phases highlights molecular biomarkers of infection, susceptibility, and ploidy," *Front. Mar. Sci.* **2**: 81</span>
 
-1. <span id="note7">A planned improvement, currently under development, will allow the user to retain unidentified features in a separate data object.</span>
+1. <span id="note7">We used a modified version of the chromatography presented in Hummel et al., 2011, "Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids," *Front. Plant. Sci.* **2**; see electronic supplement to Collins et al. 2016 for full specification.</span>
 
-1. <span id="note8">We used a modified version of the chromatography presented in Hummel et al., 2011, "Ultra performance liquid chromatography and high resolution mass spectrometry for the analysis of plant lipids," *Front. Plant. Sci.* **2**; see electronic supplement to Collins et al. 2016 for full specification.</span>
-
-1. <span id="note9">See A. Pearson, 2014, "Lipidomics for geochemistry" in *Treatise on Geochemistry* (Holland, H. D., and Turekian, K. K. eds.), 2nd Ed., Elsevier, Oxford, pp. 291-336.</span>
+1. <span id="note8">See A. Pearson, 2014, "Lipidomics for geochemistry" in *Treatise on Geochemistry* (Holland, H. D., and Turekian, K. K. eds.), 2nd Ed., Elsevier, Oxford, pp. 291-336.</span>

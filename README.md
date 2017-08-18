@@ -28,8 +28,6 @@ Fulton, J.M., H.F. Fredricks, K.D. Bidle, A. Vardi, B.J. Kendrick, G.R. DiTullio
 
 Users can the [current production version of LOBSTAHS](http://bioconductor.org/packages/LOBSTAHS) from Bioconductor by following the [directions here](http://bioconductor.org/packages/LOBSTAHS) (under "Installation"). The Bioconductor installation function will prompt you to install the latest versions of some other packages on which LOBSTAHS depends.
 
-***Note*** that you should first ensure you have the latest version of Bioconductor by running
-
 ```R
 
 source("http://bioconductor.org/biocLite.R")
@@ -37,7 +35,7 @@ biocLite()
 
 ```
 
-You can then install LOBSTAHS:
+***Note***: At this point, you should verify that you have, in fact, installed the *most current* version of Bioconductor. You may be required to install the latest version of R itself before you can obtain the latest version of Bioc. If you fail to ensure you are running the latest version of Bioconductor at this point, you won't necessarily be able to install the most up-to-date version of LOBSTAHS since the Bioc installer will only provide you will the most recent versions of packages attached to that version of Bioconductor. (If you are confused by any of this, check out this [help section](https://www.bioconductor.org/install/#troubleshoot-bioconductor-packages). Or, just install the current development version directly from GitHub using the directions, below.) Once you are satisfied that you're running the latest version of Bioconductor, you can then install LOBSTAHS:
 
 ```R
 

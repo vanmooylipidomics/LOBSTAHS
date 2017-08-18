@@ -9,7 +9,8 @@ Extracts screened peak data, compound assignments, annotation codes, and
 table containing the requested data, with option to export to a .csv file.
 }
 \usage{
-getLOBpeaklist(LOBSet, include.iso = TRUE, gen.csv = FALSE)
+getLOBpeaklist(LOBSet, include.iso = TRUE, include.unidentified = TRUE,
+               gen.csv = FALSE)
 }
 \arguments{
   \item{LOBSet}{
@@ -19,6 +20,11 @@ A LOBSTAHS \code{"LOBSet"} object.
 Specify whether isomer and isobar identification data should be included in 
 peaklist.
 }
+  \item{include.unidentified}{
+If data for unidentified or discarded features is present in the \code{LOBSet},
+should these data be exported with the peaklist? A value of \code{FALSE} will
+yield a peaklist that includes data only for those features to which one or more
+LOBSTAHS compound identities have been assigned.}
   \item{gen.csv}{
 Should a .csv file be generated in addition to the data frame that is returned?
 }
@@ -34,6 +40,15 @@ If \code{include.iso = TRUE}, three additional columns containing the
 appended. \code{getLOBpeaklist} does not export any of the diagnostic data in 
 the \code{LOBSet} \code{LOBscreen_diagnostics} or \code{LOBisoID_diagnostics} 
 slots.
+
+When the \code{LOBSet} includes peak data for features that were not identified
+during screening or were discarded (i.e., if the user specified
+\code{retain.unidentified = TRUE} when calling \code{\link{doLOBscreen}}), the
+user is given the option to export these data when using
+\code{getLOBpeaklist}. This is useful when untargeted follow-on data analysis is
+anticipated, or the user simply wants to export data for \emph{all} features
+present in the original dataset, not just those for which a LOBSTAHS identity
+was found.
 }
 \value{
   A data frame with the following structure:
@@ -126,10 +141,10 @@ James Collins, \email{james.r.collins@aya.yale.edu}
 
 }
 \examples{
-## export peaklist, with isomer data
+## export peaklist, with isomer data, but without data for unidentified features
 library(PtH2O2lipids)
 
 PtH2O2.peakdata = getLOBpeaklist(ptH2O2lipids$LOBSet, include.iso = TRUE,
-                                 gen.csv = FALSE)
+                                 include.unidentified = FALSE, gen.csv = FALSE)
 }
 \keyword{methods}
