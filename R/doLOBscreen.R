@@ -102,37 +102,54 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
   }
 
   # check for database input, use correct polarity default DB if no input
-
+  
   if (!is.null(database)) {
-
+    
     if (!class(database)=="LOBdbase") {
-
-      stop("Input 'database' is not a 'LOBdbase' object. Use loadLOBdbase() ",
-           "to read a user-supplied lipid-ox-lipid-oxylipin database from a ",
-           ".csv file, or use generateLOBdbase() to generate a new LOBSTAHS ",
-           "database.\n")
-
-    } else { # make sure it's the correct polarity
-
-      if (polarity!=polarity(database)) {
-
-        stop("Polarity '",polarity(database),"' of database does not match ",
-             "polarity '",polarity,"' of input 'xsA' object. Specify a ",
-             "'LOBdbase' object of the appropriate polarity.\n")
-
+      
+      # likely a bad input argument, but let's perform a quick, "hail mary"
+      # check to see if user accidentally/unknowingly supplied a list object
+      # that *contains* the correct LOBdbase object in an appropriately-named
+      # slot
+      
+      if (class(database)=="list" && (polarity %in% names(database)) && 
+          (class(get(eval(polarity), database))=="LOBdbase")) {
+        # this indeed appears to be the case; lucky for the user we're so nice
+        
+        database = get(eval(polarity), database)
+        
+      } else {
+        
+        stop("Input 'database' is not a 'LOBdbase' object of the correct ",
+             "polarity. Use loadLOBdbase() to read a user-supplied ",
+             "lipid-ox-lipid-oxylipin database from a .csv file, or use ",
+             "generateLOBdbase() to generate a new LOBSTAHS ",
+             "database.\n")
+        
       }
-
+      
     }
-	
-	# not using the default database, set defDB to 0 (false)
-
-	defDB = 0
-
+    
+    # if we made it this far, object is a LOBdbase; but let's make sure it's the
+    # correct polarity
+    
+    if (polarity!=polarity(database)) {
+      
+      stop("Polarity '",polarity(database),"' of database does not match ",
+           "polarity '",polarity,"' of input 'xsA' object. Specify a ",
+           "'LOBdbase' object of the appropriate polarity.\n")
+      
+    }
+    
+    # not using the default database, set defDB to 0 (false)
+    
+    defDB = 0
+    
   } else { # user didn't specify a database, use the default DB of the correct 
-           # polarity
+    # polarity
 
-    cat("User did not specify an external database. Using default LOBSTAHS",
-        "database for polarity '",polarity,"'\n\n")
+    cat("User did not specify a valid external database. Using default",
+        "LOBSTAHS database for polarity '",polarity,"'\n\n")
 
     defDB = 1
     
