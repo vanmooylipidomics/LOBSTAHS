@@ -20,6 +20,8 @@ DNPPE,43,76,0,3,12,1,0,0,0,0,0,0,0,0,0,0,0,DNPPE,DNPPE,DB_unique_species
 DAG,3,6,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,IP_DAG,DAG,DB_acyl_iteration
 MAG,3,7,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,IP_MAG,MAG,DB_acyl_iteration
 Astaxanthin,40,52,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,astaxanthin,astaxanthin,DB_unique_species
+PA,3,7,0,0,8,1,0,0,0,0,0,0,0,0,0,0,0,IP_DAG,PA,DB_acyl_iteration
+LPA,3,8,0,0,7,1,0,0,0,0,0,0,0,0,0,0,0,IP_MAG,PA,DB_acyl_iteration
 PE,5,12,0,1,8,1,0,0,0,0,0,0,0,0,0,0,0,IP_DAG,PE,DB_acyl_iteration
 LPE,5,13,0,1,7,1,0,0,0,0,0,0,0,0,0,0,0,IP_MAG,PE,DB_acyl_iteration
 PG,6,13,0,0,10,1,0,0,0,0,0,0,0,0,0,0,0,IP_DAG,PG,DB_acyl_iteration
