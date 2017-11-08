@@ -10,13 +10,13 @@ LOBSTAHS is copyright (c) 2015-2017, by the following current and former members
 
 <h2>Citations</h2>
 
-LOBSTAHS is described in:
+**LOBSTAHS is described in:**
 
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
 
 As part of Bioconductor, the package also now has its own dedicated DOI: [doi:10.18129/B9.bioc.LOBSTAHS ](http://dx.doi.org/10.18129/B9.bioc.LOBSTAHS )
 
-Please use both of these when citing LOBSTAHS in your own work.
+**Please use both of these when citing LOBSTAHS in your own work.**
 
 Adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER (package versions ≥ 1.1.2) are as described in:
 
