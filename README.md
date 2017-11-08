@@ -1,6 +1,6 @@
 # LOBSTAHS
 
-<img align="right" src="vignettes/images/LOBSTAHS_TOC_Figure.png" width="400" id="LOBSTAHS TOC figure">This is the home of the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. LOBSTAHS provides functions for easy creation of custom databases containing entries for a wide range of lipids, oxidized lipids, and oxylipins. Databases are generated using an automated computational approach based on structural criteria specified by the user in simple text tables/spreadsheets. The package's default databases contain roughly 18,000 compounds. Installation instructions and some general information about LOBSTAHS are given below. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/LOBSTAHS).
+<img align="right" src="vignettes/images/LOBSTAHS_TOC_Figure.png" width="400" id="LOBSTAHS TOC figure">This is the home of the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. LOBSTAHS provides functions for easy creation of custom databases containing entries for a wide range of lipids, oxidized lipids, and oxylipins. Databases are generated using an automated computational approach based on structural criteria specified by the user in simple text tables/spreadsheets. The package's default databases contain roughly 25,000 compounds. Installation instructions and some general information about LOBSTAHS are given below. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/LOBSTAHS).
 
 The primary repository at [https://github.com/vanmooylipidomics/LOBSTAHS](https://github.com/vanmooylipidomics/LOBSTAHS) will **always** contain the latest development version of LOBSTAHS. Changes are pushed as frequently as possible to Bioconductor, where they will appear in the read-only mirror at [https://github.com/Bioconductor-mirror/LOBSTAHS](https://github.com/Bioconductor-mirror/LOBSTAHS).
 
@@ -13,6 +13,10 @@ LOBSTAHS is copyright (c) 2015-2017, by the following current and former members
 LOBSTAHS is described in:
 
 Collins, J.R., B.R. Edwards, H.F. Fredricks, and B.A.S. Van Mooy. 2016. LOBSTAHS: An adduct-based lipidomics strategy for discovery and identification of oxidative stress biomarkers. *Analytical Chemistry* **88**:7154-7162; [doi:10.1021/acs.analchem.6b01260](http://dx.doi.org/10.1021/acs.analchem.6b01260)
+
+As part of Bioconductor, the package also now has its own dedicated DOI: [doi:10.18129/B9.bioc.LOBSTAHS ](http://dx.doi.org/10.18129/B9.bioc.LOBSTAHS )
+
+Please use both of these when citing LOBSTAHS in your own work.
 
 Adduct hierarchy and retention time window data for lipid classes BLL, PDPT, vGSL, sGSL, hGSL, hapGSL, and hapCER (package versions ≥ 1.1.2) are as described in:
 
@@ -101,7 +105,7 @@ HPLC-MS data must be assembled into a CAMERA xsAnnotate object prior to analysis
    * total acyl carbon chain length, and
    * degree of acyl carbon chain unsaturation (i.e., number of double bonds)
 
-Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), bile salts, wax esters, cholesterols, mass spectral contaminants, and quinones. Functionality for other lipid classes is added regularly. The default databases (as of August 18, 2017) include 24,086 and 19,408 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
+Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), bile salts, wax esters, cholesterols, mass spectral contaminants, and quinones. Functionality for other lipid classes is added regularly. The default databases (as of November 8, 2017) include 25,741 and 21,063 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
 
 <h2>Identification, screening, and annotation using orthogonal criteria</h2> 
 
