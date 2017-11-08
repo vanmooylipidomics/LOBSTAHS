@@ -1,4 +1,5 @@
-citHeader("To cite the LOBSTAHS package in publications use:")
+citHeader("To cite the LOBSTAHS package in publications please use both of the",
+   "following:")
 
 citEntry(entry="article",
    author=c(
@@ -24,4 +25,11 @@ citEntry(entry="misc",
    person(c("H.","F."),"Fredricks"), person(c("B.","A.","S."), "Van Mooy")),
    title="LOBSTAHS: An adduct-based lipidomics strategy for discovery and
    identification of oxidative stress biomarkers",
-   url="https://doi.org/10.18129/B9.bioc.LOBSTAHS")
+   url="https://doi.org/10.18129/B9.bioc.LOBSTAHS",
+   textVersion = paste("Collins, J. R., B. R. Edwards, H. F. Fredricks, and",
+                       "B. A. S. Van Mooy. 2017.",
+                       "LOBSTAHS: An adduct-based lipidomics strategy for",
+                       "discovery and identification of oxidative stress",
+                       "biomarkers. R package version 1.5.0;",
+                       "doi:10.18129/B9.bioc.LOBSTAHS"))
+
