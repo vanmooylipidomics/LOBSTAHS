@@ -12,7 +12,7 @@ Identify and annotate possible isomers and isobars.
 \usage{
 doLOBscreen(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
             rt.restrict =  TRUE, rt.windows = NULL, exclude.oddFA = TRUE,
-            match.ppm = NULL, retain.unidentified = TRUE)
+            exclude.oxyrule =TRUE, match.ppm = NULL, retain.unidentified = TRUE)
 }
 \arguments{
   \item{xsA}{
@@ -62,12 +62,16 @@ used to generate a .csv file of retention time data in a format appropriate for
   \item{exclude.oddFA}{
 Should compound assignments with an odd total number of acyl carbon atoms be
 excluded? (Applies only to assignments where the parent lipid class is TAG,
-IP-DAG, PUA, or FFA.) Useful if data are (or are believed to be) of exclusively
+IP-DAG, PUA, FFA or IP-MAG.) Useful if data are (or are believed to be) of exclusively
 eukaryotic origin.
 }
   \item{match.ppm}{
 \emph{m/z} tolerance (in ppm) used for matching observed data against the
 calculated \emph{m/z}'s in the database
+}
+  \item{exclude.oxyrule}{
+Should compound assignments include physically unlikey fatty acid molecules where the total number of double
+bonds are less than the oxidation state of the molecule? (Applies only to assignments where the parent lipid class is TAG, IP-DAG, PUA, FFA or IP-MAG.) Useful if such rare molecules are likely to be found in sample.
 }
   \item{retain.unidentified}{
 Should data for unidentified or discarded features be retained and appended to 
@@ -133,7 +137,7 @@ library(PtH2O2lipids)
 myPtH202LOBSet = doLOBscreen(ptH2O2lipids$xsAnnotate, polarity = "positive",
                              database = NULL, remove.iso = TRUE,
                              rt.restrict =  TRUE, rt.windows = NULL,
-                             exclude.oddFA = TRUE, match.ppm = 2.5,
+                             exclude.oddFA = TRUE, match.ppm = 2.5, exclude.oxyrule =TRUE,
                              retain.unidentified = TRUE)
 
 ## show some diagnostics
