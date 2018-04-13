@@ -3,10 +3,9 @@
 # doLOBscreen: Wrapper function for LOBSTAHS screening & annotation of an 
 # xsAnnotate object; returns a LOBSet object
 
-doLOBscreen = function(xsA, polarity = NULL, database = NULL, 
-                       remove.iso = TRUE, rt.restrict =  TRUE, 
-                       rt.windows = NULL, exclude.oddFA = TRUE,
-                       exclude.oxyrule = TRUE,
+doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE, 
+                       rt.restrict =  TRUE, rt.windows = NULL, 
+                       exclude.oddFA = TRUE, exclude.oxyrule = TRUE, 
                        match.ppm = NULL, retain.unidentified = TRUE) {
   # planning to add nSlaves option at some point
   
@@ -419,13 +418,13 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL,
     # isobars/functional isomers present
     
     for (i in 1:length(C3f_C3c.peakgroups)) {
-      
       IDs.this.pg = screenedpeaks[screenedpeaks$xcms_peakgroup==
                                     C3f_C3c.peakgroups[i],]
       
       parent.mzs.this.pg = unique(IDs.this.pg$LOBdbase_mz)
       
       if (length(parent.mzs.this.pg)>1) { # we have a C3c scenario
+      
         
         screenedpeaks$C3c[screenedpeaks$xcms_peakgroup==
                             C3f_C3c.peakgroups[i]] = 1
@@ -1005,7 +1004,8 @@ exclude_dblebond = function(matched.frag_IDs, database) {
                                 matched.frag_IDs[i]] %in% 
           c("IP_DAG","PUA","FFA","TAG", "IP_MAG")) {
         
-        if (FA_total_no_DB(database)[frag_ID(database)==matched.frag_IDs[i]] < degree_oxidation(database)[frag_ID(database)==matched.frag_IDs[i]]) {
+        if (FA_total_no_DB(database)[frag_ID(database)==matched.frag_IDs[i]] <
+            degree_oxidation(database)[frag_ID(database)==matched.frag_IDs[i]]) {
           
           ID.eval[i] = FALSE
           

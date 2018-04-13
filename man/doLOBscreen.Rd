@@ -71,7 +71,8 @@ calculated \emph{m/z}'s in the database
 }
   \item{exclude.oxyrule}{
 Should compound assignments include physically unlikey fatty acid molecules where the total number of double
-bonds are less than the oxidation state of the molecule? (Applies only to assignments where the parent lipid class is TAG, IP-DAG, PUA, FFA or IP-MAG.) Useful if such rare molecules are likely to be found in sample.
+bonds are less than the oxidation state of the molecule? (Applies only to assignments where the parent lipid 
+class is TAG, IP-DAG, PUA, FFA or IP-MAG.) Useful if such rare molecules are likely to be found in sample.
 }
   \item{retain.unidentified}{
 Should data for unidentified or discarded features be retained and appended to 
