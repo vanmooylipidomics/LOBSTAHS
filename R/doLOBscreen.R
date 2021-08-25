@@ -966,16 +966,22 @@ excludeoddFAlength = function(matched.frag_IDs, database) {
   
   if (length(matched.frag_IDs)>0) { # matches were made to this feature
     
-    for (i in 1:length(matched.frag_IDs)) {
+    for (i in 1:length(matched.frag_IDs)) { # for each match
       
       if (lipid_class(database)[frag_ID(database)==
                                 matched.frag_IDs[i]] %in% 
-          c("IP_DAG","PUA","FFA","TAG","IP_MAG")) {
+          c("IP_DAG","PUA","FFA","TAG","IP_MAG")) { # if this is a "IP_DAG","PUA","FFA","TAG","IP_MAG"
         
-        if (FA_total_no_C(database)[frag_ID(database)==
-                                    matched.frag_IDs[i]]%%2!=0) {
-          
-          ID.eval[i] = FALSE
+        if(!is.na(FA_total_no_C(database)[frag_ID(database)==
+                                         matched.frag_IDs[i]])){ # if this has a non 'NA' C chain length 
+                                                                 # implying that is not a DB_unique_spieces
+        
+          if (FA_total_no_C(database)[frag_ID(database)==
+                                      matched.frag_IDs[i]]%%2!=0) { #if this is not even
+            
+            ID.eval[i] = FALSE
+            
+          }
           
         }
         
@@ -1004,10 +1010,15 @@ exclude_dblebond = function(matched.frag_IDs, database) {
                                 matched.frag_IDs[i]] %in% 
           c("IP_DAG","PUA","FFA","TAG", "IP_MAG")) {
         
-        if (FA_total_no_DB(database)[frag_ID(database)==matched.frag_IDs[i]] <
-            degree_oxidation(database)[frag_ID(database)==matched.frag_IDs[i]]) {
-          
-          ID.eval[i] = FALSE
+        if (!is.na(FA_total_no_DB(database)[frag_ID(database)==matched.frag_IDs[i]])) {
+        
+        
+          if (FA_total_no_DB(database)[frag_ID(database)==matched.frag_IDs[i]] <
+              degree_oxidation(database)[frag_ID(database)==matched.frag_IDs[i]]) {
+            
+            ID.eval[i] = FALSE
+            
+          }
           
         }
         
