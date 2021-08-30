@@ -3,7 +3,7 @@
 1.5.1 (2017-04-11)  jrcollins <james.r.collins@aya.yale.edu>
   * Added trimmed_database
   * Added doLOBscreen check for physically unlikely oxidated molecules
-1.19.1 (2021-08-30)  jrcollins <james.r.collins@aya.yale.edu>
+1.18.1 (2021-08-30)  jrcollins <james.r.collins@aya.yale.edu>
   * Updated authors and maintainers
   * Formalized support for new lipid classes including bile salts, wax esters, 
     quinones, etc.
