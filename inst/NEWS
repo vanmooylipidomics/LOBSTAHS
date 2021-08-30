@@ -7,3 +7,6 @@
   * Updated authors and maintainers
   * Formalized support for new lipid classes including bile salts, wax esters, 
     quinones, etc.
+1.19.2 (2021-08-30)  jrcollins <james.r.collins@aya.yale.edu>
+  * Eliminated some duplication resulting from relict "trimmed_databases" 
+    directory
