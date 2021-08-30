@@ -34,8 +34,9 @@ Users can the [current production version of LOBSTAHS](http://bioconductor.org/p
 
 ```R
 
-source("http://bioconductor.org/biocLite.R")
-biocLite()
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
 
 ```
 
@@ -43,8 +44,9 @@ biocLite()
 
 ```R
 
-source("http://bioconductor.org/biocLite.R")
-biocLite("LOBSTAHS")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("LOBSTAHS")
 
 ```
 
@@ -58,9 +60,10 @@ Following these directions, you will install the latest version of the software 
 
 ```R
 
-source("http://bioconductor.org/biocLite.R")
-biocLite("xcms")
-biocLite("CAMERA")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("xcms")
+BiocManager::install("CAMERA")
 
 ```
 

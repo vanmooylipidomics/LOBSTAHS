@@ -1,6 +1,6 @@
 Package: LOBSTAHS
 Title: Lipid and Oxylipin Biomarker Screening through Adduct Hierarchy Sequences
-Version: 1.5.1
+Version: 1.19.0
 Date: 2018-04-13
 Authors@R: c(
     person("James", "Collins", email = "james.r.collins@aya.yale.edu", 
@@ -43,7 +43,7 @@ License: GPL (>= 3) + file LICENSE
 URL: http://bioconductor.org/packages/LOBSTAHS
 BugReports: https://github.com/vanmooylipidomics/LOBSTAHS/issues/new
 VignetteBuilder: knitr
-biocViews: MassSpectrometry, Metabolomics, Lipidomics, DataImport
+biocViews: ImmunoOncology, MassSpectrometry, Metabolomics, Lipidomics, DataImport
 NeedsCompilation: no
 Author: James Collins [aut, cre], Helen Fredricks [aut], Bethanie
         Edwards [aut], Tyrone Lee [aut], Henry Holm [aut] Benjamin Van Mooy [aut]
