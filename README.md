@@ -6,7 +6,7 @@ The primary repository at [https://github.com/vanmooylipidomics/LOBSTAHS](https:
 
 A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) contains detailed, step-by-step user instructions and examples of package functions illustrated with a model dataset. 
 
-LOBSTAHS is copyright (c) 2015-2017, by the following current and former members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All accompanying written materials are copyright (c) 2015-2017, James R. Collins. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
+LOBSTAHS and all accompanying written materials are copyright (c) 2015-2021, by the following current and former members of the Van Mooy Laboratory group at Woods Hole Oceanographic Institution: [James R. Collins](http://jamesrco.github.io), Bethanie R. Edwards, Daniel Lowenstein, Henry Holm, Helen F. Fredricks, and Benjamin A.S. Van Mooy. LOBSTAHS is provided under the [GNU General Public License](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/LICENSE) and subject to terms of reuse as specified therein.
 
 <h2>Citations</h2>
 
@@ -108,7 +108,7 @@ HPLC-MS data must be assembled into a CAMERA xsAnnotate object prior to analysis
    * total acyl carbon chain length, and
    * degree of acyl carbon chain unsaturation (i.e., number of double bonds)
 
-Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), bile salts, wax esters, cholesterols, mass spectral contaminants, and quinones. Functionality for other lipid classes is added regularly. The default databases (as of November 8, 2017) include 25,741 and 21,063 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
+Alternatively, users may load the LOBSTAHS default databases. These contain entries for a wide range of intact polar diacylglycerols (IP-DAG), triacylglycerols (TAG), polyunsaturated aldehydes (PUAs), free fatty acids (FFA), and common photosynthetic pigments. In addition, the latest LOBSTAHS release includes support for lyso lipids under an "IP_MAG" species class and certain glycosphingolipids, ceramides, betaine-like lipids (BLL), bile salts, wax esters, cholesterols, mass spectral contaminants, and quinones. Functionality for other lipid classes is added regularly. The default databases (as of August 30, 2021) include 25,741 and 21,063 unique compounds that can be identifed in positive and negative ionization mode data, respectively. 
 
 <h2>Identification, screening, and annotation using orthogonal criteria</h2> 
 
@@ -128,4 +128,4 @@ The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids
 
 Scripts used to generate the figures and many of the tables in the above referenced manuscript can be found at https://github.com/jamesrco/LipidomicsDataViz/tree/master/LOBSTAHS
 
-LOBSTAHS is maintained by [Jamie Collins](https://jamesrco.github.io) and collaborators in the [Van Mooy Lab](https://github.com/vanmooylipidomics) at WHOI.
+LOBSTAHS is maintained by [Jamie Collins](https://jamesrco.github.io), [Henry Holm](https://hholm.github.io), Daniel Lowenstein and other collaborators in the [Van Mooy Lab](https://github.com/vanmooylipidomics) at WHOI.

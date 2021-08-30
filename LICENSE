@@ -3,10 +3,10 @@ putative identification of mass spectral features in large, HPLC-MS lipid
 datasets, including custom onboard containing data for lipids and oxidized
 lipids.
 
-All code copyright (c) 2015-2017, the following members of the Van Mooy
-Laboratory group at Woods Hole Oceanographic Institution: James R. Collins,
-Bethanie R. Edwards, Helen F. Fredricks, and Benjamin A.S. Van Mooy. All
-accompanying written materials copyright (c) 2015-2017, James R. Collins.
+All code and accompanying written materials copyright (c) 2015-2021, the 
+following current and former members of the Van Mooy Laboratory group at Woods 
+Hole Oceanographic Institution: James R. Collins, Bethanie R. Edwards, Helen 
+F. Fredricks, Henry C. Holm, Daniel Lowenstein, and Benjamin A.S. Van Mooy.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

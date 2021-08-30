@@ -30,6 +30,6 @@ citEntry(entry="misc",
                        "B. A. S. Van Mooy. 2017.",
                        "LOBSTAHS: An adduct-based lipidomics strategy for",
                        "discovery and identification of oxidative stress",
-                       "biomarkers. R package version 1.5.0;",
+                       "biomarkers. R package version 1.19.1;",
                        "doi:10.18129/B9.bioc.LOBSTAHS"))
 
