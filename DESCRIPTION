@@ -48,6 +48,6 @@ NeedsCompilation: no
 Author: James Collins [aut, cre], Helen Fredricks [aut], Bethanie
         Edwards [aut], Henry Holm [aut], Benjamin Van Mooy [aut], 
         Daniel Lowenstein [aut]
-Maintainer: James Collins <james.r.collins@aya.yale.edu>, 
-            Henry Holm <hholm@whoi.edu>,
-            Daniel Lowenstein <dlowenstein@whoi.edu>
+Maintainer: Henry Holm <hholm@whoi.edu>,
+            Daniel Lowenstein <dlowenstein@whoi.edu>,
+            James Collins <james.r.collins@aya.yale.edu>

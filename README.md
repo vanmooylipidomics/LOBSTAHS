@@ -2,7 +2,7 @@
 
 <img align="right" src="vignettes/images/LOBSTAHS_TOC_Figure.png" width="400" id="LOBSTAHS TOC figure">This is the home of the R package **LOBSTAHS**, developed in the Van Mooy Lab at Woods Hole Oceanographic Institution. LOBSTAHS (Lipid and Oxylipin Biomarker Screening Through Adduct Hierarchy Sequences) is a multifunction package for screening, annotation, and putative identification of mass spectral features in large, HPLC-MS lipid datasets. LOBSTAHS provides functions for easy creation of custom databases containing entries for a wide range of lipids, oxidized lipids, and oxylipins. Databases are generated using an automated computational approach based on structural criteria specified by the user in simple text tables/spreadsheets. The package's default databases contain roughly 25,000 compounds. Installation instructions and some general information about LOBSTAHS are given below. The current production version of LOBSTAHS is available via [Bioconductor](http://bioconductor.org/packages/LOBSTAHS).
 
-The primary repository at [https://github.com/vanmooylipidomics/LOBSTAHS](https://github.com/vanmooylipidomics/LOBSTAHS) will **always** contain the latest development version of LOBSTAHS. Changes are pushed as frequently as possible to Bioconductor, where they will appear in the read-only mirror at [https://github.com/Bioconductor-mirror/LOBSTAHS](https://github.com/Bioconductor-mirror/LOBSTAHS).
+The primary repository at [https://github.com/vanmooylipidomics/LOBSTAHS](https://github.com/vanmooylipidomics/LOBSTAHS) will **always** contain the latest development version of LOBSTAHS. Changes are pushed as frequently as possible to Bioconductor, where updates are limited to the Bioconductor release schedule (approx. every 6 months).
 
 A [comprehensive vignette](https://github.com/vanmooylipidomics/LOBSTAHS/blob/master/vignettes/LOBSTAHS.Rmd) contains detailed, step-by-step user instructions and examples of package functions illustrated with a model dataset. 
 
@@ -128,4 +128,4 @@ The package [**PtH2O2lipids**](https://github.com/vanmooylipidomics/PtH2O2lipids
 
 Scripts used to generate the figures and many of the tables in the above referenced manuscript can be found at https://github.com/jamesrco/LipidomicsDataViz/tree/master/LOBSTAHS
 
-LOBSTAHS is maintained by [Jamie Collins](https://jamesrco.github.io), [Henry Holm](https://hholm.github.io), Daniel Lowenstein and other collaborators in the [Van Mooy Lab](https://github.com/vanmooylipidomics) at WHOI.
+LOBSTAHS is maintained by [Henry Holm](https://hholm.github.io), Daniel Lowenstein, [Jamie Collins](https://jamesrco.github.io) and other collaborators in the [Van Mooy Lab](https://github.com/vanmooylipidomics) at WHOI.
