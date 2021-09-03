@@ -29,7 +29,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
     
   }
   
-  if (sum(xsA@groupInfo[colnames(xsA@groupInfo)=="rt"]>100)==0) {
+  if (sum(xsA@groupInfo[colnames(xsA@groupInfo)=="rt"]>100,na.rm = TRUE)==0) {
     # likely that rt data are in minutes; they need to be in seconds
     
     stop("Retention time data in input object 'xsA' appear to be in minutes. ",
@@ -344,7 +344,7 @@ doLOBscreen = function(xsA, polarity = NULL, database = NULL, remove.iso = TRUE,
   
   # first, get number of sample treatments in original dataset (i.e., xcms 
   # "classes")
-  num.treatments = length(levels(xsA@xcmsSet@phenoData$class))
+  num.treatments = ncol(xsA@xcmsSet@groups)-7
   
   # create a matrix to keep track of isomer data
   
@@ -974,10 +974,10 @@ excludeoddFAlength = function(matched.frag_IDs, database) {
         
         if(!is.na(FA_total_no_C(database)[frag_ID(database)==
                                          matched.frag_IDs[i]])){ # if this has a non 'NA' C chain length 
-                                                                 # implying that is not a DB_unique_species
+                                                                 # implying that is not a DB_unique_spieces
         
           if (FA_total_no_C(database)[frag_ID(database)==
-                                      matched.frag_IDs[i]]%%2!=0) { # if this is not even
+                                      matched.frag_IDs[i]]%%2!=0) { #if this is not even
             
             ID.eval[i] = FALSE
             
@@ -1375,8 +1375,8 @@ appendDiscardedFeatures = function(LOBSet, xsAnnotate) {
 # belong to a given CAMERA pseudospectrum
 
 screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso, 
-                           rt.restrict, rt.windows, exclude.oddFA, 
-                           exclude.oxyrule, match.ppm, casecodes) {
+                           rt.restrict, rt.windows, exclude.oddFA, exclude.oxyrule, match.ppm, 
+                           casecodes) {
   
   # first argument is a CAMERA pseudospectrum; second argument is the xsA object
   # from wrapper function; others self-explanatory or passed down from wrapper 
@@ -1401,7 +1401,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso,
   isotopes = as.character(sapply(isodata, getformattedIsoData, 
                                  polarity = polarity)) # generate iso strings
   # get number of sample treatments in original dataset (i.e., xcms "classes"):
-  num.treatments = length(levels(xsA@xcmsSet@phenoData$class))
+  num.treatments = ncol(xsA@xcmsSet@groups)-7
   
   if (length(pgdata)<=(7+num.treatments+length(sampnames(xsA@xcmsSet)))) {
     
@@ -1420,8 +1420,7 @@ screenPSpectrum = function(pseudospectrum, xsA, polarity, database, remove.iso,
                                 "parent_compounds")
   rownames(diagnostic_data) = c("initial","post_remove_iso",
                                 "initial_assignments","post_rt_restrict",
-                                "post_exclude_oddFA", 
-                                "post_exclude_wrongdblbonds","post_AIHscreen")
+                                "post_exclude_oddFA", "post_exclude_wrongdblbonds","post_AIHscreen")
   
   diagnostic_data[c("initial"),c("peakgroups","peaks")] = 
     c(nrow(pgdata),sum(pgdata[
