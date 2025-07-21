@@ -638,7 +638,7 @@ loadLOBdbase = function(file, polarity, num_compounds = NULL) {
     paste0("[Ee][Xx][Aa][Cc][Tt][ |\\.|_]*[Mm][Aa][Ss][Ss]"),
     paste0("[Pp][Aa][Rr][Ee][Nn][Tt][ |\\.|_]*[Nn][Ee][Uu][Tt][Rr][Aa][Ll]",
            "[ |\\.|_]*[Mm][Aa][Ss][Ss]")),
-    grepl,colnames(db.rawdata),any))>0])
+    grepl,colnames(db.rawdata)))>0])
   
   lipid_class(object) = as.factor(db.rawdata[
     ,grepl("[Ll][Ii][Pp][Ii][Dd][ |\\.|_]*[Cc][Ll][Aa][Ss][Ss]",
